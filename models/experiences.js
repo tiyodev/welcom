@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
-const User = require('../models/users');
-const Interest = require('../models/interests');
+const user = require('../models/users');
+const interest = require('../models/interests');
 require('mongoose-double')(mongoose);
 
-const SchemaTypes = mongoose.Schema.Types;
 const Schema = mongoose.Schema;
 
 const experienceSchema = new mongoose.Schema({
   title: { type: String, maxlength: 50 },
-  creator: { type: Schema.ObjectId, ref: 'User' },
+  creator: { type: Schema.ObjectId, ref: 'user' },
   creatorName: String,
   creatorPicture: String,
   creatorAge: Number,
@@ -31,10 +30,10 @@ const experienceSchema = new mongoose.Schema({
   city: { type: String, maxlength: 64 },
   country: { type: String, maxlength: 64 },
   homePicture: String,
-  interests: [{ type: Schema.ObjectId, ref: 'Interest' }],
+  interests: [{ type: Schema.ObjectId, ref: 'interest' }],
   languages: [{ type: String, maxlength: 2 }],
   durationInHours: Number,
-  //price: SchemaTypes.Double,
+  // price: SchemaTypes.Double,
   price: Number,
   pricePerUser: { type: Boolean, default: false },
   handicapAccess: { type: Boolean, default: false },

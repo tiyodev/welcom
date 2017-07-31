@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt-nodejs');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
-const Interest = require('../models/interests');
-const Experience = require('../models/experiences');
+const interest = require('../models/interests');
+const experience = require('../models/experiences');
 
 const Schema = mongoose.Schema;
 
@@ -13,14 +13,14 @@ const userSchema = new Schema({
   isAdmin: { type: Boolean, default: false },
   isWelcomer: { type: Boolean, default: false },
   /* Email */
-  email: { type: String, unique: true, maxlength: 254},
-  newEmail: { type: String, maxlength: 254},
+  email: { type: String, unique: true, maxlength: 254 },
+  newEmail: { type: String, maxlength: 254 },
   validEmail: { type: Boolean, default: false },
   validEmailToken: String,
   validEmailTokenExpires: Date,
   lastChangeEmail: Date,
   numberChangeEmail: { type: Number, default: 0 },
-  sendMailEachPM: { type: Boolean, default: true},
+  sendMailEachPM: { type: Boolean, default: true },
   /* Password */
   password: String,
   passwordResetToken: String,
@@ -43,7 +43,7 @@ const userSchema = new Schema({
     phoneNumber: { type: String, default: '' },
     status: { type: String, default: '' },
     /* Tag */
-    interests: [{ type: Schema.ObjectId, ref: 'Interest' }],
+    interests: [{ type: Schema.ObjectId, ref: 'interest' }],
     tagAdded: { type: Number, default: 0 },
     /* Location */
     city: { type: String, default: '' },
@@ -58,7 +58,7 @@ const userSchema = new Schema({
     lastMsgSent: Date,
     /* Experience */
     expBooked: [{
-      expId: { type: String, ref: 'Experience' },
+      expId: { type: String, ref: 'experience' },
     }],
     expBooking: { type: Number, default: 0 },
     lastExpBooking: Date,
@@ -80,10 +80,10 @@ const userSchema = new Schema({
     /* Milestones */
     milestones: [{
       description: String,
-      startMonth : Number,
-      startYear : Number,
-      endMonth : Number,
-      endYear : Number,
+      startMonth: Number,
+      startYear: Number,
+      endMonth: Number,
+      endYear: Number,
       _id: { type: Schema.ObjectId }
     }],
     /* Reviews */
@@ -91,7 +91,7 @@ const userSchema = new Schema({
     nbReviewsReceive: { type: Number, default: 0 },
     globalRate: { type: Number, default: 0, min: 0, max: 5 },
     reviews: [{
-      User: { type: Schema.ObjectId, ref: 'User' },
+      User: { type: Schema.ObjectId, ref: 'user' },
       rate: { type: Number, default: 0, min: 0, max: 5 },
       comment: String,
       date: Date
@@ -105,10 +105,12 @@ const userSchema = new Schema({
 /**
  * Password hash middleware.
  */
- userSchema.pre('save', function (next) {
+userSchema.pre('save', (next) => {
   const user = this;
 
-  if (!user.isModified('password')) { return next(); }
+  if (!user.isModified('password')) {
+    return next();
+  }
   bcrypt.genSalt(10, (err, salt) => {
     if (err) { return next(err); }
     bcrypt.hash(user.password, salt, null, (err, hash) => {
@@ -122,7 +124,7 @@ const userSchema = new Schema({
 /**
  * Helper method for validating user's password.
  */
- userSchema.methods.comparePassword = function (candidatePassword, cb) {
+userSchema.methods.comparePassword = (candidatePassword, cb) => {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     cb(err, isMatch);
   });
@@ -131,7 +133,7 @@ const userSchema = new Schema({
 /**
  * Helper method for getting user's gravatar.
  */
-userSchema.methods.gravatar = function (size) {
+userSchema.methods.gravatar = (size) => {
   if (!size) {
     size = 200;
   }
