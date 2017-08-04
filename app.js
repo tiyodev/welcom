@@ -13,7 +13,7 @@ const logger = require('morgan');
 const lusca = require('lusca');
 const passport = require('passport');
 const path = require('path');
-const sassMiddleware = require('node-sass-middleware');
+// const sassMiddleware = require('node-sass-middleware');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
@@ -50,12 +50,13 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(sassMiddleware({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
+/* app.use(sassMiddleware({
+  debug: true,
+  src: path.join(path.join(__dirname, 'public', 'sass')),
+  dest: path.join(path.join(__dirname, 'public', 'css')),
   indentedSyntax: true, // true = .sass and false = .scss
   sourceMap: true
-}));
+}));*/
 app.use(express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(compression());

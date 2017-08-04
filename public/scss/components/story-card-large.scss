@@ -1,0 +1,12 @@
+.story-card-large{
+    .btn-primary{
+        background-color: $wel-blue;
+    }
+
+    &-img-cover{
+        background-size: cover;
+        background-position: center center;
+        width: 100%;
+        height: 100%;
+    }
+}

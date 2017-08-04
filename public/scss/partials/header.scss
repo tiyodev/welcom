@@ -1,0 +1,23 @@
+@import 'color';
+
+#header-nav{
+    min-height: 60px;
+    
+    .header-logo{
+        height: 45px;
+    }
+
+    a{
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+
+        color: $wel-black;
+
+        border-bottom: solid 3px;
+        border-bottom-color: $wel-white;
+
+        &:hover:not(.navbar-brand){
+            border-bottom-color: $wel-orange;
+        }
+    }
+}

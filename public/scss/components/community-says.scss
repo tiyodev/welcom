@@ -1,0 +1,36 @@
+@import 'color';
+
+#community-says {
+
+    .rounded-circle{
+        position: relative;
+        border: 5px solid $wel-white;
+        box-shadow:0 0 0 5px $wel-green;
+    }
+
+    .community-says-item{
+        img{
+            width: 100px;
+            height: 100px;
+        }
+
+        .community-say-item-from{
+            width: 50%;
+        }
+
+        .community-say-item-detail{
+            width: 70%;
+        }
+
+        .svg-quote{
+            width: 44px;
+            height: 37px;
+
+            .svg-quote-path{
+                fill: $wel-green;
+                fill-rule: evenodd;
+            }
+        }
+    }
+}
+

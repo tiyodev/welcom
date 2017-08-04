@@ -1,0 +1,110 @@
+/************** This file import all scss files and override bootstrap css ************/
+
+@import 'general';
+@import 'index';
+@import 'partials/header';
+@import 'partials/footer';
+@import 'components/experience-card';
+@import 'components/community-says';
+@import 'components/story-card-large';
+@import 'components/story-card';
+
+
+/*************** Override font family *************************************************/
+
+p, a, h1, h2, h3, h4, h5{
+  font-family: 'Merriweather', serif;
+}
+
+/*************** Override padding *****************************************************/
+.p-5{
+  padding: 2rem 2rem !important;
+}
+
+.pt-5{
+  padding-top: 2rem !important;
+}
+
+.pr-5{
+  padding-right: 2rem !important;
+}
+
+.pb-5{
+  padding-bottom: 2rem !important;
+}
+
+.pl-5{
+  padding-left: 2rem !important;
+}
+
+.p-6{
+  padding: 3rem 3rem !important;
+}
+
+.pt-6{
+  padding-top: 3rem !important;
+}
+
+.pr-6{
+  padding-right: 3rem !important;
+}
+
+.pb-6{
+  padding-bottom: 3rem !important;
+}
+
+.pl-6{
+  padding-left: 3rem !important;
+}
+
+/*************** Override margin ******************************************************/
+
+.m-5{
+  margin: 2rem 2rem !important;
+}
+
+.mt-5{
+  margin-top: 2rem !important;
+}
+
+.mr-5{
+  margin-right: 2rem !important;
+}
+
+.mb-5{
+  margin-bottom: 2rem !important;
+}
+
+.ml-5{
+  margin-left: 2rem !important;
+}
+
+.m-6{
+  margin: 3rem 3rem !important;
+}
+
+.mt-6{
+  margin-top: 3rem !important;
+}
+
+.mr-6{
+  margin-right: 3rem !important;
+}
+
+.mb-6{
+  margin-bottom: 3rem !important;
+}
+
+.ml-6{
+  margin-left: 3rem !important;
+}
+
+/*************** Override container ***************************************************/
+
+.container{
+  width: 100%;
+}
+
+.container .row{
+  width: 100%;
+}

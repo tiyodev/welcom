@@ -1,0 +1,22 @@
+@import 'color';
+
+.experience-card-item{    
+    border: 5px solid $wel-green;
+    border-radius: .25rem;
+
+    width: 20rem;
+
+    .card-block{
+        background-color: $wel-grey-middle-light;
+
+        &-img-row{
+            margin-bottom:-55px;
+
+            .rounded-circle{
+                border: 5px solid $wel-green;
+                width: 100px;
+                height: 100px;
+            }
+        }
+    }
+}
