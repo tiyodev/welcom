@@ -22,8 +22,14 @@
 .wel-bg-grey {
   background-color: #868686; }
 
+.wel-bg-orange {
+  background-color: #ffd14e; }
+
 .wel-color-white {
   color: #ffffff; }
+
+.wel-color-blue-night {
+  color: #2e79cc; }
 
 /************** This file define colors use for welcom ***************/
 /*************** Header Image Carousel ***********************************/
@@ -32,7 +38,9 @@
   height: 100%;
   z-index: 1;
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.3); }
+  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
+  background: linear-gradient(to right, #dc5770, #0a1235);
+  mix-blend-mode: multiply; }
 
 #header-carousel .carousel-control-prev,
 #header-carousel .carousel-control-next {
@@ -40,8 +48,6 @@
 
 #header-carousel .header-carousel-img {
   width: 100vw;
-  height: 100vh;
-  max-height: 600px;
   -o-object-fit: cover;
      object-fit: cover; }
 
@@ -49,22 +55,30 @@
   border-radius: 20px;
   max-width: 20px;
   height: 20px;
-  background-color: rgba(255, 116, 41, 0.5); }
+  background-color: rgba(255, 209, 78, 0.5); }
   #header-carousel .carousel-indicators li.active {
     border-radius: 25px;
     max-width: 25px;
     height: 25px;
-    background-color: #ff7429; }
+    background-color: #ffd14e; }
 
 #header-carousel .carousel-caption {
-  top: 20%;
-  font-family: 'Roboto', sans-serif; }
+  top: 20%; }
+  #header-carousel .carousel-caption h1, #header-carousel .carousel-caption h2 {
+    font-family: 'Aaux ProLight', serif; }
   #header-carousel .carousel-caption h1 {
-    text-shadow: black 3px 0px 0px, black 2.83333px 0.98333px 0px, black 2.35px 1.85px 0px, black 1.61667px 2.51667px 0px, black 0.7px 2.91667px 0px, black -0.28333px 2.98333px 0px, black -1.25px 2.73333px 0px, black -2.06667px 2.16667px 0px, black -2.66667px 1.36667px 0px, black -2.96667px 0.41667px 0px, black -2.95px -0.56667px 0px, black -2.6px -1.5px 0px, black -1.96667px -2.26667px 0px, black -1.11667px -2.78333px 0px, black -0.13333px -3px 0px, black 0.85px -2.88333px 0px, black 1.75px -2.43333px 0px, black 2.45px -1.73333px 0px, black 2.88333px -0.83333px 0px;
-    font-size: 3.5rem; }
+    font-size: 94pt;
+    font-weight: normal; }
   #header-carousel .carousel-caption h2 {
-    text-shadow: black 2px 0px 0px, black 1.75px 0.96667px 0px, black 1.08333px 1.68333px 0px, black 0.13333px 2px 0px, black -0.83333px 1.81667px 0px, black -1.6px 1.2px 0px, black -1.98333px 0.28333px 0px, black -1.86667px -0.7px 0px, black -1.3px -1.51667px 0px, black -0.41667px -1.95px 0px, black 0.56667px -1.91667px 0px, black 1.41667px -1.41667px 0px, black 1.91667px -0.56667px 0px;
-    font-size: 2rem; }
+    font-size: 23pt; }
+  #header-carousel .carousel-caption button {
+    background-color: transparent;
+    color: white !important;
+    border: 2px #FFF solid;
+    border-radius: 25px;
+    width: 170px;
+    height: 50px;
+    margin-top: 100px; }
 
 /*************** Whant a truly Parisian experience ? *********************/
 /*************** Learn more **********************************************/
@@ -72,7 +86,7 @@
   width: 100px;
   height: 5px; }
   #learn-more .svg-separate-line line {
-    stroke: #ff7429;
+    stroke: #ffd14e;
     stroke-width: 5px; }
 
 /*************** Community says ******************************************/
@@ -99,7 +113,17 @@
     border-bottom: solid 3px;
     border-bottom-color: #ffffff; }
     #header-nav a:hover:not(.navbar-brand) {
-      border-bottom-color: #ff7429; }
+      border-bottom-color: #ffd14e; }
+  #header-nav button {
+    background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
+    background: linear-gradient(to right, #dc5770, #0a1235);
+    font-size: 13,76pt; }
+  #header-nav .sign-in-link {
+    font-family: 'Aaux ProBlack', serif;
+    background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
+    background: linear-gradient(to right, #dc5770, #0a1235);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; }
 
 /************** This file define colors use for welcom ***************/
 #footer-content {
@@ -114,13 +138,13 @@
         fill: #ffffff; }
       #footer-content #back-top .back-top-shape-arrow {
         fill-rule: evenodd;
-        fill: #ff7429; }
+        fill: #ffd14e; }
   #footer-content .footer-logo {
     height: 45px; }
   #footer-content a, #footer-content p {
     color: #868686; }
   #footer-content h4 {
-    color: #ff7429; }
+    color: #ffd14e; }
   #footer-content #footer-link a {
     padding-left: 0px !important;
     padding-right: 0px !important;
@@ -128,7 +152,7 @@
     border-bottom-color: #161616; }
     #footer-content #footer-link a:hover:not(.footer-logo-link) {
       color: #ffffff;
-      border-bottom-color: #ff7429; }
+      border-bottom-color: #ffd14e; }
   #footer-content #footer-social a {
     width: 50px;
     height: 50px;
@@ -143,7 +167,7 @@
       #footer-content #footer-social a .fa.fa-instagram {
         margin-left: -5px; }
     #footer-content #footer-social a:hover {
-      border: solid 4px #ff7429; }
+      border: solid 4px #ffd14e; }
       #footer-content #footer-social a:hover .fa {
         color: #ffffff; }
   #footer-content #footer-social .footer-social-line {
@@ -217,7 +241,8 @@
 
 /*************** Override font family *************************************************/
 p, a, h1, h2, h3, h4, h5 {
-  font-family: 'Merriweather', serif; }
+  font-family: 'Aaux ProMedium', serif;
+  font-size: 12pt; }
 
 /*************** Override padding *****************************************************/
 .p-5 {

@@ -20,4 +20,17 @@
             border-bottom-color: $wel-orange;
         }
     }
+
+    button{
+        background: linear-gradient(to right, #dc5770 , #0a1235);
+        font-size: 13,76pt;
+    }
+
+    .sign-in-link{
+        font-family: 'Aaux ProBlack', serif;
+        background: -webkit-linear-gradient(to right, #dc5770 , #0a1235);
+        background: linear-gradient(to right, #dc5770 , #0a1235);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 }

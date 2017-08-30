@@ -7,8 +7,11 @@
         height: 100%; 
         z-index: 1;
         position: absolute;
+        //background-color: $wel-black-opacity-03;
 
-        background-color: $wel-black-opacity-03;
+        background: -webkit-linear-gradient(to right, rgba(220, 87, 112, 1) , rgba(10, 18, 53, 1));
+        background: linear-gradient(to right, rgba(220, 87, 112, 1) , rgba(10, 18, 53, 1));
+        mix-blend-mode: multiply;
     }
 
     .carousel-control-prev, 
@@ -18,9 +21,9 @@
 
     .header-carousel-img{
         width: 100vw;
-        height: 100vh;        
-        max-height: 600px;
-        object-fit: cover;
+        //height: 100vh;        
+        //max-height: 600px;
+        object-fit: cover; 
     }
 
     // Modification de la forme des indicateurs du carousel 
@@ -45,31 +48,29 @@
 
     .carousel-caption{
         top: 20%;
-        font-family: 'Roboto', sans-serif;
 
-        h1{            
-            text-shadow: rgb(0, 0, 0) 3px 0px 0px, rgb(0, 0, 0) 2.83333px 0.983333px 0px, 
-                        rgb(0, 0, 0) 2.35px 1.85px 0px, rgb(0, 0, 0) 1.61667px 2.51667px 0px, 
-                        rgb(0, 0, 0) 0.7px 2.91667px 0px, rgb(0, 0, 0) -0.283333px 2.98333px 0px, 
-                        rgb(0, 0, 0) -1.25px 2.73333px 0px, rgb(0, 0, 0) -2.06667px 2.16667px 0px, 
-                        rgb(0, 0, 0) -2.66667px 1.36667px 0px, rgb(0, 0, 0) -2.96667px 0.416667px 0px, 
-                        rgb(0, 0, 0) -2.95px -0.566667px 0px, rgb(0, 0, 0) -2.6px -1.5px 0px, 
-                        rgb(0, 0, 0) -1.96667px -2.26667px 0px, rgb(0, 0, 0) -1.11667px -2.78333px 0px, 
-                        rgb(0, 0, 0) -0.133333px -3px 0px, rgb(0, 0, 0) 0.85px -2.88333px 0px, 
-                        rgb(0, 0, 0) 1.75px -2.43333px 0px, rgb(0, 0, 0) 2.45px -1.73333px 0px, 
-                        rgb(0, 0, 0) 2.88333px -0.833333px 0px;
-            font-size: 3.5rem;
+        h1, h2{
+            font-family: 'Aaux ProLight', serif;
+        }
+
+        h1{
+            font-size: 94pt;
+            font-weight: normal;
         }
 
         h2{
-            text-shadow: rgb(0, 0, 0) 2px 0px 0px, rgb(0, 0, 0) 1.75px 0.966667px 0px, 
-                        rgb(0, 0, 0) 1.08333px 1.68333px 0px, rgb(0, 0, 0) 0.133333px 2px 0px, 
-                        rgb(0, 0, 0) -0.833333px 1.81667px 0px, rgb(0, 0, 0) -1.6px 1.2px 0px, 
-                        rgb(0, 0, 0) -1.98333px 0.283333px 0px, rgb(0, 0, 0) -1.86667px -0.7px 0px, 
-                        rgb(0, 0, 0) -1.3px -1.51667px 0px, rgb(0, 0, 0) -0.416667px -1.95px 0px, 
-                        rgb(0, 0, 0) 0.566667px -1.91667px 0px, rgb(0, 0, 0) 1.41667px -1.41667px 0px, 
-                        rgb(0, 0, 0) 1.91667px -0.566667px 0px;
-            font-size: 2rem;
+            font-size: 23pt;
+        }
+
+        button{
+            background-color: transparent;
+            color: white !important;
+            border: 2px #FFF solid;
+            border-radius: 25px;
+            width: 170px;
+            height: 50px;
+
+            margin-top: 100px;
         }
     }
 }

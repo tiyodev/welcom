@@ -3,7 +3,7 @@ extends layout
 block content
   //- Header image carousel
   section#header-carousel.carousel.slide(data-ride="carousel")
-    .dark-opacity-overlay
+    //- .dark-opacity-overlay
     ol.carousel-indicators.align-items-center
       li.active(data-target="#header-carousel" data-slide-to="0")
       li(data-target="#header-carousel" data-slide-to="1")
@@ -13,19 +13,26 @@ block content
 
     .carousel-inner(role="listbox")
       .carousel-caption.d-none.d-md-block
-        h1.text-uppercase.font-weight-bold.pb-5 Feel like a parisian
+        h1.font-weight-bold.pb-5 Feel like a parisian!
         h2.font-weight-bold We are a local community dedicated to make you feel welcome in our city.
         h2.font-weight-bold Meet Parisians, share a moment, experience the real Paris.
+        .row.justify-content-center
+          button.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(type="button") Join us
       .carousel-item.active
-        img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris1.png" alt="First slide")
+        .dark-opacity-overlay
+        img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris13.jpg" alt="First slide")  
       .carousel-item
-        img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris2.jpg" alt="Second slide")
+        .dark-opacity-overlay
+        img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris13.jpg" alt="Second slide")
       .carousel-item
-        img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris10.jpg" alt="Third slide")
+        .dark-opacity-overlay
+        img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris13.jpg" alt="Third slide")
       .carousel-item
-        img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris11.jpg" alt="4 slide")
+        .dark-opacity-overlay
+        img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris13.jpg" alt="4 slide")
       .carousel-item
-        img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris12.jpg" alt="5 slide")
+        .dark-opacity-overlay
+        img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris13.jpg" alt="5 slide")
 
     a.carousel-control-prev(href="#header-carousel" role="button" data-slide="prev")
       span.carousel-control-prev-icon(aria-hidden="true")
@@ -49,7 +56,7 @@ block content
           .p-3
             include components/experience-card
 
-      button.btn.btn-secondary.text-uppercase.mb-5.mt-5(type="button") Browse all the experiences
+      button.btn.btn-secondary.text-uppercase.mb-5.mt-5.wel-bg-blue.wel-color-white(type="button") Browse all the experiences
 
   //- Learn more
   section#learn-more.wel-bg-blue.wel-color-white
@@ -95,7 +102,7 @@ block content
           .p.community-says-item
             include components/community-says
 
-      button.btn.btn-secondary.text-uppercase.mb-5.mt-5(type="button") Join our community
+      button.btn.btn-secondary.text-uppercase.mb-5.mt-5.wel-bg-blue.wel-color-white(type="button") Join our community
 
   //- Our stories and vision
   section#story.wel-bg-green
