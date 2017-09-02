@@ -7,9 +7,7 @@ gulp.task('sass', () => {
   gulp.src('./public/scss/main.scss')
     .pipe(sass())
     .pipe(autoprefixer())
-    .pipe(gulp.dest((f) => {
-      return `${f.base}\\..\\css\\`;
-    }));
+    .pipe(gulp.dest(f => `${f.base}\\..\\css\\`));
 });
 
 gulp.task('default', ['sass'], () => {

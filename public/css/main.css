@@ -65,12 +65,12 @@
 #header-carousel .carousel-caption {
   top: 20%; }
   #header-carousel .carousel-caption h1, #header-carousel .carousel-caption h2 {
-    font-family: 'Aaux ProLight', serif; }
+    font-family: 'Aaux ProLight'; }
   #header-carousel .carousel-caption h1 {
-    font-size: 94pt;
+    font-size: 4em;
     font-weight: normal; }
   #header-carousel .carousel-caption h2 {
-    font-size: 23pt; }
+    font-size: 1.2em; }
   #header-carousel .carousel-caption button {
     background-color: transparent;
     color: white !important;
