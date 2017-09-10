@@ -5,7 +5,7 @@
   background-color: #ffffff; }
 
 .wel-bg-blue {
-  background-color: #2e79cc; }
+  background-color: #0a1235; }
 
 .wel-bg-green {
   background-color: #21cd99; }
@@ -29,7 +29,7 @@
   color: #ffffff; }
 
 .wel-color-blue-night {
-  color: #2e79cc; }
+  color: #0a1235; }
 
 /************** This file define colors use for welcom ***************/
 /*************** Header Image Carousel ***********************************/
@@ -81,7 +81,25 @@
     margin-top: 100px; }
 
 /*************** Whant a truly Parisian experience ? *********************/
+#experiences button {
+  width: 175px;
+  border-radius: 25px;
+  height: 50px;
+  font-family: "Aaux ProBold";
+  border: none; }
+
 /*************** Learn more **********************************************/
+#learn-more img {
+  width: 100px;
+  height: 100px; }
+
+#learn-more .learn-more-title {
+  height: 75px; }
+
+#learn-more .mw {
+  max-width: 275px;
+  min-width: 250px; }
+
 #learn-more .svg-separate-line {
   width: 100px;
   height: 5px; }
@@ -93,14 +111,86 @@
 #community-says .community-says-item {
   max-width: 350px; }
 
-/*************** Our stories and vision **********************************/
-/*************** Want to get our newsletter ? ****************************/
-#newsletter-form .col {
-  max-width: 450px; }
+#community-says button {
+  background-color: transparent;
+  color: #dc5770 !important;
+  border: 2px #dc5770 solid;
+  border-radius: 25px;
+  width: 170px;
+  height: 50px; }
 
+/*************** Multi part : ********************************************/
+/*************** Want to get our newsletter ? ****************************/
 /*************** Do you feel like becoming a Welcomer ? ******************/
-/*************** Do you feel like becoming a Welcomer ? ******************/
+/*************** Our stories and vision **********************************/
+#multi-part .item-becoming-welcomer {
+  height: 400px;
+  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#ffd14e));
+  background: linear-gradient(to right, #dc5770, #ffd14e);
+  color: white; }
+  #multi-part .item-becoming-welcomer button {
+    background-color: transparent;
+    color: white !important;
+    border: 2px white solid;
+    border-radius: 25px;
+    width: 170px;
+    height: 50px; }
+  #multi-part .item-becoming-welcomer p, #multi-part .item-becoming-welcomer h2 {
+    width: 350px;
+    margin: auto; }
+
+#multi-part .item-newsletter {
+  height: 400px;
+  background-color: white; }
+  #multi-part .item-newsletter button {
+    background-color: #dc5770;
+    color: white !important;
+    border: none;
+    border-radius: 25px;
+    width: 170px;
+    height: 50px; }
+  #multi-part .item-newsletter input {
+    border-bottom: 1px solid black;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    height: 50px;
+    width: 350px; }
+  #multi-part .item-newsletter input::-webkit-input-placeholder {
+    text-align: center;
+    font-family: 'Aaux ProLight', serif; }
+  #multi-part .item-newsletter input:-ms-input-placeholder {
+    text-align: center;
+    font-family: 'Aaux ProLight', serif; }
+  #multi-part .item-newsletter input::placeholder {
+    text-align: center;
+    font-family: 'Aaux ProLight', serif; }
+
+#multi-part .item-stories {
+  height: 650px;
+  background-color: white; }
+
+#multi-part .item-img {
+  height: 650px;
+  background: url("/images/people-walking-street.png");
+  background-size: cover; }
+
+@media (min-width: 992px) {
+  #multi-part .item {
+    width: 50%; } }
+
+@media (max-width: 991px) {
+  #multi-part .item {
+    width: 100%; }
+  #multi-part .item-stories {
+    -webkit-box-ordinal-group: 5;
+        -ms-flex-order: 4;
+            order: 4; } }
+
 /*************** We love that they do (or did) ***************************/
+#we-love-that-they-do img {
+  height: 40px; }
+
 /************** This file define colors use for welcom ***************/
 #header-nav {
   min-height: 60px; }
@@ -127,37 +217,30 @@
 
 /************** This file define colors use for welcom ***************/
 #footer-content {
-  background-color: #161616; }
-  #footer-content #back-top {
-    margin-top: -62px; }
-    #footer-content #back-top .back-top-shape {
-      width: 61px;
-      height: 61px; }
-      #footer-content #back-top .back-top-shape-lozenge {
-        fill-rule: evenodd;
-        fill: #ffffff; }
-      #footer-content #back-top .back-top-shape-arrow {
-        fill-rule: evenodd;
-        fill: #ffd14e; }
+  background-color: #0a1235; }
+  #footer-content #back-top .back-top-shape {
+    width: 61px;
+    height: 61px; }
+    #footer-content #back-top .back-top-shape-arrow {
+      fill-rule: evenodd;
+      fill: #ffffff; }
   #footer-content .footer-logo {
     height: 45px; }
   #footer-content a, #footer-content p {
-    color: #868686; }
+    color: #ffffff; }
   #footer-content h4 {
     color: #ffd14e; }
   #footer-content #footer-link a {
     padding-left: 0px !important;
     padding-right: 0px !important;
     border-bottom: solid 3px;
-    border-bottom-color: #161616; }
+    border-bottom-color: #0a1235; }
     #footer-content #footer-link a:hover:not(.footer-logo-link) {
       color: #ffffff;
       border-bottom-color: #ffd14e; }
   #footer-content #footer-social a {
     width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: solid 4px #868686; }
+    height: 50px; }
     #footer-content #footer-social a .fa {
       font-size: 1.7em; }
       #footer-content #footer-social a .fa.fa-facebook {
@@ -166,10 +249,8 @@
         margin-left: -6px; }
       #footer-content #footer-social a .fa.fa-instagram {
         margin-left: -5px; }
-    #footer-content #footer-social a:hover {
-      border: solid 4px #ffd14e; }
-      #footer-content #footer-social a:hover .fa {
-        color: #ffffff; }
+    #footer-content #footer-social a:hover .fa {
+      color: #ffd14e; }
   #footer-content #footer-social .footer-social-line {
     height: 4px;
     width: 25%;
@@ -177,72 +258,116 @@
     #footer-content #footer-social .footer-social-line line {
       stroke: #868686;
       stroke-width: 4px; }
+  #footer-content .right-reserved {
+    color: #868686; }
 
 /************** This file define colors use for welcom ***************/
 .experience-card-item {
-  border: 5px solid #21cd99;
-  border-radius: .25rem;
   width: 20rem; }
   .experience-card-item .card-block {
     background-color: #ebebeb; }
+    .experience-card-item .card-block .card-text {
+      font-family: "Aaux ProMedium";
+      font-size: 1.2rem; }
     .experience-card-item .card-block-img-row {
+      height: 100px;
       margin-bottom: -55px; }
       .experience-card-item .card-block-img-row .rounded-circle {
-        border: 5px solid #21cd99;
+        border: 5px solid #ebebeb;
         width: 100px;
-        height: 100px; }
+        height: 100px;
+        margin-top: -60px; }
+      .experience-card-item .card-block-img-row .exp-creator {
+        margin-top: -10px !important; }
+        .experience-card-item .card-block-img-row .exp-creator-name {
+          font-family: "Aaux ProBold";
+          font-size: 1.2rem;
+          margin-top: -10px !important; }
+        .experience-card-item .card-block-img-row .exp-creator-with {
+          font-family: "Aaux ProRegular";
+          font-size: 0.8rem; }
 
 /************** This file define colors use for welcom ***************/
 #community-says .rounded-circle {
-  position: relative;
-  border: 5px solid #ffffff;
-  -webkit-box-shadow: 0 0 0 5px #21cd99;
-          box-shadow: 0 0 0 5px #21cd99; }
+  position: relative; }
 
 #community-says .community-says-item img {
-  width: 100px;
-  height: 100px; }
+  width: 140px;
+  height: 140px; }
 
 #community-says .community-says-item .community-say-item-from {
   width: 50%; }
+  #community-says .community-says-item .community-say-item-from p {
+    text-align: left; }
 
 #community-says .community-says-item .community-say-item-detail {
-  width: 70%; }
+  width: 215px; }
 
 #community-says .community-says-item .svg-quote {
   width: 44px;
   height: 37px; }
   #community-says .community-says-item .svg-quote .svg-quote-path {
-    fill: #21cd99;
+    fill: #dc5770;
     fill-rule: evenodd; }
 
-.story-card-large .btn-primary {
-  background-color: #2e79cc; }
+/************** This file define colors use for welcom ***************/
+.story-card-title-text-title p {
+  font-size: 1.3rem; }
 
-.story-card-large-img-cover {
-  background-size: cover;
-  background-position: center center;
-  width: 100%;
-  height: 100%; }
+.story-card-title-text-text p {
+  font-size: 1rem; }
+
+.story-card-title-text-link a {
+  color: #dc5770;
+  text-decoration: none; }
+
+.story-card-title-text-link .fa {
+  color: #dc5770; }
 
 /************** This file define colors use for welcom ***************/
-#story .story-card-item .btn-primary {
-  background-color: #2e79cc; }
+.story-card-title p {
+  font-size: 1.1rem; }
 
-#story .story-card-item-img-top {
-  -o-object-fit: cover;
-     object-fit: cover; }
-  @media (min-width: 1500px) {
-    #story .story-card-item-img-top {
-      height: 300px; } }
-  @media (max-width: 1499px) {
-    #story .story-card-item-img-top {
-      height: 200px; } }
+.story-card-link a {
+  color: #dc5770;
+  text-decoration: none; }
+
+.story-card-link .fa {
+  color: #dc5770; }
 
 /*************** Override font family *************************************************/
-p, a, h1, h2, h3, h4, h5 {
+p, a {
   font-family: 'Aaux ProMedium', serif;
-  font-size: 12pt; }
+  font-size: 1rem; }
+
+h1 {
+  font-family: 'Aaux ProLight', serif;
+  font-size: 3rem; }
+
+h2 {
+  font-family: 'Aaux ProBold', serif;
+  font-size: 2rem; }
+
+h3 {
+  font-family: 'Aaux ProBold', serif;
+  font-size: 1.5rem; }
+
+h4 {
+  font-family: 'Aaux ProRegular', serif;
+  font-size: 1.3rem; }
+
+h5 {
+  font-family: 'Aaux ProRegular', serif;
+  font-size: 1rem; }
+
+.aaux-pro-black {
+  font-family: 'Aaux ProBlack', serif; }
+
+.aaux-pro-regular {
+  font-family: 'Aaux ProRegular', serif; }
+
+.myriad-pro {
+  font-family: 'Myriad Pro', serif; }
 
 /*************** Override padding *****************************************************/
 .p-5 {

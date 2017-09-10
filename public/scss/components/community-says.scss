@@ -4,22 +4,24 @@
 
     .rounded-circle{
         position: relative;
-        border: 5px solid $wel-white;
-        box-shadow:0 0 0 5px $wel-green;
     }
 
     .community-says-item{
         img{
-            width: 100px;
-            height: 100px;
+            width: 140px;
+            height: 140px;
         }
 
         .community-say-item-from{
             width: 50%;
+
+            p{
+                text-align: left;
+            }
         }
 
         .community-say-item-detail{
-            width: 70%;
+            width: 215px;
         }
 
         .svg-quote{
@@ -27,7 +29,7 @@
             height: 37px;
 
             .svg-quote-path{
-                fill: $wel-green;
+                fill: $wel-pink;
                 fill-rule: evenodd;
             }
         }

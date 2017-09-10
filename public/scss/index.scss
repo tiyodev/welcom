@@ -78,8 +78,30 @@
 /*************** Whant a truly Parisian experience ? *********************/
 // See experience-card.scss
 
+#experiences button{
+    width: 175px;
+    border-radius: 25px;
+    height: 50px;
+    font-family: "Aaux ProBold";
+    border: none;
+}
+
 /*************** Learn more **********************************************/
 #learn-more{
+    img{
+        width: 100px;
+        height: 100px;
+    }
+
+    .learn-more-title{
+        height: 75px;
+    }
+
+    .mw{
+        max-width: 275px;
+        min-width: 250px;
+    }
+
     .svg-separate-line{
         width: 100px;
         height: 5px;
@@ -98,21 +120,106 @@
     .community-says-item{
         max-width:350px;
     }
-}
 
-/*************** Our stories and vision **********************************/
-// see story-card-large.scss and story-card.scss
-
-
-/*************** Want to get our newsletter ? ****************************/
-#newsletter-form{
-    .col{
-        max-width:450px;
+    button{
+        background-color: transparent;
+        color: $wel-pink !important;
+        border: 2px $wel-pink solid;
+        border-radius: 25px;
+        width: 170px;
+        height: 50px;
     }
 }
 
-/*************** Do you feel like becoming a Welcomer ? ******************/
 
+/*************** Multi part : ********************************************/
+/*************** Want to get our newsletter ? ****************************/
 /*************** Do you feel like becoming a Welcomer ? ******************/
+/*************** Our stories and vision **********************************/
+#multi-part{
+    .item{
+        &-becoming-welcomer{
+            height:400px;
+            background: linear-gradient(to right, $wel-pink,  $wel-yellow);
+            color: white;
+
+            button{
+                background-color: transparent;
+                color: white !important;
+                border: 2px white solid;
+                border-radius: 25px;
+                width: 170px;
+                height: 50px;
+            }
+
+            p, h2{
+                width: 350px;
+                margin: auto;
+            }
+        }
+
+        &-newsletter{
+            height:400px;
+            background-color: white;
+
+            button{
+                background-color: $wel-pink;
+                color: white !important;
+                border: none;
+                border-radius: 25px;
+                width: 170px;
+                height: 50px;
+            }
+
+            input{
+                border-bottom : 1px solid black;
+                border-top: none;
+                border-left: none;
+                border-right: none;
+                height: 50px;
+                width: 350px;
+            }
+
+            input::placeholder {
+                text-align: center;
+                font-family: 'Aaux ProLight', serif;
+            }
+        }
+        
+        &-stories{
+            height:650px;
+            background-color: white;
+        }
+    
+        &-img{
+            height:650px;
+            background: url('/images/people-walking-street.png');
+            background-size: cover;
+        }
+    }
+
+    @media (min-width: 992px) { 
+        .item{
+            width: 50%;
+            
+        }
+    }
+
+    @media (max-width: 991px) {
+        .item{
+            width: 100%;
+        }
+
+        .item-stories{
+            order: 4;
+        }
+    }
+}
 
 /*************** We love that they do (or did) ***************************/
+
+#we-love-that-they-do{
+    img{
+        height: 40px;
+    }
+}

@@ -6,16 +6,54 @@
 @import 'partials/footer';
 @import 'components/experience-card';
 @import 'components/community-says';
-@import 'components/story-card-large';
-@import 'components/story-card';
+@import 'components/story-card-title-text';
+@import 'components/story-card-title';
 
 
 /*************** Override font family *************************************************/
 
-p, a, h1, h2, h3, h4, h5{
+p, a{
   font-family: 'Aaux ProMedium', serif;
-  font-size: 12pt;
+  font-size: 1rem;
 }
+
+h1{
+  font-family: 'Aaux ProLight', serif;
+  font-size: 3rem;
+}
+
+h2{
+  font-family: 'Aaux ProBold', serif;
+  font-size: 2rem;
+}
+
+h3{
+  font-family: 'Aaux ProBold', serif;
+  font-size: 1.5rem;
+}
+
+h4{
+  font-family: 'Aaux ProRegular', serif;
+  font-size: 1.3rem;
+}
+
+h5{
+  font-family: 'Aaux ProRegular', serif;
+  font-size: 1rem;
+}
+
+.aaux-pro-black{
+  font-family: 'Aaux ProBlack', serif;
+}
+
+.aaux-pro-regular{
+  font-family: 'Aaux ProRegular', serif;
+}
+
+.myriad-pro{
+  font-family: 'Myriad Pro', serif;
+}
+
 
 /*************** Override padding *****************************************************/
 .p-5{

@@ -1,21 +1,40 @@
 @import 'color';
 
 .experience-card-item{    
-    border: 5px solid $wel-green;
-    border-radius: .25rem;
-
     width: 20rem;
 
     .card-block{
         background-color: $wel-grey-middle-light;
 
+        .card-text{
+            font-family: "Aaux ProMedium";
+            font-size: 1.2rem;
+        }
+
         &-img-row{
+            height:100px;
             margin-bottom:-55px;
 
             .rounded-circle{
-                border: 5px solid $wel-green;
+                border: 5px solid $wel-grey-middle-light;
                 width: 100px;
                 height: 100px;
+                margin-top:-60px;
+            }
+
+            .exp-creator{
+                margin-top: -10px !important;
+
+                &-name{
+                    font-family: "Aaux ProBold";
+                    font-size: 1.2rem;
+                    margin-top: -10px !important;
+                }
+
+                &-with{
+                    font-family: "Aaux ProRegular";
+                    font-size: 0.8rem;
+                }
             }
         }
     }

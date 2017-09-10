@@ -1,0 +1,26 @@
+@import 'color';
+
+.story-card-title-text{
+    &-title{
+        p{
+            font-size: 1.3rem;
+        }
+    }
+
+    &-text{
+        p{
+            font-size: 1rem;
+        }
+    }
+
+    &-link{
+        a{
+            color: $wel-pink;
+            text-decoration:none;
+        }
+
+        .fa{
+            color: $wel-pink;
+        }
+    }
+}

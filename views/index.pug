@@ -43,10 +43,12 @@ block content
       span.sr-only Next
 
   //- Whant a truly Parisian experience ?
-  section.wel-bg-white
+  section#experiences.wel-bg-white
     .container.text-center.p-5
-      h3.pt-5 Whant a truly Parisian experience ?
-      h5.pt-5 It's not about findinf the Eiffel tower, it's about living a bit of the local life whith us.
+      h2.pt-5 Whant a truly 
+      h2 Parisian experience ?
+      h4.pt-5 It's not about findinf the Eiffel Tower,
+      h4 it's about living a bit of the local life whith us.
       .container.pt-5
         .d-flex.flex-row.justify-content-center.flex-wrap
           .p-3
@@ -56,43 +58,43 @@ block content
           .p-3
             include components/experience-card
 
-      button.btn.btn-secondary.text-uppercase.mb-5.mt-5.wel-bg-blue.wel-color-white(type="button") Browse all the experiences
+      button.btn.btn-secondary.text-uppercase.mb-5.mt-5.wel-bg-blue.wel-color-white(type="button") Browse all
 
   //- Learn more
   section#learn-more.wel-bg-blue.wel-color-white
     .container.text-center.pt-5
-      .row.justify-content-center.pt-5
-        .col-4.align-self-end.pr-5
-          img.mx-auto.d-block.mb-4(src="/images/travellers-icon.png" alt="...")
-          svg.svg-separate-line
-            line(x1="0" y1="0" x2="100" y2="0")
-          h4.pt-5 We're travellers, not tourists
+      h2.pt-5 Learn more about Welcom'
+      .row.justify-content-center.pt-5.pb-5
+        .col-3.mw.pb-5.pr-5.pl-5
+          img.mx-auto.d-block(src="/images/icon-travellers-not-tourists.png" alt="...")
+          .learn-more-title
+            h4.pt-2 We're travellers, 
+            h4 not tourists
           h6.pt-5 A new generation of travellers, curious and respectful. we care about living authentic experiences.
-        .col-4.align-self-end.pl-5
-          img.mx-auto.d-block.mb-4(src="/images/people-icon.png" alt="...")
-          svg.svg-separate-line
-            line(x1="0" y1="0" x2="100" y2="0")
-          h4.pt-5 We like to meet people
-          h6.pt-5 Travelling without meeting people is only moving. People make places, meetings make memories.
-      .row.justify-content-center.pt-6.pb-6
-        .col-4.align-self-end.pt-5
-          img.mx-auto.d-block.mb-4(src="/images/authenticity-icon.png" alt="...")
-          svg.svg-separate-line
-            line(x1="0" y1="0" x2="100" y2="0")
-          h4.pt-5 We live the sharing spirit
+        .col-3.mw.pb-5.pr-5.pl-5
+          img.mx-auto.d-block(src="/images/icon-sharing-spirit.png" alt="...")
+          .learn-more-title
+            h4.pt-2 We live 
+            h4 the sharing spirit
           h6.pt-5 Sharing is caring, and we care about helping travellers, because we are travellers ourselves.
-        .col-4.align-self-end.pl-5
-          img.mx-auto.d-block.mb-4(src="/images/help-icon.png" alt="...")
-          svg.svg-separate-line
-            line(x1="0" y1="0" x2="100" y2="0")
-          h4.pt-5 We are a community of travellers
+        .col-3.mw.pb-5.pr-5.pl-5
+          img.mx-auto.d-block(src="/images/icon-meet-people.png" alt="...")
+          .learn-more-title
+            h4.pt-2 We like 
+            h4 to meet people
+          h6.pt-5 Travelling without meeting people is only moving. People make places, meetings make memories.
+        .col-3.mw.pb-5.pr-5.pl-5
+          img.mx-auto.d-block(src="/images/icon-soucoupe-community.png" alt="...")
+          .learn-more-title
+            h4.pt-2 We are a community 
+            h4 of travellers
           h6.pt-5 We Parisian welcomers are not professionnals. We are only travellers that are home between two trips.
 
   //- Community says
   section#community-says.wel-bg-white
     .container.text-center.p-5
-      h3.pt-5 What the community says
-      h5.pt-5 We care a lot about creating a community of sharing travellers and welcomers.
+      h2.pt-5 What the community says
+      h4.pt-5.pb-5 We care a lot about creating a community of sharing travellers and welcomers.
       .container.pt-5
         .d-flex.flex-row.justify-content-center.flex-wrap
           .p.community-says-item
@@ -102,64 +104,60 @@ block content
           .p.community-says-item
             include components/community-says
 
-      button.btn.btn-secondary.text-uppercase.mb-5.mt-5.wel-bg-blue.wel-color-white(type="button") Join our community
+      button.mt-6.mb-6.text-uppercase(type="button") Join us
 
-  //- Our stories and vision
-  section#story.wel-bg-green
-    .container.text-center.p-5
-      h3.pt-5 Our stories and vision
-      h5.pt-5 Read more on what the Welcom' project is all about on our blog.
-      .container.pt-5
-        .row.justify-content-center.flex-wrap
-          .col-xl-8.col-lg-8.p-4
-            include components/story-card-large
-        .row.justify-content-center.flex-wrap
-          .col-xl-4.col-lg-4.col-md-6.p-4
-            include components/story-card
-          .col-xl-4.col-lg-4.col-md-6.hidden-sm-down.p-4
-            include components/story-card
-          //- .col-xl-3.hidden-xl-down.p-4
-          //-   include components/story-card  
 
-  //- Want to get our newsletter ?
-  section#newsletter-form.wel-bg-white
-    .container.text-center.p-5
-      h3.pt-5 Want to get our newsletter ?
-      
-      .row.justify-content-center
-        .col.pt-5
-          label.sr-only(for="first-name-input") First name, nickname, as you prefer
-          .input-group.mb-2.mr-sm-2.mb-sm-0
-            .input-group-addon.wel-bg-grey-dark
-              span.fa.fa-user-o.wel-color-white
-            input#first-name-input(type="text" class="form-control" placeholder="First name, nickname, as you prefer")
+  section#multi-part
+    .d-flex.flex-row.flex-wrap
 
-      .row.justify-content-center
-        .col.pt-5
-          label.sr-only(for="email-input") Email address
-          .input-group.mb-2.mr-sm-2.mb-sm-0
-            .input-group-addon.wel-bg-grey-dark
-              span.fa.fa-envelope-o.wel-color-white
-            input#email-input(type="text" class="form-control" placeholder="Email address")
+      //- Do you feel like becoming a Welcomer ?
+      .item.item-becoming-welcomer.text-center.p-6
+        h2 Do you feel like becoming a Welcomer ?
+        p.pt-5
+          | If you live in or near Paris, are a traveller at heart and want 
+          | to meet travellers from all over the world to make them 
+          | experience our city, please contact us and let's meet up !
+        
+        button.mt-6.mb-5.text-uppercase(type="button") Let's meet up
 
-      p.mb-3.mt-5.font-italic (we don't spam, we don't sell data)
-      button.btn.btn-secondary.text-uppercase.mb-5(type="button") Register
+      //- Want to get our newsletter ?
+      .item.item-newsletter.text-center.p-6
+        h2 Want to get our newsletter ?
+        div.pt-4
+          input(name: "first-name" placeholder="First name")
+        div.pt-4
+          input(name: "email" placeholder="E-mail")
 
-  //- Do you feel like becoming a Welcomer ?
-  section#community-says.wel-bg-grey-light
-    .container.text-center.p-5
-      h3.pt-5 Do you feel like becoming a Welcomer ?
-      p.pt-5 
-        | If you live in or near Paris, are a traveller at heart and want to meet travellers from all over the world
-        | to make them experience our city, please contact us and let's meet up !
-      button.btn.btn-secondary.text-uppercase.mb-5.mt-5(type="button") Let's meet up
+        p.pt-3 (we don't spam, we don't sell data)
+
+        button.mt-1.mb-5.text-uppercase(type="button") Register
+
+      //- Our stories and vision
+      .item.item-stories.p-6
+        .pl-5
+          h2 Our stories and vision
+          h5.pt-2 Read more on what the Welcom' project is all about on our blog.
+
+          .pt-5
+            include components/story-card-title-text
+
+          .pt-5
+            include components/story-card-title
+
+          .pt-5
+            include components/story-card-title
+
+          .pt-5
+            include components/story-card-title
+
+      .item.item-img
 
   //- We love that they do (or did)
-  section#community-says.wel-bg-grey-middle-light
+  section#we-love-that-they-do.wel-bg-grey-middle-light
     .container.text-center.p-5
-      h3.pt-5 We love that they do (or did)
+      h2.pt-5.pb-5 We love that they do (or did)
 
-      .d-flex.flex-row.justify-content-center.align-items-center.flex-wrap#footer-link.pt-5.pb-4
+      .d-flex.flex-row.justify-content-center.align-items-center.flex-wrap#footer-link.pt-5.pb-5
         .pl-5.pr-5.pb-4
           a(href="https://www.thefamily.co" target="_blank")
             img.mx-auto.d-block(src="/images/the-family-logo-grey.png" alt="The family")
