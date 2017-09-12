@@ -4,7 +4,12 @@
     min-height: 60px;
     
     .header-logo{
-        height: 45px;
+        height:65px;
+    }
+
+    h1{
+        font-family: 'Aaux ProLight', serif;
+        font-size: 5em;
     }
 
     a{
@@ -24,6 +29,7 @@
     button{
         background: linear-gradient(to right, #dc5770 , #0a1235);
         font-size: 13,76pt;
+        border: none;
     }
 
     .sign-in-link{

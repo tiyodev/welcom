@@ -195,7 +195,10 @@
 #header-nav {
   min-height: 60px; }
   #header-nav .header-logo {
-    height: 45px; }
+    height: 65px; }
+  #header-nav h1 {
+    font-family: 'Aaux ProLight', serif;
+    font-size: 5em; }
   #header-nav a {
     padding-left: 0px !important;
     padding-right: 0px !important;
@@ -207,7 +210,8 @@
   #header-nav button {
     background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
     background: linear-gradient(to right, #dc5770, #0a1235);
-    font-size: 13,76pt; }
+    font-size: 13,76pt;
+    border: none; }
   #header-nav .sign-in-link {
     font-family: 'Aaux ProBlack', serif;
     background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
@@ -225,7 +229,7 @@
       fill-rule: evenodd;
       fill: #ffffff; }
   #footer-content .footer-logo {
-    height: 45px; }
+    height: 120px; }
   #footer-content a, #footer-content p {
     color: #ffffff; }
   #footer-content h4 {
