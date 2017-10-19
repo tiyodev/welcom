@@ -1,0 +1,9 @@
+extends base.pug
+
+block email-content
+    h1 Hello !
+    if senderName
+        h3 #{senderName} sent you a message : 
+    else
+        h3 You receive a message :
+    p= senderMessage

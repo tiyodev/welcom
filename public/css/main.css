@@ -31,6 +31,9 @@
 .wel-color-blue-night {
   color: #0a1235; }
 
+button {
+  cursor: pointer; }
+
 /************** This file define colors use for welcom ***************/
 /*************** Header Image Carousel ***********************************/
 #header-carousel .dark-opacity-overlay {
@@ -48,8 +51,11 @@
 
 #header-carousel .header-carousel-img {
   width: 100vw;
+  height: auto;
+  max-height: 800px;
+  min-height: 450px;
   -o-object-fit: cover;
-     object-fit: cover; }
+  object-fit: cover; }
 
 #header-carousel .carousel-indicators li {
   border-radius: 20px;
@@ -62,23 +68,60 @@
     height: 25px;
     background-color: #ffd14e; }
 
-#header-carousel .carousel-caption {
-  top: 20%; }
-  #header-carousel .carousel-caption h1, #header-carousel .carousel-caption h2 {
-    font-family: 'Aaux ProLight'; }
-  #header-carousel .carousel-caption h1 {
-    font-size: 4em;
-    font-weight: normal; }
-  #header-carousel .carousel-caption h2 {
-    font-size: 1.2em; }
-  #header-carousel .carousel-caption button {
-    background-color: transparent;
-    color: white !important;
-    border: 2px #FFF solid;
-    border-radius: 25px;
-    width: 170px;
-    height: 50px;
-    margin-top: 100px; }
+#header-carousel .carousel-caption h1, #header-carousel .carousel-caption h2 {
+  font-family: 'Aaux ProLight'; }
+
+#header-carousel .carousel-caption button {
+  background-color: transparent;
+  color: white !important;
+  border: 2px #FFF solid;
+  border-radius: 25px;
+  width: 170px;
+  height: 50px; }
+
+@media (min-width: 1001px) {
+  #header-carousel .carousel-caption {
+    top: 20%; }
+    #header-carousel .carousel-caption h1 {
+      font-size: 4em;
+      font-weight: normal; }
+    #header-carousel .carousel-caption h2 {
+      font-size: 1.2em; }
+    #header-carousel .carousel-caption button {
+      margin-top: 50px; } }
+
+@media (max-width: 1000px) {
+  #header-carousel .carousel-caption {
+    top: 15%; }
+    #header-carousel .carousel-caption h1 {
+      font-size: 4em;
+      font-weight: normal; }
+    #header-carousel .carousel-caption h2 {
+      font-size: 1.2em; }
+    #header-carousel .carousel-caption button {
+      margin-top: 50px; } }
+
+@media (max-width: 850px) {
+  #header-carousel .carousel-caption {
+    top: 10%; }
+    #header-carousel .carousel-caption h1 {
+      font-size: 3em;
+      font-weight: normal; }
+    #header-carousel .carousel-caption h2 {
+      font-size: 1em; }
+    #header-carousel .carousel-caption button {
+      margin-top: 50px; } }
+
+@media (max-width: 550px) {
+  #header-carousel .carousel-caption {
+    top: 5%; }
+    #header-carousel .carousel-caption h1 {
+      font-size: 3em;
+      font-weight: normal; }
+    #header-carousel .carousel-caption h2 {
+      font-size: 1em; }
+    #header-carousel .carousel-caption button {
+      margin-top: 25px; } }
 
 /*************** Whant a truly Parisian experience ? *********************/
 #experiences button {
@@ -187,9 +230,41 @@
         -ms-flex-order: 4;
             order: 4; } }
 
+@media (max-width: 576px) {
+  #multi-part .item-stories {
+    height: auto; } }
+
 /*************** We love that they do (or did) ***************************/
 #we-love-that-they-do img {
   height: 40px; }
+
+@font-face {
+  font-family: "AAUX Problack";
+  src: url("/font/AAUX Problack.ttf"); }
+
+@font-face {
+  font-family: "AAUX Probold";
+  src: url("/font/AAUX Probold.ttf"); }
+
+@font-face {
+  font-family: "AAUX Prolight";
+  src: url("/font/AAUX Prolight.ttf"); }
+
+@font-face {
+  font-family: "AAUX Promedium";
+  src: url("/font/AAUX Promedium.ttf"); }
+
+@font-face {
+  font-family: "AAUX Proregular";
+  src: url("/font/AAUX Proregular.ttf"); }
+
+@font-face {
+  font-family: "Gotham-Bold";
+  src: url("/font/GothamBold.otf"); }
+
+@font-face {
+  font-family: "Gotham-Light";
+  src: url("/font/GothamLight.otf"); }
 
 /************** This file define colors use for welcom ***************/
 #header-nav {
@@ -207,11 +282,17 @@
     border-bottom-color: #ffffff; }
     #header-nav a:hover:not(.navbar-brand) {
       border-bottom-color: #ffd14e; }
-  #header-nav button {
+  #header-nav #join-us-btn {
     background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
     background: linear-gradient(to right, #dc5770, #0a1235);
     font-size: 13,76pt;
-    border: none; }
+    border: none;
+    height: 40px;
+    color: white;
+    width: 117px;
+    border-radius: 20px; }
+  #header-nav #nav-toggler-btn {
+    top: 18px; }
   #header-nav .sign-in-link {
     font-family: 'Aaux ProBlack', serif;
     background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));

@@ -55,10 +55,12 @@ passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_ID,
   clientSecret: process.env.FACEBOOK_SECRET,
   callbackURL: '/auth/facebook/callback',
-  profileFields: ['name', 'email', 'link', 'locale', 'timezone'],
+  profileFields: ['name', 'email', 'link', 'locale', 'timezone', 'birthday', 'currency', 'education', 'favorite_athletes', 'favorite_teams', 'gender', 'languages', 'location', 'middle_name', 'name_format', 'quotes', 'sports', 'website', 'work'],
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
   if (req.user) {
+    console.log(profile);
+
     User.findOne({ facebook: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
@@ -120,6 +122,8 @@ passport.use(new TwitterStrategy({
   callbackURL: '/auth/twitter/callback',
   passReqToCallback: true
 }, (req, accessToken, tokenSecret, profile, done) => {
+  console.log(profile);
+
   if (req.user) {
     User.findOne({ twitter: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
@@ -174,6 +178,8 @@ passport.use(new GoogleStrategy({
   callbackURL: '/auth/google/callback',
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
+  console.log(profile);
+
   if (req.user) {
     User.findOne({ google: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }

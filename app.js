@@ -27,6 +27,7 @@ dotenv.load({ path: '.env.dev' });
  */
 const index = require('./routes/index');
 const users = require('./routes/users');
+const auth = require('./routes/auth');
 
 /**
  * Create Express server.
@@ -45,7 +46,7 @@ app.set('view engine', 'pug');
 /**
  * Express configuration.
  */
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -109,6 +110,8 @@ app.use((req, res, next) => {
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/auth', auth);
+
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

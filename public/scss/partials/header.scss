@@ -26,10 +26,19 @@
         }
     }
 
-    button{
+    #join-us-btn{
         background: linear-gradient(to right, #dc5770 , #0a1235);
         font-size: 13,76pt;
         border: none;
+        height: 40px;
+
+        color: white; 
+        width: 117px; 
+        border-radius:20px;
+    }
+
+    #nav-toggler-btn{
+        top: 18px;
     }
 
     .sign-in-link{

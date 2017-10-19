@@ -1,0 +1,9 @@
+extends base.pug
+
+block email-content
+    h1 Hello !
+    h3 Welcom to welcom :)
+    p
+        | Please confirm your email address&nbsp;
+        a(href="http://" + newHost + "/verifyEmail/" + newToken) here
+        | .
