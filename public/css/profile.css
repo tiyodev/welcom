@@ -1,9 +1,10 @@
+/************** This file define colors use for welcom ***************/
 h1.font-weight-bold.pb-5.name {
   font-size: 72px;
   font-family: 'MyriadPro', serif;
-  color: #fff;
+  color: #ffffff;
   font-weight: bold;
-  text-shadow: 3.5px 6.062px 0 #000; }
+  text-shadow: 3.5px 6.062px 0 #000000; }
 
 div.img-back {
   width: 100%;
@@ -32,24 +33,20 @@ section.social-network {
     display: flex;
     width: 200px;
     justify-content: space-between; }
-    section.social-network div div.facebook {
-      background-image: url("/images/facebook.png");
-      background-repeat: no-repeat;
+    section.social-network div a.facebook {
+      background: url("/images/facebook.png") no-repeat;
       height: 48px;
       width: 48px; }
-    section.social-network div div.instagram {
-      background-image: url("/images/insta.png");
-      background-repeat: no-repeat;
+    section.social-network div a.instagram {
+      background: url("/images/insta.png") no-repeat;
       height: 48px;
       width: 48px; }
-    section.social-network div div.twitter {
-      background-image: url("/images/twitter.png");
-      background-repeat: no-repeat;
+    section.social-network div a.twitter {
+      background: url("/images/twitter.png") no-repeat;
       height: 48px;
       width: 48px; }
-    section.social-network div div.darkHeart {
-      background-image: url("/images/darkHeart.png");
-      background-repeat: no-repeat;
+    section.social-network div a.darkHeart {
+      background: url("/images/darkHeart.png") no-repeat;
       height: 40px;
       width: 54px;
       margin-top: 3px; }
@@ -60,25 +57,25 @@ ul.nav.justify-content-center {
   ul.nav.justify-content-center li.nav-item {
     padding: 0;
     height: 39px;
-    border-bottom: solid #fed224 3px; }
+    border-bottom: solid #ffd14e 3px; }
     ul.nav.justify-content-center li.nav-item a.nav-link {
       font-size: 24px;
       font-family: 'MyriadPro', serif;
-      color: #000;
+      color: #000000;
       padding: 0 5px;
       margin: 0 78px; }
     ul.nav.justify-content-center li.nav-item a.nav-link:active {
-      border-bottom: solid #db5a70 3px; }
+      border-bottom: solid #dc5770 3px; }
 
-div#profile section.t {
+div#profile section.laius {
   display: flex;
   flex-direction: column;
   align-items: center; }
-  div#profile section.t p.intro {
+  div#profile section.laius p.intro {
     text-align: center; }
-  div#profile section.t p.text {
+  div#profile section.laius p.text {
     text-align: left; }
-    div#profile section.t p.text span {
+    div#profile section.laius p.text span {
       font-size: 20px;
       font-family: 'MyriadPro', serif;
       font-weight: bold; }
@@ -89,7 +86,7 @@ div#profile section.management-tools {
   text-align: center;
   flex-wrap: wrap; }
   div#profile section.management-tools section.management {
-    border: solid #fed224 3px;
+    border: solid #ffd14e 3px;
     padding: 10px;
     margin: 5px; }
 div#profile div.likes {
@@ -104,7 +101,7 @@ div#profile div.likes {
 span.www {
   font-size: 24px;
   font-family: 'PoetsenOne', serif;
-  color: #ff5a5f;
+  color: #dc5770;
   margin: 40px 0; }
 
 section.desc {
@@ -151,8 +148,8 @@ section.reviews {
 
 hr.exposed {
   height: 3px;
-  color: #fed224;
-  background-color: #fed224;
+  color: #ffd14e;
+  background-color: #ffd14e;
   width: 800px;
   border: none;
   margin-top: 70px;
@@ -168,11 +165,15 @@ section.contact {
   section.contact button.contact {
     margin: 40px 0;
     padding: 20px 135px;
-    background-color: #060e36;
-    border: none;
-    color: #fff;
+    border: solid #0a1235 1px;
+    color: #0a1235;
     font-size: 20px;
     font-family: 'MyriadPro', serif;
-    font-weight: bold; }
+    font-weight: bold;
+    border-radius: 25px;
+    background-color: #ffffff; }
+  section.contact button.contact:hover {
+    background-color: #0a1235;
+    color: #ffffff; }
 
 /*# sourceMappingURL=profile.css.map */

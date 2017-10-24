@@ -1,11 +1,11 @@
-// sass --watch scss/profile.scss:css/profile.css
+@import 'color';
 
 h1.font-weight-bold.pb-5.name {
   font-size: 72px;
   font-family: 'MyriadPro', serif;
-  color: #fff;
+  color: $wel-white;
   font-weight: bold;
-  text-shadow: 3.5px 6.062px 0 #000;
+  text-shadow: 3.5px 6.062px 0 $wel-black;
 }
 
 div.img-back {
@@ -36,35 +36,31 @@ section.social-network {
   margin-top: 10px;
   margin-bottom: 50px;
 
-  div{
+  div {
     display: flex;
     width: 200px;
     justify-content: space-between;
 
-    div.facebook {
-      background-image: url('/images/facebook.png');
-      background-repeat: no-repeat;
+    a.facebook {
+      background: url('/images/facebook.png') no-repeat;
       height: 48px;
       width: 48px;
     }
 
-    div.instagram {
-      background-image: url('/images/insta.png');
-      background-repeat: no-repeat;
+    a.instagram {
+      background: url('/images/insta.png') no-repeat;
       height: 48px;
       width: 48px;
     }
 
-    div.twitter {
-      background-image: url('/images/twitter.png');
-      background-repeat: no-repeat;
+    a.twitter {
+      background: url('/images/twitter.png') no-repeat;
       height: 48px;
       width: 48px;
     }
 
-    div.darkHeart {
-      background-image: url('/images/darkHeart.png');
-      background-repeat: no-repeat;
+    a.darkHeart {
+      background: url('/images/darkHeart.png') no-repeat;
       height: 40px;
       width: 54px;
       margin-top: 3px;
@@ -79,24 +75,24 @@ ul.nav.justify-content-center {
   li.nav-item {
     padding: 0;
     height: 39px;
-    border-bottom: solid #fed224 3px;
+    border-bottom: solid $wel-yellow 3px;
 
     a.nav-link {
       font-size: 24px;
       font-family: 'MyriadPro', serif;
-      color: #000;
+      color: $wel-black;
       padding: 0 5px;
       margin: 0 78px;
     }
 
     a.nav-link:active {
-      border-bottom: solid #db5a70 3px;
+      border-bottom: solid $wel-pink 3px;
     }
   }
 }
 
 div#profile {
-  section.t {
+  section.laius {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -124,7 +120,7 @@ div#profile {
     flex-wrap: wrap;
 
     section.management {
-      border: solid #fed224 3px;
+      border: solid $wel-yellow 3px;
       padding: 10px;
       margin: 5px;
     }
@@ -146,7 +142,7 @@ div#profile {
 span.www {
   font-size: 24px;
   font-family: 'PoetsenOne', serif;
-  color: #ff5a5f;
+  color: $wel-pink;
   margin: 40px 0;
 }
 
@@ -211,8 +207,8 @@ section.reviews {
 
 hr.exposed {
   height: 3px;
-  color: #fed224;
-  background-color: #fed224;
+  color: $wel-yellow;
+  background-color: $wel-yellow;
   width: 800px;
   border: none;
   margin-top: 70px;
@@ -232,11 +228,17 @@ section.contact {
   button.contact {
     margin: 40px 0;
     padding: 20px 135px;
-    background-color: #060e36;
-    border: none;
-    color: #fff;
+    border: solid $wel-blue 1px;
+    color: $wel-blue;
     font-size: 20px;
     font-family: 'MyriadPro', serif;
     font-weight: bold;
+    border-radius: 25px;
+    background-color: $wel-white;
+  }
+
+  button.contact:hover {
+    background-color: $wel-blue;
+    color: $wel-white;
   }
 }
