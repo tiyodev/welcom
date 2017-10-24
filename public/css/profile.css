@@ -1,0 +1,178 @@
+h1.font-weight-bold.pb-5.name {
+  font-size: 72px;
+  font-family: 'MyriadPro', serif;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 3.5px 6.062px 0 #000; }
+
+div.img-back {
+  width: 100%;
+  height: 400px; }
+
+section.avatar-logo {
+  display: flex;
+  justify-content: center;
+  width: 100%; }
+  section.avatar-logo div.logo {
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -100px;
+    background: url("/images/default-profile-img.png") no-repeat;
+    background-size: cover; }
+
+section.social-network {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-top: 10px;
+  margin-bottom: 50px; }
+  section.social-network div {
+    display: flex;
+    width: 200px;
+    justify-content: space-between; }
+    section.social-network div div.facebook {
+      background-image: url("/images/facebook.png");
+      background-repeat: no-repeat;
+      height: 48px;
+      width: 48px; }
+    section.social-network div div.instagram {
+      background-image: url("/images/insta.png");
+      background-repeat: no-repeat;
+      height: 48px;
+      width: 48px; }
+    section.social-network div div.twitter {
+      background-image: url("/images/twitter.png");
+      background-repeat: no-repeat;
+      height: 48px;
+      width: 48px; }
+    section.social-network div div.darkHeart {
+      background-image: url("/images/darkHeart.png");
+      background-repeat: no-repeat;
+      height: 40px;
+      width: 54px;
+      margin-top: 3px; }
+
+ul.nav.justify-content-center {
+  margin: 40px 0;
+  flex-wrap: wrap; }
+  ul.nav.justify-content-center li.nav-item {
+    padding: 0;
+    height: 39px;
+    border-bottom: solid #fed224 3px; }
+    ul.nav.justify-content-center li.nav-item a.nav-link {
+      font-size: 24px;
+      font-family: 'MyriadPro', serif;
+      color: #000;
+      padding: 0 5px;
+      margin: 0 78px; }
+    ul.nav.justify-content-center li.nav-item a.nav-link:active {
+      border-bottom: solid #db5a70 3px; }
+
+div#profile section.t {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  div#profile section.t p.intro {
+    text-align: center; }
+  div#profile section.t p.text {
+    text-align: left; }
+    div#profile section.t p.text span {
+      font-size: 20px;
+      font-family: 'MyriadPro', serif;
+      font-weight: bold; }
+div#profile section.management-tools {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  flex-wrap: wrap; }
+  div#profile section.management-tools section.management {
+    border: solid #fed224 3px;
+    padding: 10px;
+    margin: 5px; }
+div#profile div.likes {
+  display: flex;
+  flex-direction: row; }
+  div#profile div.likes div.like {
+    margin: 5px;
+    border: solid grey 3px;
+    border-radius: 4px;
+    padding: 5px; }
+
+span.www {
+  font-size: 24px;
+  font-family: 'PoetsenOne', serif;
+  color: #ff5a5f;
+  margin: 40px 0; }
+
+section.desc {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  section.desc p.para {
+    font-family: 'Myriad Pro', serif;
+    text-align: center;
+    margin-bottom: 0; }
+
+section.reviews {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  section.reviews section.review {
+    /*height: 160px;*/
+    display: flex;
+    border: solid #a6a6a6 3px;
+    width: 775px;
+    margin-top: 40px; }
+    section.reviews section.review div.picture {
+      height: 130px;
+      width: 130px;
+      border: solid #a6a6a6 2px;
+      border-radius: 50%;
+      margin: 20px; }
+    section.reviews section.review section.commentary {
+      display: flex;
+      flex-direction: column;
+      margin-top: 25px; }
+      section.reviews section.review section.commentary span.title {
+        font-size: 18px;
+        font-weight: bold; }
+      section.reviews section.review section.commentary img {
+        margin: 20px 0;
+        height: 15px;
+        width: 14px; }
+
+#experiences section.exp {
+  display: flex;
+  justify-content: center;
+  text-align: center; }
+
+hr.exposed {
+  height: 3px;
+  color: #fed224;
+  background-color: #fed224;
+  width: 800px;
+  border: none;
+  margin-top: 70px;
+  margin-bottom: 40px; }
+
+section.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  section.contact span.request {
+    font-family: 'Myriad Pro', serif;
+    font-size: 20px; }
+  section.contact button.contact {
+    margin: 40px 0;
+    padding: 20px 135px;
+    background-color: #060e36;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    font-family: 'MyriadPro', serif;
+    font-weight: bold; }
+
+/*# sourceMappingURL=profile.css.map */
