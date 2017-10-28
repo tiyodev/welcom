@@ -1,11 +1,13 @@
 @import 'color';
 
+/* Profile */
+
 h1.font-weight-bold.pb-5.name {
   font-size: 72px;
   font-family: 'MyriadPro', serif;
   color: $wel-white;
   font-weight: bold;
-  text-shadow: 3.5px 6.062px 0 $wel-black;
+  text-shadow: 3.5px 6px 0 $wel-black;
 }
 
 div.img-back {
@@ -13,20 +15,32 @@ div.img-back {
   height: 400px;
 }
 
+div.pic {
+  height: 250px;
+  width: 250px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -100px;
+}
+
 section.avatar-logo {
   display: flex;
   justify-content: center;
   width: 100%;
 
-  div.logo {
-    height: 250px;
-    width: 250px;
-    border-radius: 50%;
-    position: absolute;
-    bottom: -100px;
+  div.default-pic {
+    background: white url('/images/logo-mixte-no-fond.png') no-repeat;
+    background-size: 175px;
+    background-position-x: 39px;
+    background-position-y: 60px;
+    border: solid $wel-yellow 3px;
+  }
+
+  div.pic.logo {
     background: url('/images/default-profile-img.png') no-repeat;
     background-size: cover;
   }
+
 }
 
 section.social-network {
@@ -34,38 +48,37 @@ section.social-network {
   flex-direction: row;
   justify-content: space-evenly;
   margin-top: 10px;
-  margin-bottom: 50px;
 
   div {
     display: flex;
     width: 200px;
     justify-content: space-between;
-
-    a.facebook {
-      background: url('/images/facebook.png') no-repeat;
-      height: 48px;
-      width: 48px;
-    }
-
-    a.instagram {
-      background: url('/images/insta.png') no-repeat;
-      height: 48px;
-      width: 48px;
-    }
-
-    a.twitter {
-      background: url('/images/twitter.png') no-repeat;
-      height: 48px;
-      width: 48px;
-    }
-
-    a.darkHeart {
-      background: url('/images/darkHeart.png') no-repeat;
-      height: 40px;
-      width: 54px;
-      margin-top: 3px;
-    }
   }
+}
+
+a.facebook {
+  background: url('/images/facebook.png') no-repeat;
+  height: 48px;
+  width: 48px;
+}
+
+a.instagram {
+  background: url('/images/insta.png') no-repeat;
+  height: 48px;
+  width: 48px;
+}
+
+a.twitter {
+  background: url('/images/twitter.png') no-repeat;
+  height: 48px;
+  width: 48px;
+}
+
+a.darkHeart {
+  background: url('/images/darkHeart.png') no-repeat;
+  height: 40px;
+  width: 54px;
+  margin-top: 3px;
 }
 
 ul.nav.justify-content-center {
@@ -140,16 +153,18 @@ div#profile {
 }
 
 span.www {
+  margin-top: 125px;
+  margin-bottom: 40px;
   font-size: 24px;
   font-family: 'PoetsenOne', serif;
   color: $wel-pink;
-  margin: 40px 0;
 }
 
 section.desc {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 30px;
 
   p.para {
     font-family: 'Myriad Pro', serif;
@@ -205,14 +220,21 @@ section.reviews {
   }
 }
 
-hr.exposed {
+hr {
   height: 3px;
   color: $wel-yellow;
   background-color: $wel-yellow;
-  width: 800px;
   border: none;
-  margin-top: 70px;
+  margin-top: 40px;
   margin-bottom: 40px;
+}
+
+hr.exposed.longer {
+  width: 800px;
+}
+
+hr.exposed.little {
+  width: 400px
 }
 
 section.contact {
@@ -241,4 +263,87 @@ section.contact {
     background-color: $wel-blue;
     color: $wel-white;
   }
+}
+
+
+/* Edit Profile */
+
+div.button-change {
+  height: 48px;
+  width: 80px;
+  margin-top: 150px;
+  margin-left: 81px;
+  background-color: $wel-grey;
+  border-radius: 15px;
+
+  label.change {
+    background: $wel-grey url('/images/update-picture-icon.png');
+    background-size: cover;
+    height: 48px;
+    width: 50px;
+    margin-left: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+
+  input#change {
+    display: none;
+  }
+}
+
+h2.title {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 50px;
+}
+
+input.longer {
+  width: 100%;
+}
+
+section.log {
+  margin-top: 30px;
+
+  section.form {
+    width: 380px;
+
+    section.info {
+      p {
+        margin-bottom: 14px;
+      }
+
+      label {
+          width: 115px;
+          font-size: 20px;
+          font-family: 'Myriad Pro', serif;
+          color: rgb( 58, 69, 49 );
+      }
+
+      span {
+          font-size: 20px;
+          font-family: 'Myriad Pro', serif;
+      }
+
+      label.long {
+        width: inherit;
+      }
+    }
+  }
+
+  section.form.url {
+    section.info {
+      input {
+        height: 30px;
+      }
+    }
+  }
+}
+
+button.pink {
+  background-color: #dc5770;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  margin: 0 auto 40px;
 }
