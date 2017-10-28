@@ -1,0 +1,168 @@
+extends layout
+
+block content
+    section#header-carousel.carousel.slide(data-ride="carousel")
+        .carousel-inner(role="listbox")
+            .carousel-item.active
+                .dark-opacity-overlay
+                div.img-back
+
+        section.avatar-logo
+            div.pic.default-pic
+                div.button-change
+                    label(for='change' class='change')
+                    input(type='file' id='change' class='change')
+
+    section.d-flex.flex-column.text-center
+        span.www W W W W W
+        p Tip : the more your profile is complete,
+            br
+            | the easier it is to create bonds with other members of the community !
+
+    section.d-flex.flex-row.justify-content-center.flex-wrap.log
+        section.d-flex.flex-column.form
+            section.p-2.info
+                label Nickname
+                span actualnickname
+            section.p-2.info
+                label First name
+                span actualfirstname
+            section.p-2.info
+                label Email
+                span actualemail@main.world
+
+        section.d-flex.flex-column.form
+            section.p-2.info
+                p (if no nickname, your first name will be displayed)
+            section.p-2.info
+                label Last name
+                span Actuallastname
+            section.p-2.info
+                label Password
+                span 0000000
+
+    hr.exposed.little
+
+    h2.text-center.title About you
+
+    section.d-flex.flex-row.justify-content-center.flex-wrap.log
+        section.d-flex.flex-column.form
+            section.p-2.info
+                label Current city
+                span Boston, Texas
+
+            section.p-2.info
+                label.long Please, choose the adjective that best describes you in this list :
+
+            section.p-2.info
+                label Date of birth
+                input#date(type="date" value="2017-06-01")
+
+        section.d-flex.flex-column.form
+            section.p-2.info
+                label Gender
+                span ActualGender
+
+            section.p-2.info
+                select#selectbox2
+                    option(value='cool') cool
+
+            section.p-2.info
+                label.long (It won't be displayed on your profile, only your age will.)
+
+    section.d-flex.flex-column.justify-content-center
+        label Languages spoken (like, enough to have a conversation with other travellers) :
+        section.p-2.info
+            input.languages(type="checkbox", name="language", value="English")
+            label English
+            input.languages(type="checkbox", name="language", value="Français")
+            label Français
+            input.languages(type="checkbox", name="language", value="Espagnol")
+            label Espagnol
+            input.languages(type="checkbox", name="language", value="Portugao")
+            label Portugao
+
+        label Languages you are currently learning :
+        section.p-2.info
+            input.languages(type="checkbox", name="language", value="English")
+            label English
+            input.languages(type="checkbox", name="language", value="Français")
+            label Français
+            input.languages(type="checkbox", name="language", value="Espagnol")
+            label Espagnol
+            input.languages(type="checkbox", name="language", value="Portugao")
+            label Portugao
+
+    hr.exposed.little
+
+    h2.text-center.title Your description
+
+    section.d-flex.flex-column.justify-content-center.flex-wrap
+        section.p-2.info
+            label Your intro (it's a short text that will appear on top of your profile, like a status) :
+        section.p-2.info
+            input.longer(type="text", name="introduction" placeholder="In which mood are you ? What is your current project, the last awesome meeting you've lived ?")
+        section.p-2.info
+            label What are your hobbies, interests, passions ?
+            br
+            | (You don't have to list all of them, but shared interests are a good start point to create bonds. Like foods, drinks, places, unicorns, activities, etc. You can add 5 to 20.)
+        section.p-2.info
+            input.longer(type="text", name="h", placeholder="Type here the first letters and choose and existring one or create a new one")
+        section.p-2.info
+            label Your bio : a much bigger space where you can write what you want other members to know about you. Let us know who you are !
+        section.p-2.info
+            input.longer(type="text", name="bio", placeholder="What is your current life ? Your best memories, your highlights, hopes, projects, thoughts ?")
+
+    hr.exposed.little
+
+    h2.text-center.title The traveller in you
+
+    section.d-flex.flex-column.justify-content-center.flex-wrap
+        section.p-2.info
+            label What trips have you lived ?
+        section.p-2.info
+            input.desc(type="text", name="tripes", placeholder="Paris already ? Amsterdam, Berlin, a small place in your country, or even... Kingslanding ?")
+
+        section.p-2.info
+            label Do you have travel plans for the future ?
+        section.p-2.info
+            input.longer(type="text", name="travels", placeholder="Whether big or small plans, very precise or just ideas.")
+
+        section.p-2.info
+            label Do you have travel plans for the future ?
+        section.p-2.info
+            input.longer(type="text", name="travels", placeholder="Whether big or small plans, very precise or just ideas.")
+
+    hr.exposed.little
+
+    h2.text-center.title Your network
+
+    section.d-flex.flex-column.text-center
+        p If you use some social networks to share your thoughts, pictures, trips, you can put the links here so they will appear on your profile. A simple URL copy-past is enought. But it's not compulsory, share it only if you want !
+
+    section.d-flex.flex-row.justify-content-center.flex-wrap.log
+        section.d-flex.flex-column.form.url
+            section.d-flex.p-2.align-items-center.justify-content-around.info
+                a.d-flex.facebook(href='#')
+                input(type="text")
+
+        section.d-flex.flex-column.form
+            section.d-flex.p-2.align-items-center.justify-content-around.info
+                a.d-flex.instagram(href='#')
+                input(type="text")
+
+        section.d-flex.flex-column.form
+            section.d-flex.p-2.align-items-center.justify-content-around.info
+                a.d-flex.twitter(href='#')
+                input(type="text")
+
+        section.d-flex.flex-column.form
+            section.d-flex.p-2.align-items-center.justify-content-around.info
+                a.d-flex.darkHeart(href='#')
+                input(type="text")
+
+    hr.exposed.little
+
+    h2.text-center.title All setup, well done !
+
+    button.pink Save

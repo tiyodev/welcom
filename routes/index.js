@@ -8,6 +8,7 @@ const profileController = require('./../controllers/profile');
 router.get('/', indexController.getIndex);
 
 router.get('/test', profileController.personDescription);
+router.get('/test2', profileController.editProfile);
 
 router.get('/login', userController.getLogin);
 router.post('/login', userController.postLogin);
