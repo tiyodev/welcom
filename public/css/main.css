@@ -7,8 +7,11 @@
 .wel-bg-blue {
   background-color: #0a1235; }
 
-.wel-bg-green {
-  background-color: #21cd99; }
+.wel-bg-pink {
+  background-color: #dc5770; }
+
+.wel-bg-yellow {
+  background-color: #ffd14e; }
 
 .wel-bg-grey-dark {
   background-color: #161616; }
@@ -22,14 +25,14 @@
 .wel-bg-grey {
   background-color: #868686; }
 
-.wel-bg-orange {
-  background-color: #ffd14e; }
-
 .wel-color-white {
   color: #ffffff; }
 
 .wel-color-blue-night {
   color: #0a1235; }
+
+.wel-color-yellow {
+  color: #ffd14e; }
 
 button {
   cursor: pointer; }
@@ -299,6 +302,57 @@ button {
     background: linear-gradient(to right, #dc5770, #0a1235);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent; }
+
+#join-us-form input {
+  border-bottom: 1px solid black;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  height: 50px;
+  width: 80%; }
+
+#join-us-form input::-webkit-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#join-us-form input:-ms-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#join-us-form input::placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#join-us-form a {
+  border: none; }
+
+#join-us-form .join-us-btn button {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #dc5770;
+  border-radius: 25px;
+  font-weight: bold;
+  width: 170px;
+  height: 50px; }
+
+#join-us-form .terms-of-use {
+  width: 80%; }
+
+#join-us-form .social-btn button {
+  border: none;
+  border-radius: 25px;
+  width: 80%;
+  height: 50px; }
+
+#join-us-form .social-btn i {
+  font-weight: bold !important; }
+
+#join-us-form hr {
+  height: 3px;
+  color: #ffd14e;
+  background-color: #ffd14e;
+  border: none;
+  width: 60%; }
 
 /************** This file define colors use for welcom ***************/
 #footer-content {

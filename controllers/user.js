@@ -29,19 +29,19 @@ function updateValidEmailToken(user) {
     if (Date.now() > user.validEmailTokenExpires.getTime()) {
       // Si l'utilisateur n'a toujours pas validé son mail, un nouveau est recréé
       createRandomToken()
-          .then((newToken) => {
-            User.findById(user._id, (err, user) => {
-              user.validEmailToken = newToken;
-              user.validEmailTokenExpires = Date.now() + 3600000;
-              user.save((err) => {
-                if (err) {
-                  console.error(err);
-                  reject(err);
-                }
-                resolve(newToken);
-              });
-            });
+      .then((newToken) => {
+        User.findById(user._id, (err, user) => {
+          user.validEmailToken = newToken;
+          user.validEmailTokenExpires = Date.now() + 3600000;
+          user.save((err) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            }
+            resolve(newToken);
           });
+        });
+      });
     } else {
       resolve(user.validEmailToken);
     }
@@ -55,11 +55,10 @@ function updateValidEmailToken(user) {
  */
 function setPasswordResetToken(resetEmail) {
   return new Promise((resolve, reject) => {
-    User.findOne({ email: resetEmail }, (err, user) => {
-      if (!user) {
-        reject('Account with that email address does not exist.');
-      }
-      createRandomToken().then((token) => {
+    User.getUserByEmail(resetEmail)
+    .then((user) => {
+      createRandomToken()
+      .then((token) => {
         user.passwordResetToken = token;
         user.passwordResetExpires = Date.now() + 3600000; // 1 hour
         user.save((err) => {
@@ -69,7 +68,13 @@ function setPasswordResetToken(resetEmail) {
           }
           resolve([user.email, token]);
         });
+      })
+      .catch((err) => {
+        reject(err);
       });
+    })
+    .catch((err) => {
+      reject(err);
     });
   });
 }

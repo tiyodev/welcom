@@ -22,7 +22,7 @@
         border-bottom-color: $wel-white;
 
         &:hover:not(.navbar-brand){
-            border-bottom-color: $wel-orange;
+            border-bottom-color: $wel-yellow;
         }
     }
 
@@ -47,5 +47,62 @@
         background: linear-gradient(to right, #dc5770 , #0a1235);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+    }
+}
+
+#join-us-form{
+    input{
+        border-bottom : 1px solid black;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        height: 50px;
+        width: 80%;
+    }
+    
+    input::placeholder {
+        text-align: center;
+        font-family: 'Aaux ProLight', serif;
+    }
+
+    a{
+        border: none;
+    }
+
+    .join-us-btn{
+        button{
+            background-color: $wel-white;
+            color: $wel-black;
+            border: 2px solid $wel-pink;
+            border-radius: 25px;
+            font-weight: bold;
+            width: 170px;
+            height: 50px;
+        }
+    }
+
+    .terms-of-use{
+        width: 80%;
+    }
+
+    .social-btn{
+        button{
+            border: none;
+            border-radius: 25px;
+            width: 80%;
+            height: 50px;            
+        }
+
+        i{
+            font-weight: bold !important;
+        }
+    }
+
+    hr{
+        height: 3px;
+        color: $wel-yellow;
+        background-color: $wel-yellow;
+        border: none;
+        width: 60%;
     }
 }

@@ -27,40 +27,55 @@ nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light
         div#joinus.modal.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel")
             div.modal-dialog(role="document")
                 div.modal-content
-                    div.modal-header
-                        h3.modal-title.text-center Our community awaits you
+                    div.modal-header.wel-bg-blue.wel-color-yellow
+                        h3.modal-title.m-auto Join our travellers community
                         button.close(type="button" data-dismiss="modal" aria-label="Close")
-                            span(aria-hidden="true") &times;
+                            span.wel-color-yellow(aria-hidden="true") &times;
                     div#joinus-modal.modal-body
-                        form.form-horizontal.text-center(name="signupForm" action="/signup" method='POST' onsubmit="return checkSignUpForm()")
+                        form#join-us-form.form-horizontal(name="signupForm" action="/signup" method='POST' onsubmit="return checkSignUpForm()")
                             input(type='hidden', name='_csrf', value=_csrf)
 
-                            input#email.form-control.form-modal(name="email" type="email" placeholder="Email address")
-                            p#email-err.form-msg-error
-
-                            input#password.form-control.form-modal(name="password" type="password" placeholder="Password")
-                            p#password-err.form-msg-error
-
-                            input#password-confirm.form-control.form-modal(name="password-confirm" type="password" placeholder="Confirm password")
-                            p#password-confirm-err.form-msg-error
-
-                            button.btn.btn-default.btn-welcom(type="submit")
-                                div#loader-sub Welcom' me
+                            .item.text-center
+                                .pt-2
+                                    input#email.form-control.form-modal.m-auto(name="email" type="email" placeholder="Your email")
+                                    p#email-err.form-msg-error.m-auto
+                                .pt-4
+                                    input#password.form-control.form-modal.m-auto(name="password" type="password" placeholder="Choose a password")
+                                    p#password-err.form-msg-error.m-auto
+                                .pt-4
+                                    input#password-confirm.form-control.form-modal.m-auto(name="password-confirm" type="password" placeholder="Confirm your password")
+                                    p#password-confirm-err.form-msg-error.m-auto
+                                .pt-4.join-us-btn
+                                    p.terms-of-use.m-auto.pb-4
+                                        | By clicking the "Welcom !" button, you agree our Terms of Use, which you can 
+                                        a(href='#') read here
+                                        | . 
+                                    button.mt-1.mb-2(type="submit") Welcome !
 
                             .form-group
-                                .col-sm-offset-4.col-sm-8
+                                .m-auto
                                     hr
+                                    p.text-center Or join us with :
+
                             .form-group
-                                .col-sm-offset-4.col-sm-8
-                                    a.btn.btn-block.btn-facebook.btn-social(href='/auth/facebook')
-                                        i.fa.fa-facebook
-                                            | &nbsp;Sign in with Facebook
-                                    a.btn.btn-block.btn-twitter.btn-social(href='/auth/twitter')
-                                        i.fa.fa-twitter
-                                            | &nbsp;Sign in with Twitter
-                                    a.btn.btn-block.btn-google.btn-social(href='/auth/google')
-                                        i.fa.fa-google-plus
-                                            | &nbsp;Sign in with Google
+                                .social-btn.text-center
+                                    .mt-2
+                                        button.wel-bg-blue(type="submit") 
+                                            a(href='/auth/facebook')
+                                                i.fa.fa-facebook.wel-color-white
+                                                    | &nbsp;&nbsp; Your Facebook account                                    
+                                    .mt-2
+                                        button.wel-bg-pink(type="submit") 
+                                            a(href='/auth/twitter')
+                                                i.fa.fa-twitter.wel-color-white
+                                                    | &nbsp;&nbsp; Your Twitter account
+                                    .mt-2
+                                        button.wel-bg-yellow(type="submit") 
+                                            a(href='/auth/google')
+                                                i.fa.fa-google-plus.wel-color-white
+                                                    | &nbsp;&nbsp; Your Google account
+                                    .mt-4
+                                        a(href='#') Already a member ?
 
         <!-- Login Modal -->
         div#login.modal.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel")

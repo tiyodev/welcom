@@ -142,6 +142,19 @@ userSchema.methods.gravatar = (size) => {
   return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
 };
 
+function getUserByEmail(email) {
+  return new Promise((resolve, reject) => {
+    this.findOne({ email }, (err, user) => {
+      if (!user) {
+        reject('Account with that email address does not exist.');
+      }
+      resolve(user);
+    });
+  });
+}
+
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
+module.exports = getUserByEmail;

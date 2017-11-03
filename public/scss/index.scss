@@ -36,14 +36,14 @@
             max-width: 20px;
             height: 20px;
 
-            background-color: $wel-orange-opacity-05;
+            background-color: $wel-yellow-opacity-05;
 
             &.active{                
                 border-radius: 25px;
                 max-width: 25px;
                 height: 25px;
 
-                background-color: $wel-orange;
+                background-color: $wel-yellow;
             }
         }
     }
@@ -164,7 +164,7 @@
         height: 5px;
 
         line{
-            stroke:$wel-orange;
+            stroke:$wel-yellow;
             stroke-width: 5px;
         }
     }
