@@ -21,7 +21,7 @@ nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light
                     li.pl-3.pr-3.nav-item
                         a.text-uppercase.nav-link(href="https://medium.com/@WelcomParis/") Read our blog
                     li.pl-3.pr-3.nav-item
-                        a.text-uppercase.nav-link.sign-in-link(href="#" data-toggle="modal" data-target="#login") Sign in
+                        a.text-uppercase.nav-link.sign-in-link(href="#" data-toggle="modal" data-target="#sign-in-modal") Sign in
 
         <!-- Join us Modal -->
         div#joinus.modal.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel")
@@ -75,50 +75,55 @@ nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light
                                                 i.fa.fa-google-plus.wel-color-white
                                                     | &nbsp;&nbsp; Your Google account
                                     .mt-4
-                                        a(href='#') Already a member ?
-
-        <!-- Login Modal -->
-        div#login.modal.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel")
+                                        a(href='#' onclick="$('#joinus').modal('hide');$('#sign-in-modal').modal('toggle');") Already a member ?
+        <!-- Sing in Modal -->
+        div#sign-in-modal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="sign in modal")
             div.modal-dialog(role="document")
                 div.modal-content
-                    div.modal-header
-                        h3.modal-title.text-center We missed you
+                    div.modal-header.wel-bg-blue.wel-color-yellow
+                        h3.modal-title.m-auto  Welcome back !
                         button.close(type="button" data-dismiss="modal" aria-label="Close")
-                            span(aria-hidden="true") &times;
-                    div#login-modal.modal-body                  
-                        form.form-horizontal.text-center(action="/login" method='POST')
+                            span.wel-color-yellow(aria-hidden="true") &times;
+                    div#sign-in-modal-body.modal-body
+                        form#sign-in-modal-form.form-horizontal(name="signupForm" action="/login" method='POST' onsubmit="return checkSignUpForm()")
                             input(type='hidden', name='_csrf', value=_csrf)
 
-                            p(id="auth-err" class="form-msg-error")
-
-                            input#email-login.form-control.form-modal(name="email" type="email" placeholder="Email")
-                          
-                            input#password-login.form-control.form-modal(name="password" type="password" placeholder="Password")
-
-                            br
-
-                            button.btn.btn-default.btn-welcom(type="submit") Welcom' back
-
-                            br
-                            input#remember-me(type="checkbox" checked)
-                            span.form-label &nbsp;Remember me
-
-                            br
-
-                            p Don't have an account yet ?
-                                span
-                                    a(href="/signup") &nbsp; Join us !
+                            .item.text-center
+                                .pt-2
+                                    input#email.form-control.form-modal.m-auto(name="email" type="email" placeholder="Your email")
+                                    p#email-err.form-msg-error.m-auto
+                                .pt-4
+                                    input#password.form-control.form-modal.m-auto(name="password" type="password" placeholder="Your password")
+                                    p#password-err.form-msg-error.m-auto
+                                .pt-4
+                                    input#remember-me(type="checkbox" checked)
+                                    span.form-label &nbsp;Remember me
+                                .pt-4.sign-in-btn
+                                    button.mt-1.mb-2(type="submit") Sign in
+                                .pt-2
+                                    a(href='/forgot') Forgot your password ?
 
                             .form-group
-                                .col-sm-offset-2.col-sm-8
+                                .m-auto
                                     hr
+                                    p.text-center Or sign in with :
+
                             .form-group
-                                .col-sm-offset-2.col-sm-8
-                                    a.btn.btn-block.btn-facebook.btn-social(href='/auth/facebook')
-                                        i.fa.fa-facebook &nbsp; Sign in with Facebook
-                                    a.btn.btn-block.btn-twitter.btn-social(href='/auth/twitter')
-                                        i.fa.fa-twitter &nbsp; Sign in with Twitter
-                                    a.btn.btn-block.btn-google.btn-social(href='/auth/google')
-                                        i.fa.fa-google-plus &nbsp; Sign in with Google
-                        .modal-footer
-                            a.btn.btn-block(href='/forgot') Forgot your password ?
+                                .social-btn.text-center
+                                    .mt-2
+                                        button.wel-bg-blue(type="submit") 
+                                            a(href='/auth/facebook')
+                                                i.fa.fa-facebook.wel-color-white
+                                                    | &nbsp;&nbsp; Your Facebook account                                    
+                                    .mt-2
+                                        button.wel-bg-pink(type="submit") 
+                                            a(href='/auth/twitter')
+                                                i.fa.fa-twitter.wel-color-white
+                                                    | &nbsp;&nbsp; Your Twitter account
+                                    .mt-2
+                                        button.wel-bg-yellow(type="submit") 
+                                            a(href='/auth/google')
+                                                i.fa.fa-google-plus.wel-color-white
+                                                    | &nbsp;&nbsp; Your Google account
+                                    .mt-4
+                                        a(href='#' onclick="$('#sign-in-modal').modal('hide');$('#joinus').modal('toggle');$('#joinus').modal('handleUpdate');") Not yet a member ? Join us !

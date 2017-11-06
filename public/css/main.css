@@ -354,6 +354,54 @@ button {
   border: none;
   width: 60%; }
 
+#sign-in-modal-form input:not(#remember-me) {
+  border-bottom: 1px solid black;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  height: 50px;
+  width: 80%; }
+
+#sign-in-modal-form input::-webkit-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#sign-in-modal-form input:-ms-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#sign-in-modal-form input::placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#sign-in-modal-form a {
+  border: none; }
+
+#sign-in-modal-form .sign-in-btn button {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #dc5770;
+  border-radius: 25px;
+  font-weight: bold;
+  width: 170px;
+  height: 50px; }
+
+#sign-in-modal-form .social-btn button {
+  border: none;
+  border-radius: 25px;
+  width: 80%;
+  height: 50px; }
+
+#sign-in-modal-form .social-btn i {
+  font-weight: bold !important; }
+
+#sign-in-modal-form hr {
+  height: 3px;
+  color: #ffd14e;
+  background-color: #ffd14e;
+  border: none;
+  width: 60%; }
+
 /************** This file define colors use for welcom ***************/
 #footer-content {
   background-color: #0a1235; }

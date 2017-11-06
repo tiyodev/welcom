@@ -106,3 +106,59 @@
         width: 60%;
     }
 }
+
+
+#sign-in-modal{
+    &-form{
+        input:not(#remember-me){
+            border-bottom : 1px solid black;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            height: 50px;
+            width: 80%;
+        }
+        
+        input::placeholder {
+            text-align: center;
+            font-family: 'Aaux ProLight', serif;
+        }
+
+        a{
+            border: none;
+        }
+
+        .sign-in-btn{
+            button{
+                background-color: $wel-white;
+                color: $wel-black;
+                border: 2px solid $wel-pink;
+                border-radius: 25px;
+                font-weight: bold;
+                width: 170px;
+                height: 50px;
+            }
+        }
+
+        .social-btn{
+            button{
+                border: none;
+                border-radius: 25px;
+                width: 80%;
+                height: 50px;            
+            }
+
+            i{
+                font-weight: bold !important;
+            }
+        }
+
+        hr{
+            height: 3px;
+            color: $wel-yellow;
+            background-color: $wel-yellow;
+            border: none;
+            width: 60%;
+        }
+    }
+}

@@ -17,7 +17,7 @@ block content
         h2.font-weight-bold We are a local community dedicated to make you feel welcome in our city.
         h2.font-weight-bold Meet Parisians, share a moment, experience the real Paris.
         .row.justify-content-center
-          button.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(type="button") Join us
+          button.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(type="button" data-toggle="modal" data-target="#joinus") Join us
       .carousel-item.active
         .dark-opacity-overlay
         img.mx-auto.d-block.header-carousel-img(src="/images/photo-paris13.jpg" alt="First slide")  
@@ -104,8 +104,7 @@ block content
           .p.community-says-item
             include components/community-says
 
-      button.mt-6.mb-6.text-uppercase(type="button") Join us
-
+      button.mt-6.mb-6.text-uppercase(type="button" data-toggle="modal" data-target="#joinus") Join us
 
   section#multi-part
     .d-flex.flex-row.flex-wrap
