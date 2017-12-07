@@ -122,39 +122,29 @@ userSchema.pre('save', function hashPwd(next) {
 /**
  * Helper method for validating user's password.
  */
-userSchema.methods.comparePassword = (candidatePassword, cb) => {
+/**
+ * Helper method for validating user's password.
+ */
+userSchema.methods.comparePassword = function comparePassword(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     cb(err, isMatch);
   });
 };
 
-/**
- * Helper method for getting user's gravatar.
- */
-userSchema.methods.gravatar = (size) => {
-  if (!size) {
-    size = 200;
-  }
-  if (!this.email) {
-    return `https://gravatar.com/avatar/?s=${size}&d=retro`;
-  }
-  const md5 = crypto.createHash('md5').update(this.email).digest('hex');
-  return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
-};
-
-function getUserByEmail(email) {
-  return new Promise((resolve, reject) => {
-    this.findOne({ email }, (err, user) => {
-      if (!user) {
-        reject('Account with that email address does not exist.');
-      }
-      resolve(user);
-    });
-  });
-}
-
-
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
-module.exports = getUserByEmail;
+
+
+// function getUserByEmail(email) {
+//   return new Promise((resolve, reject) => {
+//     User.findOne({ email }, (err, user) => {
+//       if (!user) {
+//         reject('Account with that email address does not exist.');
+//       }
+//       resolve(user);
+//     });
+//   });
+// }
+
+// module.exports = getUserByEmail;

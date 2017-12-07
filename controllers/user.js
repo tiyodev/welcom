@@ -133,18 +133,26 @@ exports.postLogin = (req, res, next) => {
 
   const errors = req.validationErrors();
 
+  console.log(`errors : ${JSON.stringify(errors)}`);
+
   if (errors) {
     req.flash('errors', errors);
     return res.redirect('/');
   }
 
   passport.authenticate('local', (err, user, info) => {
+    console.log(`err : ${err}`);
+    console.log(`user : ${user}`);
+    console.log(`info : ${JSON.stringify(info)}`);
+
     if (err) { return next(err); }
     if (!user) {
+      console.log('ybo A');
       req.flash('errors', info);
       return res.redirect('/');
     }
     if (!user.validEmail) {
+      console.log('ybo B');
       updateValidEmailToken(user)
         .then((newToken) => {
           Emails.sendMail(user.email, 'Confirm your email address', { templateName: 'validEmail', host: req.headers.host, token: newToken })
@@ -163,6 +171,7 @@ exports.postLogin = (req, res, next) => {
           return res.redirect('/');
         });
     } else {
+      console.log('ybo C');
       req.logIn(user, (err) => {
         if (err) {
           return next(err);
@@ -298,6 +307,7 @@ exports.getVerifyEmail = (req, res, next) => {
     .findOne({ validEmailToken: req.params.validEmailToken })
     .where('validEmailTokenExpires').gt(Date.now())
     .exec((err, user) => {
+      console.log(`ybo1 user : ${JSON.stringify(user)}`);
       if (err) {
         return next(err);
       }
@@ -312,17 +322,28 @@ exports.getVerifyEmail = (req, res, next) => {
       }
       user.validEmailToken = undefined;
       user.validEmailTokenExpires = undefined;
+
       user.save((err) => {
+        console.log('test 1');
         if (err) {
+          console.log('test 1.1');
           return next(err);
         }
-        req.logIn(user, (err) => {
-          if (err) {
-            return next(err);
-          }
-          req.flash('success', { msg: 'Your email has been successfully validated.' });
-          return res.redirect('/');
-        });
+
+        return res.redirect('/');
+
+        // console.log('test 2');
+        // req.logIn(user, (err) => {
+        //   console.log('test 3');
+        //   if (err) {
+        //     console.log('test 3.1');
+        //     return next(err);
+        //   }
+        //   console.log('test 4');
+        //   req.flash('success', { msg: 'Your email has been successfully validated.' });
+        //   console.log('test 5');
+        //   return res.redirect('/');
+        // });
       });
     });
 };
@@ -346,51 +367,58 @@ exports.postSignup = (req, res) => {
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.sanitize('email').normalizeEmail({ remove_dots: false });
 
-  const errors = req.validationErrors();
+  req.getValidationResult()
+  .then(() => {
+    const user = new User({
+      email: req.body.email,
+      password: req.body.password,
+      validEmailTokenExpires: Date.now() + 3600000
+    });
 
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/');
-  }
+    console.log(`YBO 1 : ${user}`);
 
-  const user = new User({
-    email: req.body.email,
-    password: req.body.password,
-    validEmailTokenExpires: Date.now() + 3600000
-  });
+    createRandomToken()
+    .then((newToken) => {
+      console.log(`YBO 2 : ${newToken}`);
 
-  createRandomToken()
-  .then((newToken) => {
-    user.validEmailToken = newToken;
+      user.validEmailToken = newToken;
 
-    User.findOne({ email: req.body.email }, (err, existingUser) => {
-      if (existingUser) {
-        req.flash('errors', { msg: 'Account with that email address already exists.' });
-        res.redirect('/');
-      } else {
-        user.save()
-        .then(() => {
-          Emails.sendMail(user.email, 'Confirm your email address', { templateName: 'validEmail', host: req.headers.host, token: user.validEmailToken })
+      User.findOne({ email: req.body.email }, (err, existingUser) => {
+        console.log(`YBO 3 : ${existingUser}`);
+        if (existingUser) {
+          req.flash('errors', { msg: 'Account with that email address already exists.' });
+          res.redirect('/');
+        } else {
+          console.log(`YBO 4 : ${existingUser}`);
+          user.save()
           .then(() => {
-            req.flash('info', { msg: `You will receive an Email at ${user.email} with instructions within the next 5 minutes (usually instant).` });
-            res.redirect('/');
-          }).catch((err) => {
+            Emails.sendMail(user.email, 'Confirm your email address', { templateName: 'validEmail', host: req.headers.host, token: user.validEmailToken })
+            .then(() => {
+              req.flash('info', { msg: `You will receive an Email at ${user.email} with instructions within the next 5 minutes (usually instant).` });
+              res.redirect('/');
+            }).catch((err) => {
+              req.flash('errors', { msg: err });
+              console.error(err);
+              res.redirect('/');
+            });
+          })
+          .catch((err) => {
             req.flash('errors', { msg: err });
             console.error(err);
             res.redirect('/');
           });
-        })
-        .catch((err) => {
-          req.flash('errors', { msg: err });
-          console.error(err);
-          res.redirect('/');
-        });
-      }
+        }
+      });
+    })
+    .catch((err) => {
+      req.flash('errors', { msg: err });
+      console.error(err);
+      res.redirect('/');
     });
   })
-  .catch((err) => {
-    req.flash('errors', { msg: err });
-    console.error(err);
-    res.redirect('/');
+  .catch((errors) => {
+    console.log(`YBO 0 : ${errors}`);
+    req.flash('errors', errors);
+    return res.redirect('/');
   });
 };

@@ -7,24 +7,32 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const User = require('../models/users');
 
 passport.serializeUser((user, done) => {
+  console.log('test A');
   done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
+  console.log('test B');
   User.findOne({ _id: id, isActive: true }, (err, user) => {
+    console.error(err);
     done(err, user);
-  }).populate('profile.interests');
+  });
+  // .populate('profile.interests');
 });
 
 /**
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+  console.log(`YBO . email ${email}`);
+  console.log(`YBO . password ${password}`);
+
   User.findOne({ email: email.toLowerCase() }, (err, user) => {
     if (!user) {
       return done(null, false, { msg: `Email ${email} not found.` });
     }
     user.comparePassword(password, (err, isMatch) => {
+      console.log(`YBO . isMatch ${isMatch}`);
       if (isMatch) {
         return done(null, user);
       }

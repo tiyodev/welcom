@@ -1,4 +1,6 @@
 
+- console.log(locals.user)
+
 nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light
     .container.d-flex.justify-content-around
         button#nav-toggler-btn.align-items-center.navbar-toggler.navbar-toggler-right(type="button" data-toggle="collapse" data-target="#navbarsExampleContainer" 
@@ -14,14 +16,43 @@ nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light
                     li.hidden-sm-up
                         a.navbar-brand(href="#") 
                             img.header-logo(src='images/welcom-logo-horizontal-header.svg')
-                    li.pl-3.pr-3.nav-item.active
-                        button#join-us-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(type="button" data-toggle="modal" data-target="#joinus") Join us
+                    if !locals.user
+                        li.pl-3.pr-3.nav-item.active
+                            button#join-us-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(type="button" data-toggle="modal" data-target="#joinus") Join us
                     li.pl-3.pr-3.nav-item
                         a.text-uppercase.nav-link(href="#") Learn more
                     li.pl-3.pr-3.nav-item
                         a.text-uppercase.nav-link(href="https://medium.com/@WelcomParis/") Read our blog
-                    li.pl-3.pr-3.nav-item
-                        a.text-uppercase.nav-link.sign-in-link(href="#" data-toggle="modal" data-target="#sign-in-modal") Sign in
+                    if !locals.user
+                        li.pl-3.pr-3.nav-item
+                            a.text-uppercase.nav-link.sign-in-link(href="#" data-toggle="modal" data-target="#sign-in-modal") Sign in
+                    else
+                        li(class="dropdown user-dropdown")
+                            a(href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
+                            if !locals.user.profile.picture
+                                img(id="headerProfilePicture" class="img-circle user-icon" src="/images/defaultProfilePicture.png")
+                            else
+                                img(id="headerProfilePicture" class="img-circle user-icon" src=locals.user.profile.picture)
+                            ul(class="dropdown-menu")
+                            li(class="dropdown-header text-center hidden-xs")
+                                h5(class="dropdown-title")= locals.user.profile.firstName
+                            li(role="separator" class="divider hidden-xs")
+                                li
+                                a(href="/experience/create") Design an experience
+
+                            li(role="separator" class="divider hidden-xs")
+                            //-
+                                li
+                                a(href="/dashboard") Dashboard
+                                li(role="separator" class="divider hidden-xs")
+                            li
+                                a(href="/account/profile/" + locals.user._id) Profile
+                            li(role="separator" class="divider hidden-xs")
+                            li
+                                a(href="/account/set_account") Account
+                            li(role="separator" class="divider hidden-xs")
+                            li
+                                a(href="/logout") Sign out
 
         <!-- Join us Modal -->
         div#joinus.modal.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel")
@@ -76,6 +107,7 @@ nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light
                                                     | &nbsp;&nbsp; Your Google account
                                     .mt-4
                                         a(href='#' onclick="$('#joinus').modal('hide');$('#sign-in-modal').modal('toggle');") Already a member ?
+        
         <!-- Sing in Modal -->
         div#sign-in-modal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="sign in modal")
             div.modal-dialog(role="document")

@@ -1,18 +1,15 @@
 const pug = require('pug');
-const nodemailer = require('nodemailer');
+const request = require('request');
 
-const _emailPath = './templates/';
+// const nodemailer = require('nodemailer');
+const SibApiV3Sdk = require('sib-api-v3-sdk');
 
-/**
- * Email envoyé lorsqu'un user reçoit un PM.
- */
-// function sendMessageEmail(sender, msg) {
-//   const compiledEmail = pug.compileFile(`${_emailPath}message-sent.pug`);
-//   return compiledEmail({
-//     sender,
-//     message: msg
-//   });
-// }
+const _emailPath = './config/emails/templates/';
+
+// Configure API key authorization: api-key
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications['api-key'];
+apiKey.apiKey = process.env.SID_API;
 
 /**
  * Email utilisé pour valider l'email du user
@@ -112,41 +109,74 @@ function makeTextTemplate(templateArgs) {
   }
 }
 
+// /**
+//  * Service d'envoi de mail
+//  */
+// exports.sendMail = function sendMail(userEmail, subject, templateArgs) {
+//   return new Promise((resolve, reject) => {
+//     console.log(`YBO A : ${apiKey}`);
+
+//     const apiInstance = new SibApiV3Sdk.SMTPApi();
+//     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(
+//       {
+//         to: userEmail,
+//         sender: new SibApiV3Sdk.SendSmtpEmailSender({
+//           email: 'noreply@welcom.city'
+//         }),
+//         subject,
+//         textContent: makeTextTemplate(templateArgs),
+//         htmlContent: makeHtmlTemplate(templateArgs)
+//       }
+//     );
+
+//     apiInstance.sendTransacEmail(sendSmtpEmail)
+//     .then((data) => {
+//       console.log(`SendInBlue API called successfully. Returned data: ${data}`);
+//       resolve(data);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//       reject(error);
+//     });
+//   });
+// };
+
+
 /**
  * Service d'envoi de mail
  */
-exports.sendMail = function (userEmail, subject, templateArgs) {
+exports.sendMail = function sendMail(userEmail, subject, templateArgs) {
   return new Promise((resolve, reject) => {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.mailgun.org',
-      port: 25,
-      service: 'Mailgun',
-      auth: {
-        user: process.env.MAILGUN_USER,
-        pass: process.env.MAILGUN_PASSWORD
+    const options = {
+      method: 'POST',
+      url: 'https://api.sendinblue.com/v3/smtp/email',
+      headers: {
+        'api-key': process.env.SID_API
       },
-      dkim: {
-        domainName: 'welcom.city',
-        keySelector: 'mx',
-        privateKey: 'k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAi6dOcyjW14ddsoCZUHkhFi1IGCGxhFCvAlZu7iKu1wZxMKd5QfZcEI4A6hHYv6NVOgaItz7jGnbpZ95pNUnWOHDpTX0iTibPH7i6NVaCFx1Zir3R+VUmc731OC3KPdoYp+x3R+7gsgVyuzETQzdrMKdl/XM8uj5GYgYXBB32rQIDAQAB'
+      body:
+      {
+        sender: { email: 'noreply@welcom.city' },
+        to: [{ email: userEmail }],
+        htmlContent: makeHtmlTemplate(templateArgs),
+        textContent: makeTextTemplate(templateArgs),
+        subject,
+        replyTo: { email: 'welcomtomycity@gmail.com' }
       },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
-    const mailOptions = {
-      to: userEmail,
-      from: 'noreply@welcom.city',
-      subject,
-      text: makeTextTemplate(templateArgs),
-      html: makeHtmlTemplate(templateArgs),
+      json: true
     };
-    transporter.sendMail(mailOptions, (err) => {
-      if (err) {
-        reject(`Error : ${err}`);
-      } else {
-        resolve('Mail sent');
-      }
+
+    console.log(`YBO A : ${JSON.stringify(options)}`);
+
+    request(options, (error, response, body) => {
+      if (error) reject(error);
+
+     // console.log(response);
+      console.log(`YBO B body : ${JSON.stringify(body)}`);
+      console.log(`YBO C response : ${JSON.stringify(response)}`);
+      console.log(`YBO D error : ${JSON.stringify(error)}`);
+
+      resolve(body);
     });
   });
 };
+
