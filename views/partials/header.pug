@@ -8,7 +8,7 @@ nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light
             span.navbar-toggler-icon
 
         .p-0.hidden-xs-down
-            a.navbar-brand(href="#") 
+            a.navbar-brand(href="/") 
                 img.header-logo(src='images/welcom-logo-horizontal-header.svg')
         .p-0
             .collapse.navbar-collapse#navbarsExampleContainer
@@ -20,9 +20,9 @@ nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light
                         li.pl-3.pr-3.nav-item.active
                             button#join-us-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(type="button" data-toggle="modal" data-target="#joinus") Join us
                     li.pl-3.pr-3.nav-item
-                        a.text-uppercase.nav-link(href="#") Learn more
+                        a.text-uppercase.nav-link(href="/learnmore") Learn more
                     li.pl-3.pr-3.nav-item
-                        a.text-uppercase.nav-link(href="https://medium.com/@WelcomParis/") Read our blog
+                        a.text-uppercase.nav-link(href="/readblog") Read our blog
                     if !locals.user
                         li.pl-3.pr-3.nav-item
                             a.text-uppercase.nav-link.sign-in-link(href="#" data-toggle="modal" data-target="#sign-in-modal") Sign in
@@ -79,7 +79,7 @@ nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light
                                 .pt-4.join-us-btn
                                     p.terms-of-use.m-auto.pb-4
                                         | By clicking the "Welcom !" button, you agree our Terms of Use, which you can 
-                                        a(href='#') read here
+                                        a(href='/termsofuse') read here
                                         | . 
                                     button.mt-1.mb-2(type="submit") Welcome !
 

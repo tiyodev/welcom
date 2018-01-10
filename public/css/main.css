@@ -269,6 +269,92 @@ button {
   font-family: "Gotham-Light";
   src: url("/font/GothamLight.otf"); }
 
+.footer-content {
+  max-width: 80%;
+  width: 1000px; }
+  .footer-content h4 {
+    font-weight: bold; }
+
+@media (min-width: 1200px) {
+  .meet-team-img {
+    width: 350px; }
+  .meet-team-desc {
+    width: 550px; } }
+
+@media (min-width: 992px) {
+  .meet-team-img {
+    width: 350px; }
+  .meet-team-desc {
+    width: 350px; } }
+
+@media (min-width: 768px) {
+  .meet-team-img {
+    width: 450px; }
+  .meet-team-desc {
+    width: 450px; } }
+
+@media (min-width: 576px) and (max-width: 767px) {
+  p {
+    margin-left: 5%;
+    margin-right: 5%; }
+  .img-jb-tiyo {
+    max-width: 95%; }
+  .meet-team-img {
+    width: 350px; }
+  .meet-team-desc {
+    width: 350px; } }
+
+@media (max-width: 575px) {
+  p {
+    margin-left: 5%;
+    margin-right: 5%; }
+  .img-jb-tiyo {
+    max-width: 95%; }
+  .meet-team-img {
+    width: 350px; }
+  .meet-team-desc {
+    width: 350px; } }
+
+.contact-us-form input {
+  border-bottom: 1px solid black;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  height: 50px;
+  width: 350px; }
+
+.contact-us-form input::-webkit-input-placeholder, .contact-us-form textarea::-webkit-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+.contact-us-form input:-ms-input-placeholder, .contact-us-form textarea:-ms-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+.contact-us-form input::placeholder, .contact-us-form textarea::placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+.contact-us-btn button {
+  background-color: #dc5770;
+  color: white !important;
+  border: none;
+  border-radius: 25px;
+  width: 170px;
+  height: 50px; }
+
+.need-you-img {
+  width: 400px;
+  max-width: 100%; }
+
+.joinus-btn {
+  background-color: transparent;
+  color: #dc5770 !important;
+  border: 2px #dc5770 solid;
+  border-radius: 25px;
+  width: 170px;
+  height: 50px; }
+
 /************** This file define colors use for welcom ***************/
 #header-nav {
   min-height: 60px; }
@@ -523,7 +609,7 @@ button {
   color: #dc5770; }
 
 /*************** Override font family *************************************************/
-p, a {
+p, a, span {
   font-family: 'Aaux ProMedium', serif;
   font-size: 1rem; }
 

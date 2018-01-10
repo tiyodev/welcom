@@ -2,6 +2,7 @@
 @import 'general';
 @import 'index';
 @import 'font';
+@import 'footer';
 @import 'partials/header';
 @import 'partials/footer';
 @import 'components/experience-card';
@@ -10,7 +11,7 @@
 @import 'components/story-card-title';
 
 /*************** Override font family *************************************************/
-p, a{
+p, a, span{
   font-family: 'Aaux ProMedium', serif;
   font-size: 1rem;
 }

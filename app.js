@@ -32,6 +32,7 @@ require('./config/passport');
 const index = require('./routes/index');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+const footer = require('./routes/footer');
 
 /**
  * Create Express server.
@@ -106,9 +107,9 @@ app.use((req, res, next) => {
 });
 
 app.use('/', index);
+app.use('/', footer);
 app.use('/users', users);
 app.use('/auth', auth);
-
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -127,5 +128,8 @@ app.use((err, req, res) => {
   res.status(err.status || 500);
   res.render('error');
 });
+
+process.on('uncaughtException', console.error);
+process.on('unhandledRejection', console.error);
 
 module.exports = app;
