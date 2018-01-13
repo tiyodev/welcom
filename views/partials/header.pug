@@ -1,161 +1,181 @@
+nav#wel-nav-bar.navbar.navbar-toggleable-md.navbar-light
+  button#header-nav-btn.navbar-toggler.navbar-toggler-right.align-items-center(type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" 
+  aria-expanded="false" aria-label="Toggle navigation")
+    span.navbar-toggler-icon
 
-- console.log(locals.user)
+  .navbar-collapse.justify-content-around.m-auto
+    a.navbar-brand(href="/") 
+      img.header-logo(src='images/welcom-logo-horizontal-header.svg')
 
-nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light
-    .container.d-flex.justify-content-around
-        button#nav-toggler-btn.align-items-center.navbar-toggler.navbar-toggler-right(type="button" data-toggle="collapse" data-target="#navbarsExampleContainer" 
-        aria-controls="navbarsExampleContainer" aria-expanded="false" aria-label="Toggle navigation")
-            span.navbar-toggler-icon
+  #navbarNav.collapse.navbar-collapse.justify-content-around 
+    ul.navbar-nav.p-auto
+      li.pt-4(role="separator")
+      if !locals.user
+        li.nav-item.m-auto.pl-2.pr-2
+          button#join-us-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(data-target="#joinus" data-toggle="modal" type="button") Join us
+        li.nav-item.m-auto.pl-2.pr-2
+          a.text-uppercase.nav-link(href="/learnmore") Learn more
+        li.nav-item.m-auto.pl-2.pr-2
+          a.text-uppercase.nav-link(href="/readblog") Read our blog
+        if !locals.user
+          li.nav-item.m-auto.pl-2.pr-2
+            a.text-uppercase.nav-link.sign-in-link(data-target="#sign-in-modal" data-toggle="modal" href="#") Sign in
 
-        .p-0.hidden-xs-down
-            a.navbar-brand(href="/") 
-                img.header-logo(src='images/welcom-logo-horizontal-header.svg')
-        .p-0
-            .collapse.navbar-collapse#navbarsExampleContainer
-                ul.pt-2.pr-4.navbar-nav.mr-auto.d-flex.justify-content-end
-                    li.hidden-sm-up
-                        a.navbar-brand(href="#") 
-                            img.header-logo(src='images/welcom-logo-horizontal-header.svg')
-                    if !locals.user
-                        li.pl-3.pr-3.nav-item.active
-                            button#join-us-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(type="button" data-toggle="modal" data-target="#joinus") Join us
-                    li.pl-3.pr-3.nav-item
-                        a.text-uppercase.nav-link(href="/learnmore") Learn more
-                    li.pl-3.pr-3.nav-item
-                        a.text-uppercase.nav-link(href="/readblog") Read our blog
-                    if !locals.user
-                        li.pl-3.pr-3.nav-item
-                            a.text-uppercase.nav-link.sign-in-link(href="#" data-toggle="modal" data-target="#sign-in-modal") Sign in
-                    else
-                        li(class="dropdown user-dropdown")
-                            a(href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
-                            if !locals.user.profile.picture
-                                img(id="headerProfilePicture" class="img-circle user-icon" src="/images/defaultProfilePicture.png")
-                            else
-                                img(id="headerProfilePicture" class="img-circle user-icon" src=locals.user.profile.picture)
-                            ul(class="dropdown-menu")
-                            li(class="dropdown-header text-center hidden-xs")
-                                h5(class="dropdown-title")= locals.user.profile.firstName
-                            li(role="separator" class="divider hidden-xs")
-                                li
-                                a(href="/experience/create") Design an experience
+//- nav#header-nav.p-0.wel-bg-white.navbar.navbar-toggleable-md.navbar-light.bg-faded
+//-     .container.d-flex.justify-content-around
+//-         button#nav-toggler-btn.align-items-center.navbar-toggler.navbar-toggler-right(type="button" data-toggle="collapse" data-target="#navbarsExampleContainer" 
+//-         aria-controls="navbarsExampleContainer" aria-expanded="false" aria-label="Toggle navigation")
+//-             span.navbar-toggler-icon
 
-                            li(role="separator" class="divider hidden-xs")
-                            //-
-                                li
-                                a(href="/dashboard") Dashboard
-                                li(role="separator" class="divider hidden-xs")
-                            li
-                                a(href="/account/profile/" + locals.user._id) Profile
-                            li(role="separator" class="divider hidden-xs")
-                            li
-                                a(href="/account/set_account") Account
-                            li(role="separator" class="divider hidden-xs")
-                            li
-                                a(href="/logout") Sign out
+//-         .p-0.hidden-xs-down
+//-             a.navbar-brand(href="/") 
+//-                 img.header-logo(src='images/welcom-logo-horizontal-header.svg')
+//-         .p-0
+//-             .collapse.navbar-collapse#navbarsExampleContainer
+//-                 ul.pt-2.pr-4.navbar-nav.mr-auto.d-flex.justify-content-end
+//-                     li.hidden-sm-up
+//-                         a.navbar-brand(href="#") 
+//-                             img.header-logo(src='images/welcom-logo-horizontal-header.svg')
+//-                     if !locals.user
+//-                         li.pl-3.pr-3.nav-item.active
+//-                             button#join-us-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(type="button" data-toggle="modal" data-target="#joinus") Join us
+//-                     li.pl-3.pr-3.nav-item
+//-                         a.text-uppercase.nav-link(href="/learnmore") Learn more
+//-                     li.pl-3.pr-3.nav-item
+//-                         a.text-uppercase.nav-link(href="/readblog") Read our blog
+//-                     if !locals.user
+//-                         li.pl-3.pr-3.nav-item
+//-                             a.text-uppercase.nav-link.sign-in-link(href="#" data-toggle="modal" data-target="#sign-in-modal") Sign in
+//-                     else
+//-                         li(class="dropdown user-dropdown")
+//-                             a(href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
+//-                             if !locals.user.profile.picture
+//-                                 img(id="headerProfilePicture" class="img-circle user-icon" src="/images/defaultProfilePicture.png")
+//-                             else
+//-                                 img(id="headerProfilePicture" class="img-circle user-icon" src=locals.user.profile.picture)
+//-                             ul(class="dropdown-menu")
+//-                             li(class="dropdown-header text-center hidden-xs")
+//-                                 h5(class="dropdown-title")= locals.user.profile.firstName
+//-                             li(role="separator" class="divider hidden-xs")
+//-                                 li
+//-                                 a(href="/experience/create") Design an experience
 
-        <!-- Join us Modal -->
-        div#joinus.modal.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel")
-            div.modal-dialog(role="document")
-                div.modal-content
-                    div.modal-header.wel-bg-blue.wel-color-yellow
-                        h3.modal-title.m-auto Join our travellers community
-                        button.close(type="button" data-dismiss="modal" aria-label="Close")
-                            span.wel-color-yellow(aria-hidden="true") &times;
-                    div#joinus-modal.modal-body
-                        form#join-us-form.form-horizontal(name="signupForm" action="/signup" method='POST' onsubmit="return checkSignUpForm()")
-                            input(type='hidden', name='_csrf', value=_csrf)
+//-                             li(role="separator" class="divider hidden-xs")
+//-                             //-
+//-                                 li
+//-                                 a(href="/dashboard") Dashboard
+//-                                 li(role="separator" class="divider hidden-xs")
+//-                             li
+//-                                 a(href="/account/profile/" + locals.user._id) Profile
+//-                             li(role="separator" class="divider hidden-xs")
+//-                             li
+//-                                 a(href="/account/set_account") Account
+//-                             li(role="separator" class="divider hidden-xs")
+//-                             li
+//-                                 a(href="/logout") Sign out
 
-                            .item.text-center
-                                .pt-2
-                                    input#email.form-control.form-modal.m-auto(name="email" type="email" placeholder="Your email")
-                                    p#email-err.form-msg-error.m-auto
-                                .pt-4
-                                    input#password.form-control.form-modal.m-auto(name="password" type="password" placeholder="Choose a password")
-                                    p#password-err.form-msg-error.m-auto
-                                .pt-4
-                                    input#password-confirm.form-control.form-modal.m-auto(name="password-confirm" type="password" placeholder="Confirm your password")
-                                    p#password-confirm-err.form-msg-error.m-auto
-                                .pt-4.join-us-btn
-                                    p.terms-of-use.m-auto.pb-4
-                                        | By clicking the "Welcom !" button, you agree our Terms of Use, which you can 
-                                        a(href='/termsofuse') read here
-                                        | . 
-                                    button.mt-1.mb-2(type="submit") Welcome !
+//-         <!-- Join us Modal -->
+//-         div#joinus.modal.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel")
+//-             div.modal-dialog(role="document")
+//-                 div.modal-content
+//-                     div.modal-header.wel-bg-blue.wel-color-yellow
+//-                         h3.modal-title.m-auto Join our travellers community
+//-                         button.close(type="button" data-dismiss="modal" aria-label="Close")
+//-                             span.wel-color-yellow(aria-hidden="true") &times;
+//-                     div#joinus-modal.modal-body
+//-                         form#join-us-form.form-horizontal(name="signupForm" action="/signup" method='POST' onsubmit="return checkSignUpForm()")
+//-                             input(type='hidden', name='_csrf', value=_csrf)
 
-                            .form-group
-                                .m-auto
-                                    hr
-                                    p.text-center Or join us with :
+//-                             .item.text-center
+//-                                 .pt-2
+//-                                     input#email.form-control.form-modal.m-auto(name="email" type="email" placeholder="Your email")
+//-                                     p#email-err.form-msg-error.m-auto
+//-                                 .pt-4
+//-                                     input#password.form-control.form-modal.m-auto(name="password" type="password" placeholder="Choose a password")
+//-                                     p#password-err.form-msg-error.m-auto
+//-                                 .pt-4
+//-                                     input#password-confirm.form-control.form-modal.m-auto(name="password-confirm" type="password" placeholder="Confirm your password")
+//-                                     p#password-confirm-err.form-msg-error.m-auto
+//-                                 .pt-4.join-us-btn
+//-                                     p.terms-of-use.m-auto.pb-4
+//-                                         | By clicking the "Welcom !" button, you agree our Terms of Use, which you can 
+//-                                         a(href='/termsofuse') read here
+//-                                         | . 
+//-                                     button.mt-1.mb-2(type="submit") Welcome !
 
-                            .form-group
-                                .social-btn.text-center
-                                    .mt-2
-                                        button.wel-bg-blue(type="submit") 
-                                            a(href='/auth/facebook')
-                                                i.fa.fa-facebook.wel-color-white
-                                                    | &nbsp;&nbsp; Your Facebook account                                    
-                                    .mt-2
-                                        button.wel-bg-pink(type="submit") 
-                                            a(href='/auth/twitter')
-                                                i.fa.fa-twitter.wel-color-white
-                                                    | &nbsp;&nbsp; Your Twitter account
-                                    .mt-2
-                                        button.wel-bg-yellow(type="submit") 
-                                            a(href='/auth/google')
-                                                i.fa.fa-google-plus.wel-color-white
-                                                    | &nbsp;&nbsp; Your Google account
-                                    .mt-4
-                                        a(href='#' onclick="$('#joinus').modal('hide');$('#sign-in-modal').modal('toggle');") Already a member ?
-        
-        <!-- Sing in Modal -->
-        div#sign-in-modal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="sign in modal")
-            div.modal-dialog(role="document")
-                div.modal-content
-                    div.modal-header.wel-bg-blue.wel-color-yellow
-                        h3.modal-title.m-auto  Welcome back !
-                        button.close(type="button" data-dismiss="modal" aria-label="Close")
-                            span.wel-color-yellow(aria-hidden="true") &times;
-                    div#sign-in-modal-body.modal-body
-                        form#sign-in-modal-form.form-horizontal(name="signupForm" action="/login" method='POST' onsubmit="return checkSignUpForm()")
-                            input(type='hidden', name='_csrf', value=_csrf)
+//-                             .form-group
+//-                                 .m-auto
+//-                                     hr
+//-                                     p.text-center Or join us with :
 
-                            .item.text-center
-                                .pt-2
-                                    input#email.form-control.form-modal.m-auto(name="email" type="email" placeholder="Your email")
-                                    p#email-err.form-msg-error.m-auto
-                                .pt-4
-                                    input#password.form-control.form-modal.m-auto(name="password" type="password" placeholder="Your password")
-                                    p#password-err.form-msg-error.m-auto
-                                .pt-4
-                                    input#remember-me(type="checkbox" checked)
-                                    span.form-label &nbsp;Remember me
-                                .pt-4.sign-in-btn
-                                    button.mt-1.mb-2(type="submit") Sign in
-                                .pt-2
-                                    a(href='/forgot') Forgot your password ?
+//-                             .form-group
+//-                                 .social-btn.text-center
+//-                                     .mt-2
+//-                                         button.wel-bg-blue(type="submit") 
+//-                                             a(href='/auth/facebook')
+//-                                                 i.fa.fa-facebook.wel-color-white
+//-                                                     | &nbsp;&nbsp; Your Facebook account                                    
+//-                                     .mt-2
+//-                                         button.wel-bg-pink(type="submit") 
+//-                                             a(href='/auth/twitter')
+//-                                                 i.fa.fa-twitter.wel-color-white
+//-                                                     | &nbsp;&nbsp; Your Twitter account
+//-                                     .mt-2
+//-                                         button.wel-bg-yellow(type="submit") 
+//-                                             a(href='/auth/google')
+//-                                                 i.fa.fa-google-plus.wel-color-white
+//-                                                     | &nbsp;&nbsp; Your Google account
+//-                                     .mt-4
+//-                                         a(href='#' onclick="$('#joinus').modal('hide');$('#sign-in-modal').modal('toggle');") Already a member ?
 
-                            .form-group
-                                .m-auto
-                                    hr
-                                    p.text-center Or sign in with :
+//-         <!-- Sing in Modal -->
+//-         div#sign-in-modal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="sign in modal")
+//-             div.modal-dialog(role="document")
+//-                 div.modal-content
+//-                     div.modal-header.wel-bg-blue.wel-color-yellow
+//-                         h3.modal-title.m-auto  Welcome back !
+//-                         button.close(type="button" data-dismiss="modal" aria-label="Close")
+//-                             span.wel-color-yellow(aria-hidden="true") &times;
+//-                     div#sign-in-modal-body.modal-body
+//-                         form#sign-in-modal-form.form-horizontal(name="signupForm" action="/login" method='POST' onsubmit="return checkSignUpForm()")
+//-                             input(type='hidden', name='_csrf', value=_csrf)
 
-                            .form-group
-                                .social-btn.text-center
-                                    .mt-2
-                                        button.wel-bg-blue(type="submit") 
-                                            a(href='/auth/facebook')
-                                                i.fa.fa-facebook.wel-color-white
-                                                    | &nbsp;&nbsp; Your Facebook account                                    
-                                    .mt-2
-                                        button.wel-bg-pink(type="submit") 
-                                            a(href='/auth/twitter')
-                                                i.fa.fa-twitter.wel-color-white
-                                                    | &nbsp;&nbsp; Your Twitter account
-                                    .mt-2
-                                        button.wel-bg-yellow(type="submit") 
-                                            a(href='/auth/google')
-                                                i.fa.fa-google-plus.wel-color-white
-                                                    | &nbsp;&nbsp; Your Google account
-                                    .mt-4
-                                        a(href='#' onclick="$('#sign-in-modal').modal('hide');$('#joinus').modal('toggle');$('#joinus').modal('handleUpdate');") Not yet a member ? Join us !
+//-                             .item.text-center
+//-                                 .pt-2
+//-                                     input#email.form-control.form-modal.m-auto(name="email" type="email" placeholder="Your email")
+//-                                     p#email-err.form-msg-error.m-auto
+//-                                 .pt-4
+//-                                     input#password.form-control.form-modal.m-auto(name="password" type="password" placeholder="Your password")
+//-                                     p#password-err.form-msg-error.m-auto
+//-                                 .pt-4
+//-                                     input#remember-me(type="checkbox" checked)
+//-                                     span.form-label &nbsp;Remember me
+//-                                 .pt-4.sign-in-btn
+//-                                     button.mt-1.mb-2(type="submit") Sign in
+//-                                 .pt-2
+//-                                     a(href='/forgot') Forgot your password ?
+
+//-                             .form-group
+//-                                 .m-auto
+//-                                     hr
+//-                                     p.text-center Or sign in with :
+
+//-                             .form-group
+//-                                 .social-btn.text-center
+//-                                     .mt-2
+//-                                         button.wel-bg-blue(type="submit") 
+//-                                             a(href='/auth/facebook')
+//-                                                 i.fa.fa-facebook.wel-color-white
+//-                                                     | &nbsp;&nbsp; Your Facebook account                                    
+//-                                     .mt-2
+//-                                         button.wel-bg-pink(type="submit") 
+//-                                             a(href='/auth/twitter')
+//-                                                 i.fa.fa-twitter.wel-color-white
+//-                                                     | &nbsp;&nbsp; Your Twitter account
+//-                                     .mt-2
+//-                                         button.wel-bg-yellow(type="submit") 
+//-                                             a(href='/auth/google')
+//-                                                 i.fa.fa-google-plus.wel-color-white
+//-                                                     | &nbsp;&nbsp; Your Google account
+//-                                     .mt-4
+//-                                         a(href='#' onclick="$('#sign-in-modal').modal('hide');$('#joinus').modal('toggle');$('#joinus').modal('handleUpdate');") Not yet a member ? Join us !

@@ -356,137 +356,37 @@ button {
   height: 50px; }
 
 /************** This file define colors use for welcom ***************/
-#header-nav {
-  min-height: 60px; }
-  #header-nav .header-logo {
-    height: 65px; }
-  #header-nav h1 {
-    font-family: 'Aaux ProLight', serif;
-    font-size: 5em; }
-  #header-nav a {
-    padding-left: 0px !important;
-    padding-right: 0px !important;
-    color: #000000;
-    border-bottom: solid 3px;
-    border-bottom-color: #ffffff; }
-    #header-nav a:hover:not(.navbar-brand) {
-      border-bottom-color: #ffd14e; }
-  #header-nav #join-us-btn {
-    background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
-    background: linear-gradient(to right, #dc5770, #0a1235);
-    font-size: 13,76pt;
-    border: none;
-    height: 40px;
-    color: white;
-    width: 117px;
-    border-radius: 20px; }
-  #header-nav #nav-toggler-btn {
-    top: 18px; }
-  #header-nav .sign-in-link {
-    font-family: 'Aaux ProBlack', serif;
-    background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
-    background: linear-gradient(to right, #dc5770, #0a1235);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; }
+#header-nav-btn {
+  top: 30px; }
 
-#join-us-form input {
-  border-bottom: 1px solid black;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  height: 50px;
-  width: 80%; }
+#wel-nav-bar .header-logo {
+  height: 75px; }
 
-#join-us-form input::-webkit-input-placeholder {
-  text-align: center;
-  font-family: 'Aaux ProLight', serif; }
-
-#join-us-form input:-ms-input-placeholder {
-  text-align: center;
-  font-family: 'Aaux ProLight', serif; }
-
-#join-us-form input::placeholder {
-  text-align: center;
-  font-family: 'Aaux ProLight', serif; }
-
-#join-us-form a {
-  border: none; }
-
-#join-us-form .join-us-btn button {
-  background-color: #ffffff;
+#wel-nav-bar a {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
   color: #000000;
-  border: 2px solid #dc5770;
-  border-radius: 25px;
-  font-weight: bold;
-  width: 170px;
-  height: 50px; }
+  border-bottom: solid 3px;
+  border-bottom-color: #ffffff; }
+  #wel-nav-bar a:hover:not(.navbar-brand) {
+    border-bottom-color: #ffd14e; }
 
-#join-us-form .terms-of-use {
-  width: 80%; }
-
-#join-us-form .social-btn button {
+#wel-nav-bar #join-us-btn {
+  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
+  background: linear-gradient(to right, #dc5770, #0a1235);
+  font-size: 13,76pt;
   border: none;
-  border-radius: 25px;
-  width: 80%;
-  height: 50px; }
+  height: 40px;
+  color: white;
+  width: 117px;
+  border-radius: 20px; }
 
-#join-us-form .social-btn i {
-  font-weight: bold !important; }
-
-#join-us-form hr {
-  height: 3px;
-  color: #ffd14e;
-  background-color: #ffd14e;
-  border: none;
-  width: 60%; }
-
-#sign-in-modal-form input:not(#remember-me) {
-  border-bottom: 1px solid black;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  height: 50px;
-  width: 80%; }
-
-#sign-in-modal-form input::-webkit-input-placeholder {
-  text-align: center;
-  font-family: 'Aaux ProLight', serif; }
-
-#sign-in-modal-form input:-ms-input-placeholder {
-  text-align: center;
-  font-family: 'Aaux ProLight', serif; }
-
-#sign-in-modal-form input::placeholder {
-  text-align: center;
-  font-family: 'Aaux ProLight', serif; }
-
-#sign-in-modal-form a {
-  border: none; }
-
-#sign-in-modal-form .sign-in-btn button {
-  background-color: #ffffff;
-  color: #000000;
-  border: 2px solid #dc5770;
-  border-radius: 25px;
-  font-weight: bold;
-  width: 170px;
-  height: 50px; }
-
-#sign-in-modal-form .social-btn button {
-  border: none;
-  border-radius: 25px;
-  width: 80%;
-  height: 50px; }
-
-#sign-in-modal-form .social-btn i {
-  font-weight: bold !important; }
-
-#sign-in-modal-form hr {
-  height: 3px;
-  color: #ffd14e;
-  background-color: #ffd14e;
-  border: none;
-  width: 60%; }
+#wel-nav-bar .sign-in-link {
+  font-family: 'Aaux ProBlack', serif;
+  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
+  background: linear-gradient(to right, #dc5770, #0a1235);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; }
 
 /************** This file define colors use for welcom ***************/
 #footer-content {

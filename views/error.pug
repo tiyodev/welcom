@@ -1,6 +1,11 @@
 extends layout
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  .wel-bg-blue.wel-color-white.p-6
+    h1.text-center.wel-color-yellow Error !
+  .d-flex.flex-row.justify-content-center.m-auto.footer-content
+    .p-2
+      h1.pt-4.text-center= error.status
+      h2.text-center= message
+      
+      pre.pt-4 #{error.stack}

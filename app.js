@@ -15,6 +15,7 @@ const passport = require('passport');
 const path = require('path');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+const errorHandler = require('./config/error-handler');
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -115,21 +116,12 @@ app.use('/auth', auth);
 app.use((req, res, next) => {
   const err = new Error('Not Found');
   err.status = 404;
+  err.message = err.message;
   next(err);
 });
 
-// error handler
-app.use((err, req, res) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-process.on('uncaughtException', console.error);
-process.on('unhandledRejection', console.error);
+app.use(errorHandler.logErrors);
+app.use(errorHandler.clientErrorHandler);
+app.use(errorHandler.errorHandler);
 
 module.exports = app;

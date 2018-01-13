@@ -99,3 +99,15 @@ function onListening() {
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+process.on('uncaughtException', (err, next) => {
+  console.log(' UNCAUGHT EXCEPTION ');
+  console.log(`[Inside 'uncaughtException' event] ${err.stack}` || err.message);
+  next(err);
+});
+
+process.on('unhandledRejection', (err, next) => {
+  console.log(' UNHANDLED REJECTION ');
+  console.log(`[Inside 'unhandledRejection' event] ${err.stack}` || err.message);
+  next(err);
+});

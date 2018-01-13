@@ -1,46 +1,46 @@
 extends ../layout
 
 block content
-    div.wel-bg-blue.wel-color-white.p-6
-        h1.text-center.wel-color-yellow Let’s talk !
-    .d-flex.flex-row.justify-content-center.m-auto.footer-content
+  .wel-bg-blue.wel-color-white.p-6
+    h1.text-center.wel-color-yellow Let’s talk !
+  .d-flex.flex-row.justify-content-center.m-auto.footer-content
+    .p-2
+      p.pt-4
+        | It is very important for us to be in permanent contact with the community.<br/>
+        | If you have something to tell us, choose the medium you prefer below and shoot us a message !
+
+      .d-flex.flex-row.justify-content-around
         .p-2
-            p.pt-4
-                | It is very important for us to be in permanent contact with the community.<br/>
-                | If you have something to tell us, choose the medium you prefer below and shoot us a message !
+          a(href="https://www.facebook.com/welcomcity/" target="_blank")
+            img.pt-4.mx-auto.d-block(src="/images/facebook-logo-l.png" alt="facebook" height="100px") 
+        .p-2
+          a(href="https://twitter.com/WelcomParis" target="_blank")
+            img.pt-4.mx-auto.d-block(src="/images/twitter-logo-l.png" alt="twitter" height="100px") 
+        //- .p-2
+        //-     a(href="https://www.instagram.com/welcom_paris/" target="_blank")
+        //-         img.pt-4.mx-auto.d-block(src="/images/instagram-logo-l.png" alt="instagram" height="100px") 
+        //- .p-2
+        //-     a(href="https://medium.com/@WelcomParis" target="_blank")
+        //-         img.pt-4.mx-auto.d-block(src="/images/medium-logo-l.png" alt="medium" height="100px") 
 
-            .d-flex.flex-row.justify-content-around
-                .p-2
-                    a(href="https://www.facebook.com/welcomcity/" target="_blank")
-                        img.pt-4.mx-auto.d-block(src="/images/facebook-logo-l.png" alt="facebook" height="100px") 
-                .p-2
-                    a(href="https://twitter.com/WelcomParis" target="_blank")
-                        img.pt-4.mx-auto.d-block(src="/images/twitter-logo-l.png" alt="twitter" height="100px") 
-                //- .p-2
-                //-     a(href="https://www.instagram.com/welcom_paris/" target="_blank")
-                //-         img.pt-4.mx-auto.d-block(src="/images/instagram-logo-l.png" alt="instagram" height="100px") 
-                //- .p-2
-                //-     a(href="https://medium.com/@WelcomParis" target="_blank")
-                //-         img.pt-4.mx-auto.d-block(src="/images/medium-logo-l.png" alt="medium" height="100px") 
+      p.pt-6.pb-4.text-center You can even use the form just below.
 
-            p.pt-6.pb-4.text-center You can even use the form just below.
+      .d-flex.flex-row.justify-content-center.align-items-center.flex-wrap
+        .p-2
+          img.mx-auto.d-block(src="/images/team/jb.jpg" alt="JB" height="200px" )
+        .p-2.meet-team-desc
+          p Usually, I’m the one that answer, and I answer to all messages we receive, as fast as possible.
+          p Can’t wait to read your words !
+          p JB
 
-            .d-flex.flex-row.justify-content-center.align-items-center.flex-wrap
-                .p-2
-                    img.mx-auto.d-block(src="/images/team/jb.jpg" alt="JB" height="200px" )
-                .p-2.meet-team-desc
-                    p Usually, I’m the one that answer, and I answer to all messages we receive, as fast as possible.
-                    p Can’t wait to read your words !
-                    p JB
+      .d-flex.flex-column.justify-content-center.align-items-center.pt-4
+        .contact-us-form
+          .pt-4
+            textarea(name="desc", cols="42", rows="5" placeholder="Please write here")
+          .pt-4
+            input(name= "email" placeholder="Your email")
 
-            .d-flex.flex-column.justify-content-center.align-items-center.pt-4
-                .contact-us-form
-                    .pt-4
-                        textarea(name="desc", cols="42", rows="5" placeholder="Please write here")
-                    .pt-4
-                        input(name= "email" placeholder="Your email")
+          p.pt-3.text-center (we don't spam, we don't sell data)
 
-                    p.pt-3.text-center (we don't spam, we don't sell data)
-                
-                .contact-us-btn
-                    button.mt-1.mb-5.text-uppercase(type="button") SEND
+        .contact-us-btn
+          button.mt-1.mb-5.text-uppercase(type="button") SEND

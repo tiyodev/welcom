@@ -1,20 +1,19 @@
 @import 'color';
 
-#header-nav{
-    min-height: 60px;
-    
-    .header-logo{
-        height:65px;
-    }
+#header-nav-btn{
+    top: 30px;
+}
 
-    h1{
-        font-family: 'Aaux ProLight', serif;
-        font-size: 5em;
+#wel-nav-bar{
+    background-color: $wel-white;
+
+    .header-logo{
+        height:75px;
     }
 
     a{
-        padding-left: 0px !important;
-        padding-right: 0px !important;
+        // padding-left: 0px !important;
+        // padding-right: 0px !important;
 
         color: $wel-black;
 
@@ -37,10 +36,6 @@
         border-radius:20px;
     }
 
-    #nav-toggler-btn{
-        top: 18px;
-    }
-
     .sign-in-link{
         font-family: 'Aaux ProBlack', serif;
         background: -webkit-linear-gradient(to right, #dc5770 , #0a1235);
@@ -49,6 +44,21 @@
         -webkit-text-fill-color: transparent;
     }
 }
+
+// #header-nav{
+//     min-height: 60px;
+    
+//     h1{
+//         font-family: 'Aaux ProLight', serif;
+//         font-size: 5em;
+//     }
+
+//     #nav-toggler-btn{
+//         top: 18px;
+//     }
+
+
+// }
 
 #join-us-form{
     input{
