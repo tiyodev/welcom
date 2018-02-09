@@ -34,7 +34,7 @@
 }
 
 .wel-color-white{
-  color: $wel-white;
+  color: $wel-white !important;
 }
 
 .wel-color-blue-night{
@@ -47,4 +47,25 @@
 
 button{
   cursor: pointer;
+}
+
+.gradient-rounded-btn{
+  font-size: 13,76pt;
+
+  background: linear-gradient(to right, #dc5770 , #0a1235);
+  color: white;
+
+  border: none;
+  border-radius:20px;
+
+  height: 40px;
+  width: calc(100% + 20px);
+}
+
+.text-gradient{
+  font-family: 'Aaux ProBlack', serif;
+  background: -webkit-linear-gradient(to right, #dc5770 , #0a1235);
+  background: linear-gradient(to right, #dc5770 , #0a1235);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

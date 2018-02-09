@@ -26,7 +26,7 @@
   background-color: #868686; }
 
 .wel-color-white {
-  color: #ffffff; }
+  color: #ffffff !important; }
 
 .wel-color-blue-night {
   color: #0a1235; }
@@ -36,6 +36,23 @@
 
 button {
   cursor: pointer; }
+
+.gradient-rounded-btn {
+  font-size: 13,76pt;
+  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
+  background: linear-gradient(to right, #dc5770, #0a1235);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  height: 40px;
+  width: calc(100% + 20px); }
+
+.text-gradient {
+  font-family: 'Aaux ProBlack', serif;
+  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
+  background: linear-gradient(to right, #dc5770, #0a1235);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; }
 
 /************** This file define colors use for welcom ***************/
 /*************** Header Image Carousel ***********************************/
@@ -208,6 +225,9 @@ button {
   #multi-part .item-newsletter input:-ms-input-placeholder {
     text-align: center;
     font-family: 'Aaux ProLight', serif; }
+  #multi-part .item-newsletter input::-ms-input-placeholder {
+    text-align: center;
+    font-family: 'Aaux ProLight', serif; }
   #multi-part .item-newsletter input::placeholder {
     text-align: center;
     font-family: 'Aaux ProLight', serif; }
@@ -331,6 +351,10 @@ button {
   text-align: center;
   font-family: 'Aaux ProLight', serif; }
 
+.contact-us-form input::-ms-input-placeholder, .contact-us-form textarea::-ms-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
 .contact-us-form input::placeholder, .contact-us-form textarea::placeholder {
   text-align: center;
   font-family: 'Aaux ProLight', serif; }
@@ -359,34 +383,131 @@ button {
 #header-nav-btn {
   top: 30px; }
 
-#wel-nav-bar .header-logo {
-  height: 75px; }
+#wel-nav-bar {
+  background-color: #ffffff; }
+  #wel-nav-bar a {
+    color: #000000; }
+  #wel-nav-bar .header-logo {
+    height: 75px; }
+  #wel-nav-bar .underline-yellow {
+    border-bottom: solid 3px;
+    border-bottom-color: #ffffff; }
+    #wel-nav-bar .underline-yellow:hover {
+      border-bottom-color: #ffd14e; }
+  #wel-nav-bar #header-profile-picture {
+    width: 75px; }
+  #wel-nav-bar #message-icon .badge {
+    background-color: #ffd14e;
+    margin-left: -10px; }
 
-#wel-nav-bar a {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-  color: #000000;
-  border-bottom: solid 3px;
-  border-bottom-color: #ffffff; }
-  #wel-nav-bar a:hover:not(.navbar-brand) {
-    border-bottom-color: #ffd14e; }
+#join-us-form input {
+  border-bottom: 1px solid black;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  height: 50px;
+  width: 80%; }
 
-#wel-nav-bar #join-us-btn {
-  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
-  background: linear-gradient(to right, #dc5770, #0a1235);
-  font-size: 13,76pt;
+#join-us-form input::-webkit-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#join-us-form input:-ms-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#join-us-form input::-ms-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#join-us-form input::placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#join-us-form a {
   border: none;
-  height: 40px;
-  color: white;
-  width: 117px;
-  border-radius: 20px; }
+  color: #000000; }
 
-#wel-nav-bar .sign-in-link {
-  font-family: 'Aaux ProBlack', serif;
-  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
-  background: linear-gradient(to right, #dc5770, #0a1235);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; }
+#join-us-form .join-us-btn button {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #dc5770;
+  border-radius: 25px;
+  font-weight: bold;
+  width: 170px;
+  height: 50px; }
+
+#join-us-form .terms-of-use {
+  width: 80%; }
+
+#join-us-form .social-btn button {
+  border: none;
+  border-radius: 25px;
+  width: 80%;
+  height: 50px; }
+
+#join-us-form .social-btn i {
+  font-weight: bold !important; }
+
+#join-us-form hr {
+  height: 3px;
+  color: #ffd14e;
+  background-color: #ffd14e;
+  border: none;
+  width: 60%; }
+
+#sign-in-modal-form input:not(#remember-me) {
+  border-bottom: 1px solid black;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  height: 50px;
+  width: 80%; }
+
+#sign-in-modal-form input::-webkit-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#sign-in-modal-form input:-ms-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#sign-in-modal-form input::-ms-input-placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#sign-in-modal-form input::placeholder {
+  text-align: center;
+  font-family: 'Aaux ProLight', serif; }
+
+#sign-in-modal-form a {
+  border: none;
+  color: #000000; }
+
+#sign-in-modal-form .sign-in-btn button {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #dc5770;
+  border-radius: 25px;
+  font-weight: bold;
+  width: 170px;
+  height: 50px; }
+
+#sign-in-modal-form .social-btn button {
+  border: none;
+  border-radius: 25px;
+  width: 80%;
+  height: 50px; }
+
+#sign-in-modal-form .social-btn i {
+  font-weight: bold !important; }
+
+#sign-in-modal-form hr {
+  height: 3px;
+  color: #ffd14e;
+  background-color: #ffd14e;
+  border: none;
+  width: 60%; }
 
 /************** This file define colors use for welcom ***************/
 #footer-content {

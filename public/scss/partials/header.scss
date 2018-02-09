@@ -7,58 +7,34 @@
 #wel-nav-bar{
     background-color: $wel-white;
 
+    a{
+        color: $wel-black;
+    }
+
     .header-logo{
         height:75px;
     }
 
-    a{
-        // padding-left: 0px !important;
-        // padding-right: 0px !important;
-
-        color: $wel-black;
-
+    .underline-yellow{
         border-bottom: solid 3px;
         border-bottom-color: $wel-white;
 
-        &:hover:not(.navbar-brand){
+        &:hover{
             border-bottom-color: $wel-yellow;
         }
     }
 
-    #join-us-btn{
-        background: linear-gradient(to right, #dc5770 , #0a1235);
-        font-size: 13,76pt;
-        border: none;
-        height: 40px;
-
-        color: white; 
-        width: 117px; 
-        border-radius:20px;
+    #header-profile-picture{
+        width: 75px;
     }
 
-    .sign-in-link{
-        font-family: 'Aaux ProBlack', serif;
-        background: -webkit-linear-gradient(to right, #dc5770 , #0a1235);
-        background: linear-gradient(to right, #dc5770 , #0a1235);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+    #message-icon{
+        .badge{
+            background-color: $wel-yellow;
+            margin-left: -10px;
+        }
     }
 }
-
-// #header-nav{
-//     min-height: 60px;
-    
-//     h1{
-//         font-family: 'Aaux ProLight', serif;
-//         font-size: 5em;
-//     }
-
-//     #nav-toggler-btn{
-//         top: 18px;
-//     }
-
-
-// }
 
 #join-us-form{
     input{
@@ -77,6 +53,7 @@
 
     a{
         border: none;
+        color: $wel-black;
     }
 
     .join-us-btn{
@@ -117,7 +94,6 @@
     }
 }
 
-
 #sign-in-modal{
     &-form{
         input:not(#remember-me){
@@ -133,9 +109,10 @@
             text-align: center;
             font-family: 'Aaux ProLight', serif;
         }
-
+        
         a{
             border: none;
+            color: $wel-black;
         }
 
         .sign-in-btn{
