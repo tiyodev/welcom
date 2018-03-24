@@ -1,0 +1,75 @@
+extends ../layout
+
+block content
+
+  img.img-header-profile.img-fluid(src=data.profileHeaderPic alt="Profile header")
+  .profile-social-icn.d-flex.flex-row.justify-content-center.align-items-center.flex-wrap
+    .pl-5.pr-5
+      a(href=data.facebookLink target="_blank")
+        img(src="/images/facebook.png" alt="facebook")
+    .pl-5.pr-5
+      a(href=data.instagramLink target="_blank")
+        img(src="/images/insta.png" alt="insta")
+    .profile-social-icn-separator
+    .pl-5.pr-5
+      a(href=data.twitterLink target="_blank")
+        img(src="/images/twitter.png" alt="twitter")
+    .pl-5.pr-5
+      a(href=data.webLink target="_blank")
+        img(src="/images/darkHeart.png" alt="darkHeart")
+  .img-profile.mx-auto
+    img.img-profile-picture.rounded-circle(src=data.profilePic alt="Profile picture")
+
+  #profile-content.m-auto
+    .pt-4.pb-4.text-center
+      h2 #{data.displayName}
+      h4.green-txt X #{data.nbRecommendation} positive recommendations
+      p.pt-2 
+        | #{data.description} 
+        br 
+        | #{data.languageSpokenDesc}
+
+    nav.nav.nav-pills.nav-fill.nav-primary.font-weight-bold
+      a.nav-item.nav-link.active(href="/profile") Profile
+      a.nav-item.nav-link(href="/profile/recommendation") Recommendations
+      a.nav-item.nav-link(href="/profile/experience") Experiences
+      a.nav-item.nav-link(href="/profile/dashboard") Dashboard
+
+    .pt-5.pb-4.text-center
+      p #{data.shortDesc}
+
+    .profile-tags
+      .d-flex.align-content-between.flex-wrap.mb-3
+        each tag in data.tags
+          .p-2.m-2.border.border-secondary.rounded #{tag}
+
+    h4.pt-3.pl-2.font-weight-bold What I want to share whith the community :
+    p.pl-2 #{data.shareCommunityDesc}
+
+    hr.profile-separation.mt-6.mb-6
+
+    h4.font-weight-bold.pl-2 About me :
+    p.pl-2 #{data.aboutMe}
+
+    hr.profile-separation.mt-6.mb-6
+
+    .pt-4.pb-4.d-flex.justify-content-around.flex-wrap
+      .p-4.profile-square.text-center
+        h4.font-weight-bold The trips I lived
+        p #{data.tripLived}
+
+      .p-4.profile-square.text-center 
+        h4.font-weight-bold My travel plans
+        p #{data.travelPlans}
+
+    hr.profile-separation.mt-6.mb-6
+
+    if !data.isConnectedUser
+      p.text-center Wish to have a chat ?
+      
+      .pb-6.text-center
+        button.pr-6.pl-6.btn.btn-outline-dark(type="button") Contact me
+    else
+      .pb-6.text-center
+        a(href="/profile/edit")
+          button.pr-6.pl-6.btn.btn-dark(type="button") Edit profile

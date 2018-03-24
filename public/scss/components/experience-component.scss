@@ -1,0 +1,57 @@
+@import 'color';
+
+.experience-card{
+  border: solid 1px $wel-grey-middle-light;  
+  height: 250px;
+
+  &-form{
+    border: solid 1px $wel-pink;  
+    height: 450px;
+
+    &-container{
+      max-width: 425px;
+
+      label{
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  &-left-container{
+    padding-left: 10px;
+  }
+
+  &-pic{
+    width: 200px;
+  }
+
+  &-cover-pic{
+    width: 300px;
+    height: 250px;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: bottom;
+    object-position: bottom;
+    border-top: solid 1px $wel-grey-middle-light;
+    border-bottom: solid 1px $wel-grey-middle-light;
+  }
+
+  &-action{
+    border-bottom: solid 1px $wel-grey-middle-light;  
+    border-left: solid 1px $wel-grey-middle-light;  
+    border-right: solid 1px $wel-grey-middle-light;  
+  }
+
+  .vertical-separation{
+    width: 1px;
+    height: 90%;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border-left: solid 3px $wel-grey-middle-light;
+  }
+
+  &-msg{
+    border: solid 1px $wel-grey-middle-light;
+  }
+}

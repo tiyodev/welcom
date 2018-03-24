@@ -1,19 +1,34 @@
+//- .card.experience-card-item
+//-   img.img-fluid.card-img-top(src=exp.headerPic alt="Card image cap")
+//-   .card-block.p-2
+//-     .container
+//-       .row.no-gutters.card-block-img-row
+//-         .col.exp-creator
+//-           span.exp-creator-with with 
+//-           p.exp-creator-name.p-0.m-0 #{exp.displayName}
+//-         .col
+//-           img.mx-auto.d-block.rounded-circle(src=exp.profilePic alt="...")
+//-         .col
+//-           span.position-absolute.nb-reco #{exp.nbRecommendation} 
+//-           span.position-absolute.icon-reco.fa.fa-smile-o.fa-2x
+
+//-       .row.pt-3.pl-5.pb-4
+//-         p.card-text #{exp.expDesc}
+
 .card.experience-card-item
-  img.img-fluid.card-img-top(src="/images/default-img-card.jpg" alt="Card image cap")
+  img.img-fluid.card-img-top(src=exp.headerPic alt="Card image cap")
   .card-block.p-2
     .container
-      .row.no-gutters.card-block-img-row
-        .col
-          img(src="/images/yellow-star.png" alt="...")
-          img(src="/images/yellow-star.png" alt="...")
-          img(src="/images/yellow-star.png" alt="...")
-          img(src="/images/dark-star.png" alt="...")
-          img(src="/images/dark-star.png" alt="...")
-        .col
-          img.mx-auto.d-block.rounded-circle(src="/images/default-profile-img.png" alt="...")
-        .col.exp-creator
+      .row.d-flex.justify-content-center.no-gutters.card-block-img-row
+        .p-0
+          img.mx-auto.d-block.rounded-circle(src=exp.profilePic alt="...")
+        .p-0.exp-creator
           span.exp-creator-with with 
-          p.exp-creator-name.p-0.m-0 Greg
+          p.exp-creator-name.p-0.m-0 #{exp.displayName}
 
       .row.pt-3.pl-5.pb-4
-        p.card-text Explore the wonderful Golden Triangle together
+        p.card-text #{exp.expDesc}
+      .row.pt-3.pl-5.pb-4
+        span.position-absolute.nb-reco #{exp.nbRecommendation} 
+        span.position-absolute.icon-reco.fa.fa-smile-o.fa-2x
+    

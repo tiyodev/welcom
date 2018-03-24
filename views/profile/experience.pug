@@ -1,0 +1,64 @@
+extends ../layout
+
+block content
+
+  img.img-header-profile.img-fluid(src=data.profileHeaderPic alt="Profile header")
+  .profile-social-icn.d-flex.flex-row.justify-content-center.align-items-center.flex-wrap
+    .pl-5.pr-5
+      a(href=data.facebookLink target="_blank")
+        img(src="/images/facebook.png" alt="facebook")
+    .pl-5.pr-5
+      a(href=data.instagramLink target="_blank")
+        img(src="/images/insta.png" alt="insta")
+    .profile-social-icn-separator
+    .pl-5.pr-5
+      a(href=data.twitterLink target="_blank")
+        img(src="/images/twitter.png" alt="twitter")
+    .pl-5.pr-5
+      a(href=data.webLink target="_blank")
+        img(src="/images/darkHeart.png" alt="darkHeart")
+  .img-profile.mx-auto
+    img.img-profile-picture.rounded-circle(src=data.profilePic alt="Profile picture")
+
+  #profile-content.m-auto
+    .pt-4.pb-4.text-center
+      h2 #{data.displayName}
+      h4.green-txt X #{data.nbRecommendation} positive recommendations
+      p.pt-2 
+        | #{data.description} 
+        br
+        | #{data.languageSpokenDesc}
+
+    nav.nav.nav-pills.nav-fill.nav-primary.font-weight-bold
+      a.nav-item.nav-link(href="/profile") Profile
+      a.nav-item.nav-link(href="/profile/recommendation") Recommendations
+      a.nav-item.nav-link.active(href="/profile/experience") Experiences
+      a.nav-item.nav-link(href="/profile/dashboard") Dashboard
+
+    .pt-5.pb-4.text-center
+      span #{data.displayName} has 
+      span.recommendation-txt.green-txt #{data.nbWelcomerRecommendations} recommandation#{data.nbWelcomerRecommendations > 1 ? 's' : '' } 
+      span as a welcomer.
+
+      p.pt-4.mx-auto.w-75 #{data.experiencesDesc}
+
+      p.pt-2.mx-auto.w-75 
+        | To see or edit your existing experiences, just click on one of them.
+        br
+        | To create a ne one, click on the button below.
+
+        .p-2.text-center
+          button.btn.btn-wel-blue(type="button") Create a new experience
+
+      .d-flex.flex-row.justify-content-center.flex-wrap
+        each exp in exps
+          .p-3
+            include ../components/experience-card
+      
+      if !exps || exps.length === 0
+        hr.profile-separation.mt-6.mb-6
+
+        p.text-center Do you need help ?
+
+        .p-2.text-center
+          button.btn.btn-wel-blue(type="button") Contact the Welcom' team

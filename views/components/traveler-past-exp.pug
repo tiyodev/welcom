@@ -1,0 +1,26 @@
+if exp
+  .d-flex.justify-content-between.align-items-center.experience-card
+    .experience-card-left-container
+      .mx-auto
+        img.experience-card-pic.rounded-circle(src=exp.welcomerProfilePic alt="Profile picture")
+    .pl-4.pr-4.pt-2.pb-2 
+      p On the #{exp.date.toLocaleDateString('en-GB', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })},
+      p you lived :
+      h4.text-center.font-weight-bold #{exp.title}
+      span with 
+      span.font-weight-bold #{exp.welcomerDisplayName}
+    .experience-card-cover
+      img.experience-card-cover-pic.rounded.float-right(src=exp.expCover alt="Experience cover")
+  .mb-3.experience-card-action
+    p.pt-2.mb-0.text-center
+      | Did you let recommendations on the experience's page and on #{exp.welcomerDisplayName}'s profile ?
+      br
+      | Recommendations build trust among the community!
+    .d-flex.justify-content-center.align-items-center
+      .p-2
+        button.btn.btn-wel-pink(type="button") Go to conversation
+      .p-2
+        button.btn.btn-secondary(type="button") Let recommendations
+else
+  span.mb-4.p-4 No past experiences. 
+    a(href="#") Do you want to find a new experience to live?

@@ -3,12 +3,16 @@
 @import 'index';
 @import 'font';
 @import 'footer';
+@import 'profile';
+@import 'edit-profile';
 @import 'partials/header';
 @import 'partials/footer';
+@import 'components/recommendation';
 @import 'components/experience-card';
 @import 'components/community-says';
 @import 'components/story-card-title-text';
 @import 'components/story-card-title';
+@import 'components/experience-component';
 
 /*************** Override font family *************************************************/
 p, a, span{

@@ -1,10 +1,10 @@
-- console.log('ybo');
-- console.log(locals.user);
+//- - console.log('ybo');
+//- - console.log(locals.user);
 
 nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
   .container
     a.navbar-brand(href="/") 
-      img.header-logo(src='images/welcom-logo-horizontal-header.svg')
+      img.header-logo(src='../images/welcom-logo-horizontal-header.svg')
     button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarNav")
       span.navbar-toggler-icon
     #navbarNav.navbar-collapse.collapse
@@ -32,12 +32,12 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
           li.nav-item.m-auto.dropdown
             a#navbarDropdown.nav-link(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
               if !locals.user.profile.picture
-                img#header-profile-picture.rounded-circle(src="/images/defaultProfilePicture.png")
+                img#header-profile-picture.rounded-circle(src="/images/default-profile-pic.jpg")
               else
                 img#header-profile-picture.rounded-circle(src=locals.user.profile.picture)
 
             .dropdown-menu(aria-labelledby="navbarDropdown")
-              a.dropdown-item(href="#") Profile
+              a.dropdown-item(href="/profile") Profile
               .dropdown-divider
               a.dropdown-item(href="/logout") Sign out
 

@@ -1,0 +1,21 @@
+@import 'color';
+
+.recommendation{
+  hr{
+    background-color: $wel-grey-middle-light !important;
+    width: 100% !important;
+    height: 1px !important;
+  }
+
+  &-profile-pic{
+    height: 150px;
+  }
+
+  &-answer{
+    margin-left: 200px;
+    
+    &-profile-pic{
+      height: 125px;
+    }
+  }
+}

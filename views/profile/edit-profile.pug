@@ -1,0 +1,178 @@
+extends ../layout
+
+block content
+  .p-0.img-header-content
+    img.img-header-profile.img-fluid(src=(user.profile.coverPic !== undefined ? user.profile.coverPic : '/images/default-cover-pic.jpg')  alt="Profile header")
+    button.img-profile-cover-upload.btn.btn-wel-blue(type="button")
+      .span.fa.fa-camera.fa-3x
+  .pb-6.mx-auto.img-profile
+    img.img-profile-edit-picture.rounded-circle(src=(user.profile.profilePic !== undefined ? user.profile.profilePic : '/images/default-profile-pic.jpg') alt="Profile picture")
+    button.img-profile-pic-upload.btn.btn-wel-blue(type="button")
+      .span.fa.fa-camera.fa-3x
+
+  #profile-edit-content.pt-6.m-auto
+    .pt-4.pb-4.text-center
+      p 
+        | Tip: We know it's a lot to fill, but the more your profile reflects you
+        | and the more it is compelte, the easier it is to create bonds with other members
+        | of the community!
+
+    form(action="/profile/edit", method="post")
+      input(type='hidden' name='_csrf' value=_csrf id="_csrf")
+
+      h2.p-4.text-center Personal informations
+      .form-row
+        .form-group.col-md-6
+          label(for="inputFirstName") First Name
+          input#inputFirstName.form-control(type="text" name="firstName" placeholder="First Name" value=user.profile.firstName)
+        .form-group.col-md-6
+          label(for="inputLastName") Last Name
+          input#inputLastName.form-control(type="text" name="lastName" placeholder="Last Name" value=user.profile.lastName)
+      .form-row
+        .form-group.col-md-6
+          label(for="inputNickname") Nickname
+          input#inputNickname.form-control(type="text" name="nickName" placeholder="Nickname" value=user.profile.nickName)
+          small (if no nickname, your first name will be displayed.)
+        .form-group.col-md-6
+          label(for="inputEmail") Email
+          input#inputEmail.form-control(type="email" name="email" placeholder="Email" value=user.email)
+      .form-row
+        .form-group.col-md-6
+          label(for="inputMobileNumber") Mobile Number
+          input#inputMobileNumber.form-control(type="tel" name="mobileNumber" placeholder="Mobile Number" value=user.profile.phoneNumber)
+        .form-group.col-md-6
+          label(for="inputPassword") Password
+          input#inputPassword.form-control(type="password" name="password" placeholder="Password" value=user.password)
+      .form-group
+        p (It won't be displayed on your profile, it's only if we need to 
+          | contact you quickly - no spam or ads)
+
+      hr.mt-6.form-separation
+
+      h2.p-4.text-center About you
+
+      .form-row
+        .form-group.col-md-6
+          label(for="inputCurrentCity") Current City
+          input#inputCurrentCity.form-control(type="text" name="city" placeholder="Current City" value=user.profile.city)
+        .form-group.col-md-6
+          label(for="inputGender") Gender
+          select#inputGender.form-control(name="gender")
+            option(selected=(user.profile.gender === 'Man')) Man
+            option(selected=(user.profile.gender === 'Woman')) Woman
+
+      .form-row
+        .form-group.col-md-6
+          label(for="inputBirthDate") Date of birth
+          input#inputBirthDate.form-control(type="date" name="birthdate" placeholder="Date of birth" value=user.profile.birthdate)
+          small (It won't be displayed on your profile, only your age will.)
+        .form-group.col-md-6
+          label(for="inputDescribeAdj") Chose the adjective that best describes you as a traveller in this list: 
+          select#inputDescribeAdj.form-control.selectpicker(data-live-search="true" data-size="8" name="adjective")
+            option(value="") Choose...
+            each adj in adjectives
+              option= adj
+           
+      .form-row
+        .form-group.col-md-6
+          label(for="inputLanguageSpoken") Languages spoken (like, enough to have a conversation with other travellers):
+          select#inputLanguageSpoken.form-control.selectpicker(multiple data-live-search="true" data-max-options="6" data-size="8" name="languageSpoken")
+            each language in languages
+              option= language.name
+                  
+        .form-group.col-md-6
+          label(for="inputLanguageLearning") Languages you are currently learning:  
+          select#inputLanguageLearning.form-control.selectpicker(multiple data-live-search="true" data-max-options="2" data-size="8" name="languageLearning")
+            each language in languages
+              option= language.name
+      
+      hr.mt-6.form-separation
+
+      h2.p-4.text-center Your description
+
+      .form-row
+        .form-group.col-md-12
+          label(for="inputIntro") Your intro (it's a short text that will appear on top of your profile like a status):
+          textarea#inputIntro.form-control(name="inputIntro" cols="30" rows="5" value=user.profile.intro)
+      .form-row
+        .form-group.col-md-12
+          label(for="inputHobbie") What are your hobbies, interests, passions ?
+          p (You don't have to list all of them, but shared interests are a good start point to create bonds.
+            | Like foods, drinks, places, movies, unicorns, activities, etc. You can add 5 to 20.)
+          select#inputHobbie.form-control.selectpicker(multiple data-live-search="true" data-max-options="20" data-size="5" name="hobbies")
+            option foods
+            option drinks
+            option movies
+      .form-row
+        .form-group.col-md-12
+          label(for="inputBio") Your bio: a much bigger space where you can write what you want other members to know
+            | about you. Let us know who you are!
+          textarea#inputBio.form-control(name="inputBio" cols="30" rows="10" value=user.profile.description)
+      
+      hr.mt-6.form-separation
+
+      h2.p-4.text-center The traveller in you
+
+      .form-row
+        .form-group.col-md-12
+          label(for="inputSharing") What would you like to share whith the community?
+          textarea#inputSharing.form-control(name="inputSharing" cols="30" rows="5" placeholder="Passion for languages, for history, for sport? Even just time, thoughts and smiles ais good!" value=user.profile.shareWithCommunity)
+      .form-row
+        .form-group.col-md-12
+          label(for="inputTripLived") What trips have you lived?
+          textarea#inputTripLived.form-control(name="inputTripLived" cols="30" rows="5" placeholder="Paris already? Amsterdam, Berlin, a small place in your country, or even... Kingslanding?" value=user.profile.tripLived)
+      .form-row
+        .form-group.col-md-12
+          label(for="inputFutureTravel") Do you have travel plans for the future?
+          textarea#inputFutureTravel.form-control(name="inputFutureTravel" cols="30" rows="5" placeholder="Whether big or small plans, very precise or just ideas." value=user.profile.travelPlan)
+
+      hr.mt-6.form-separation
+
+      h2.p-4.text-center Your network
+
+      p.text-center
+        | If you use some social networks to share your thoughts, pictures, trips, you can put the
+        | links here so they will appear on your profile. 
+        br
+        |A simple URL copy-past is enough. 
+        br
+        | But it's not compulsory, share it only if you want!
+
+      .form-row
+        .form-group.col-md-6
+          //- label(for="inputFacebook") Facebook link
+          .input-group
+            .input-group-prepend
+              .input-group-text 
+                img(src="/images/facebook.png" alt="facebook")
+            input#inputFacebook.form-control(type="text" name="facebookLink" placeholder="Facebook URL" value=user.profile.facebookLing)
+        .form-group.col-md-6
+          //- label(for="inputInstagram") Instagram link
+          .input-group
+            .input-group-prepend
+              .input-group-text 
+                img(src="/images/insta.png" alt="insta")
+            input#inputInstagram.form-control(type="text" name="instagramLink" placeholder="Instagram URL" value=user.profile.instagramLink)
+      .form-row
+        .form-group.col-md-6
+          //- label(for="inputTwitter") Twitter link
+          .input-group
+            .input-group-prepend
+              .input-group-text 
+                img(src="/images/twitter.png" alt="twitter")
+            input#inputTwitter.form-control(type="text" name="twitterLink" placeholder="Twitter URL" value=user.profile.twitterLink)
+        .form-group.col-md-6
+          //- label(for="inputOtherLink") Other link
+          .input-group
+            .input-group-prepend
+              .input-group-text 
+                img(src="/images/darkHeart.png" alt="darkHeart" height="48px" width="48px")
+            input#inputOtherLink.form-control(type="text" name="otherLink" placeholder="Other URL" value=user.profile.otherLink)
+            small This last one is for other networks and websites: your blog, your Couchsurfing profile, etc.
+      
+      hr.mt-6.form-separation
+
+      h3.p-4.text-center All setup, well done!
+
+      .pb-6.text-center
+        button.pr-6.pl-6.btn.btn-wel-pink.font-weight-bold(type="submit") Save profile

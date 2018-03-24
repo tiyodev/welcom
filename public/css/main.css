@@ -39,7 +39,6 @@ button {
 
 .gradient-rounded-btn {
   font-size: 13,76pt;
-  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
   background: linear-gradient(to right, #dc5770, #0a1235);
   color: white;
   border: none;
@@ -49,10 +48,55 @@ button {
 
 .text-gradient {
   font-family: 'Aaux ProBlack', serif;
-  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
   background: linear-gradient(to right, #dc5770, #0a1235);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent; }
+
+/************** Welcom Custom Button ***************/
+.btn-wel-pink {
+  color: #ffffff;
+  background-color: #dc5770;
+  border-color: #d8425e; }
+  .btn-wel-pink:hover {
+    color: #ffffff;
+    background-color: #d32d4c;
+    border-color: #bf2844; }
+  .btn-wel-pink:active, .btn-wel-pink.active {
+    background-color: #d32d4c;
+    border-color: #bf2844; }
+  .btn-wel-pink:focus, .btn-wel-pink.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(220, 87, 112, 0.5) !important; }
+
+.btn-wel-blue {
+  color: #ffffff;
+  background-color: #0a1235;
+  border-color: #060b20; }
+  .btn-wel-blue:hover {
+    color: #ffffff;
+    background-color: #060b20;
+    border-color: #02030a; }
+  .btn-wel-blue:active, .btn-wel-blue.active {
+    background-color: #060b20;
+    border-color: #02030a; }
+  .btn-wel-blue:focus, .btn-wel-blue.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(10, 18, 53, 0.5) !important; }
+
+.btn-wel-yellow {
+  color: #000000;
+  background-color: #ffd14e;
+  border-color: #ffca35; }
+  .btn-wel-yellow:hover {
+    color: #000000;
+    background-color: #ffc41b;
+    border-color: #ffbd02; }
+  .btn-wel-yellow:active, .btn-wel-yellow.active {
+    background-color: #ffc41b;
+    border-color: #ffbd02; }
+  .btn-wel-yellow:focus, .btn-wel-yellow.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(255, 209, 78, 0.5) !important; }
 
 /************** This file define colors use for welcom ***************/
 /*************** Header Image Carousel ***********************************/
@@ -61,7 +105,6 @@ button {
   height: 100%;
   z-index: 1;
   position: absolute;
-  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#0a1235));
   background: linear-gradient(to right, #dc5770, #0a1235);
   mix-blend-mode: multiply; }
 
@@ -188,7 +231,6 @@ button {
 /*************** Our stories and vision **********************************/
 #multi-part .item-becoming-welcomer {
   height: 400px;
-  background: -webkit-gradient(linear, left top, right top, from(#dc5770), to(#ffd14e));
   background: linear-gradient(to right, #dc5770, #ffd14e);
   color: white; }
   #multi-part .item-becoming-welcomer button {
@@ -249,9 +291,7 @@ button {
   #multi-part .item {
     width: 100%; }
   #multi-part .item-stories {
-    -webkit-box-ordinal-group: 5;
-        -ms-flex-order: 4;
-            order: 4; } }
+    order: 4; } }
 
 @media (max-width: 576px) {
   #multi-part .item-stories {
@@ -379,6 +419,107 @@ button {
   width: 170px;
   height: 50px; }
 
+.img-header-content {
+  max-height: 500px; }
+
+.img-header-profile {
+  width: 100vw;
+  height: auto;
+  max-height: 500px;
+  min-height: 300px;
+  -o-object-fit: cover;
+  object-fit: cover;
+  -o-object-position: bottom;
+     object-position: bottom; }
+
+.img-profile {
+  height: 1px;
+  width: 200px; }
+  .img-profile-picture {
+    height: 200px;
+    width: 200px;
+    top: -200px;
+    position: relative; }
+  .img-profile-edit-picture {
+    height: 200px;
+    width: 200px;
+    top: -100px;
+    position: relative; }
+  .img-profile-pic-upload {
+    top: -235px;
+    left: 45px;
+    width: 110px;
+    height: 70px;
+    position: relative;
+    border-radius: 50%;
+    color: #ffd14e; }
+    .img-profile-pic-upload:hover {
+      color: #ffd14e; }
+  .img-profile-cover-upload {
+    width: 110px;
+    height: 70px;
+    bottom: 285px;
+    left: calc((100% - 110px) / 2);
+    position: relative;
+    border-radius: 50%;
+    color: #ffd14e; }
+    .img-profile-cover-upload:hover {
+      color: #ffd14e; }
+
+.profile-social-icn {
+  height: 100px; }
+  .profile-social-icn-separator {
+    width: 250px; }
+
+#profile-content {
+  max-width: 80%;
+  width: 1140px; }
+  #profile-content .nav-primary .nav-link {
+    color: #000000;
+    border-bottom: solid 2px #dc5770; }
+    #profile-content .nav-primary .nav-link.active {
+      color: #000000;
+      background-color: #dc5770; }
+    #profile-content .nav-primary .nav-link:hover {
+      border: solid 2px #dc5770; }
+  #profile-content .nav-secondary .nav-link {
+    color: #000000;
+    border-bottom: solid 2px #ffd14e; }
+    #profile-content .nav-secondary .nav-link.active {
+      color: #000000;
+      background-color: #ffd14e; }
+    #profile-content .nav-secondary .nav-link:hover {
+      border: solid 2px #ffd14e; }
+  #profile-content .profile-square {
+    border: solid 2px #dc5770;
+    width: 300px; }
+  #profile-content .profile-separation {
+    background-color: #ffd14e;
+    height: 2px;
+    width: 50%; }
+  #profile-content .recommendation-txt {
+    font-size: 22px; }
+  #profile-content .dashboard-split {
+    background-color: #0a1235;
+    height: 1px;
+    margin-top: 14px;
+    width: 100%; }
+    #profile-content .dashboard-split-lbl {
+      color: #0a1235;
+      font-size: 18px;
+      font-weight: bold; }
+
+.green-txt {
+  color: #41b866; }
+
+#profile-edit-content {
+  max-width: 80%;
+  width: 1140px; }
+  #profile-edit-content .form-separation {
+    background-color: #ffd14e;
+    height: 2px;
+    width: 50%; }
+
 /************** This file define colors use for welcom ***************/
 #header-nav-btn {
   top: 30px; }
@@ -398,7 +539,8 @@ button {
     width: 75px; }
   #wel-nav-bar #message-icon .badge {
     background-color: #ffd14e;
-    margin-left: -10px; }
+    margin-left: -10px;
+    display: inline; }
 
 #join-us-form input {
   border-bottom: 1px solid black;
@@ -556,6 +698,20 @@ button {
     color: #868686; }
 
 /************** This file define colors use for welcom ***************/
+.recommendation hr {
+  background-color: #ebebeb !important;
+  width: 100% !important;
+  height: 1px !important; }
+
+.recommendation-profile-pic {
+  height: 150px; }
+
+.recommendation-answer {
+  margin-left: 200px; }
+  .recommendation-answer-profile-pic {
+    height: 125px; }
+
+/************** This file define colors use for welcom ***************/
 .experience-card-item {
   width: 20rem; }
   .experience-card-item .card-block {
@@ -580,6 +736,18 @@ button {
         .experience-card-item .card-block-img-row .exp-creator-with {
           font-family: "Aaux ProRegular";
           font-size: 0.8rem; }
+
+.nb-reco {
+  left: 17px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #41b866;
+  top: -2px; }
+
+.icon-reco {
+  color: #41b866;
+  font-weight: bold;
+  top: -2px; }
 
 /************** This file define colors use for welcom ***************/
 #community-says .rounded-circle {
@@ -628,6 +796,44 @@ button {
 
 .story-card-link .fa {
   color: #dc5770; }
+
+/************** This file define colors use for welcom ***************/
+.experience-card {
+  border: solid 1px #ebebeb;
+  height: 250px; }
+  .experience-card-form {
+    border: solid 1px #dc5770;
+    height: 450px; }
+    .experience-card-form-container {
+      max-width: 425px; }
+      .experience-card-form-container label {
+        font-size: 1.5rem; }
+  .experience-card-left-container {
+    padding-left: 10px; }
+  .experience-card-pic {
+    width: 200px; }
+  .experience-card-cover-pic {
+    width: 300px;
+    height: 250px;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: bottom;
+    object-position: bottom;
+    border-top: solid 1px #ebebeb;
+    border-bottom: solid 1px #ebebeb; }
+  .experience-card-action {
+    border-bottom: solid 1px #ebebeb;
+    border-left: solid 1px #ebebeb;
+    border-right: solid 1px #ebebeb; }
+  .experience-card .vertical-separation {
+    width: 1px;
+    height: 90%;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border-left: solid 3px #ebebeb; }
+  .experience-card-msg {
+    border: solid 1px #ebebeb; }
 
 /*************** Override font family *************************************************/
 p, a, span {

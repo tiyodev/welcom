@@ -7,12 +7,10 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const User = require('../models/users');
 
 passport.serializeUser((user, done) => {
-  console.log('test A');
   done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-  console.log('test B');
   User.findOne({ _id: id, isActive: true }, (err, user) => {
     console.error(err);
     done(err, user);

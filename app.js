@@ -34,6 +34,7 @@ const index = require('./routes/index');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
 const footer = require('./routes/footer');
+const profile = require('./routes/profile');
 
 /**
  * Create Express server.
@@ -109,6 +110,7 @@ app.use((req, res, next) => {
 
 app.use('/', index);
 app.use('/', footer);
+app.use('/profile', profile);
 app.use('/users', users);
 app.use('/auth', auth);
 

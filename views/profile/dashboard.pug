@@ -1,0 +1,241 @@
+extends ../layout
+
+block content
+  img.img-header-profile.img-fluid(src=data.profileHeaderPic alt="Profile header")
+  .profile-social-icn.d-flex.flex-row.justify-content-center.align-items-center.flex-wrap
+    .pl-5.pr-5
+      a(href=data.facebookLink target="_blank")
+        img(src="/images/facebook.png" alt="facebook")
+    .pl-5.pr-5
+      a(href=data.instagramLink target="_blank")
+        img(src="/images/insta.png" alt="insta")
+    .profile-social-icn-separator
+    .pl-5.pr-5
+      a(href=data.twitterLink target="_blank")
+        img(src="/images/twitter.png" alt="twitter")
+    .pl-5.pr-5
+      a(href=data.webLink target="_blank")
+        img(src="/images/darkHeart.png" alt="darkHeart")
+  .img-profile.mx-auto
+    img.img-profile-picture.rounded-circle(src=data.profilePic alt="Profile picture")
+
+  #profile-content.m-auto.pb-6
+    .pt-4.pb-4.text-center
+      h2 #{data.displayName}
+      h4.green-txt #{data.nbRecommendation} positive recommendations
+      p.pt-2 
+        | #{data.description} 
+        br
+        | #{data.languageSpokenDesc}
+
+    nav.nav.nav-pills.nav-fill.nav-primary.font-weight-bold
+      a.nav-item.nav-link(href="/profile") Profile
+      a.nav-item.nav-link(href="/profile/recommendation") Recommendations
+      a.nav-item.nav-link(href="/profile/experience") Experiences
+      a.nav-item.nav-link.active(href="/profile/dashboard") Dashboard
+
+    .pt-5.pb-4.text-center
+      p 
+        | This your personal dashboard, where you can find the booking requests you sent and your bookings.
+        br
+        | Remember please: welcomer are like friends of friends, not professionals. 
+        br
+        | Thanks for being a member of community !
+
+    .mx-auto
+      if !data.isWelcomer
+        .d-flex.justify-content-center
+          .pt-4.pb-4.w-25
+            span.dashboard-split-lbl Pending
+          .pt-4.pb-4.w-75
+            hr.dashboard-split
+        
+        if exps.asTraveler.pending
+          each exp in exps.asTraveler.pending
+            include ../components/traveler-pending-exp.pug
+        else
+          include ../components/traveler-pending-exp.pug
+
+        .d-flex.justify-content-center
+          .pt-4.pb-4.w-25
+            span.dashboard-split-lbl Experience to come
+          .pt-4.pb-4.w-75
+            hr.dashboard-split
+
+        if exps.asTraveler.come
+          each exp in exps.asTraveler.come
+            include ../components/traveler-come-exp.pug
+        else
+          include ../components/traveler-come-exp.pug
+
+        .d-flex.justify-content-center
+          .pt-4.pb-4.w-25
+            span.dashboard-split-lbl Past experience
+          .pt-4.pb-4.w-75
+            hr.dashboard-split
+
+        if exps.asTraveler.past
+          each exp in exps.asTraveler.past
+            include ../components/traveler-past-exp.pug
+        else
+          include ../components/traveler-past-exp.pug
+
+        hr.profile-separation.mt-6.mb-6
+
+        p.text-center Do you need help ?
+
+        .p-2.text-center
+          button.btn.btn-wel-blue(type="button") Contact the Welcom' team
+
+      else
+        nav.nav.nav-pills.nav-fill.nav-secondary.font-weight-bold
+          a#secondary-menu-traveler.nav-item.nav-link.active(href="#") Traveler
+          a#secondary-menu-welcomer.nav-item.nav-link(href="#") Welcomer
+
+        #nav-secondary-traveler
+          p.pt-4.text-center
+            | Find here your bookings and booking requests.
+            br
+            | Remember please: the other welcomers are like you, just travellers helpings other travellers.
+            br
+            | Thank you for being an active member of the community!
+
+          .d-flex.justify-content-center
+            .pt-4.pb-4.w-25
+              span.dashboard-split-lbl Pending
+            .pt-4.pb-4.w-75
+              hr.dashboard-split
+          
+          if exps.asTraveler.pending
+            each exp in exps.asTraveler.pending
+              include ../components/traveler-pending-exp.pug
+          else
+            include ../components/traveler-pending-exp.pug
+
+          .d-flex.justify-content-center
+            .pt-4.pb-4.w-25
+              span.dashboard-split-lbl Experience to come
+            .pt-4.pb-4.w-75
+              hr.dashboard-split
+
+          if exps.asTraveler.come
+            each exp in exps.asTraveler.come
+              include ../components/traveler-come-exp.pug
+          else
+            include ../components/traveler-come-exp.pug
+
+          .d-flex.justify-content-center
+            .pt-4.pb-4.w-25
+              span.dashboard-split-lbl Past experience
+            .pt-4.pb-4.w-75
+              hr.dashboard-split
+
+          if exps.asTraveler.past
+            each exp in exps.asTraveler.past
+              include ../components/traveler-past-exp.pug
+          else
+            include ../components/traveler-past-exp.pug
+
+          hr.profile-separation.mt-6.mb-6
+
+          p.text-center Do you need help ?
+
+          .p-2.text-center
+            button.btn.btn-wel-blue(type="button") Contact the Welcom' team
+
+        #nav-secondary-welcomer.d-none
+          p.pt-4.text-center
+            | Find here your booking requests you receibed and the bookings you already accepted.
+            br
+            | Thank you for being a welcomer, you are the beating heart of this community!
+
+          .d-flex.justify-content-center
+            .pt-4.pb-4.w-25
+              span.dashboard-split-lbl Pending
+            .pt-4.pb-4.w-75
+              hr.dashboard-split
+          
+          if exps.asWelcomer.pending
+            each exp in exps.asWelcomer.pending
+              include ../components/welcomer-pending-exp.pug
+          else
+            include ../components/welcomer-pending-exp.pug
+
+          .d-flex.justify-content-center
+            .pt-4.pb-4.w-25
+              span.dashboard-split-lbl Experience to come
+            .pt-4.pb-4.w-75
+              hr.dashboard-split
+
+          if exps.asWelcomer.come
+            each exp in exps.asWelcomer.come
+              include ../components/welcomer-come-exp.pug
+          else
+            include ../components/welcomer-come-exp.pug
+
+          .d-flex.justify-content-center
+            .pt-4.pb-4.w-25
+              span.dashboard-split-lbl Past experience
+            .pt-4.pb-4.w-75
+              hr.dashboard-split
+
+          if exps.asWelcomer.past
+            each exp in exps.asWelcomer.past
+              include ../components/welcomer-past-exp.pug
+          else
+            include ../components/welcomer-past-exp.pug
+
+          hr.profile-separation.mt-6.mb-6
+
+          p.text-center Do you need help ?
+
+          .p-2.text-center
+            button.btn.btn-wel-blue(type="button") Contact the Welcom' team
+
+block js
+  script(type="text/javascript").
+    function changeSecondaryMenu(event){
+      const navSecondaryTraveler = document.getElementById("nav-secondary-traveler");
+      const navSecondaryWelcomer = document.getElementById("nav-secondary-welcomer");
+
+      // Check witch secondary menu is clicking
+      if(this.text.toLowerCase() === 'traveler'){
+        const welcomerSecondaryMenu = document.getElementById("secondary-menu-welcomer");
+        // Remove active class in the other secondary menu
+        welcomerSecondaryMenu.classList.remove('active');
+        // Add active class in this secondary menu
+        this.classList.add('active');
+        // Hide other menu
+        navSecondaryWelcomer.classList.add('d-none');
+        // Display this menu
+        navSecondaryTraveler.classList.remove('d-none');
+      }
+      else if(this.text.toLowerCase() === 'welcomer'){
+        const travelerSecondaryMenu = document.getElementById("secondary-menu-traveler");
+        // Remove active class in the other secondary menu
+        travelerSecondaryMenu.classList.remove('active');
+        // Add active class in this secondary menu
+        this.classList.add('active');
+        // Hide other menu
+        navSecondaryTraveler.classList.add('d-none');
+        // Display this menu
+        navSecondaryWelcomer.classList.remove('d-none');
+      }
+      else{
+        console.error('Impossible to find secondary menu : ' + this)
+      }
+      event.preventDefault();
+    };
+
+    window.onload = function(){
+      const welcomerSecondaryMenu = document.getElementById("secondary-menu-welcomer");
+      const travelerSecondaryMenu = document.getElementById("secondary-menu-traveler");
+
+      if (typeof window.addEventListener != "undefined") {
+        welcomerSecondaryMenu.addEventListener("click",changeSecondaryMenu,false);
+        travelerSecondaryMenu.addEventListener("click",changeSecondaryMenu,false);
+      } else {
+        welcomerSecondaryMenu.attachEvent("onclick",changeSecondaryMenu);
+        travelerSecondaryMenu.attachEvent("onclick",changeSecondaryMenu);
+      }
+    };

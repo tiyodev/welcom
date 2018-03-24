@@ -1,0 +1,75 @@
+extends ../layout
+
+block content
+
+  img.img-header-profile.img-fluid(src=data.profileHeaderPic alt="Profile header")
+  .profile-social-icn.d-flex.flex-row.justify-content-center.align-items-center.flex-wrap
+    .pl-5.pr-5
+      a(href=data.facebookLink target="_blank")
+        img(src="/images/facebook.png" alt="facebook")
+    .pl-5.pr-5
+      a(href=data.instagramLink target="_blank")
+        img(src="/images/insta.png" alt="insta")
+    .profile-social-icn-separator
+    .pl-5.pr-5
+      a(href=data.twitterLink target="_blank")
+        img(src="/images/twitter.png" alt="twitter")
+    .pl-5.pr-5
+      a(href=data.webLink target="_blank")
+        img(src="/images/darkHeart.png" alt="darkHeart")
+  .img-profile.mx-auto
+    img.img-profile-picture.rounded-circle(src=data.profilePic alt="Profile picture")
+
+  #profile-content.m-auto.pb-6
+    .pt-4.pb-4.text-center
+      h2 #{data.displayName}
+      h4.green-txt #{data.nbRecommendation} positive recommendations
+      p.pt-2 
+        | #{data.description} 
+        br
+        | #{data.languageSpokenDesc}
+
+    nav.nav.nav-pills.nav-fill.nav-primary.font-weight-bold
+      a.nav-item.nav-link(href="/profile") Profile
+      a.nav-item.nav-link.active(href="/profile/recommendation") Recommendations
+      a.nav-item.nav-link(href="/profile/experience") Experiences
+      a.nav-item.nav-link(href="/profile/dashboard") Dashboard
+
+    .pt-5.text-center
+      p #{data.recommendationDescription}
+
+    each recommendation in recommendations
+      include ../components/recommendation.pug
+
+    if data.isConnectedUser
+      hr.profile-separation
+
+      p.mx-auto.w-75.pt-4.text-center 
+        | If you want more recommendations, you can ask your friends to register and give you one.
+        br
+        | Members don't need to book an experiences together to write each others recommendations.
+        br
+        | If you know someone and want the community to trust them like they deserve, juste give a recommendation.
+        br
+        | It's the same for your friends or the members that know you: they can give you a recommendation to build trust!
+    else
+      h3.pt-4.text-center Do you feel like writing a recommendation ?
+
+      p.mx-auto.w-75.pt-4.text-center 
+        | You don't need to live an experience to so. If you know the welcomer, or if you would like to 
+        | encourage him/her, you can write a recommendation to let other members know what you think.
+        br
+        | We want to let the members express themselves with kindness. 
+        br
+        | Recommendations build trust among the community!
+
+      .pt-4.pb-4.text-center
+        button.btn-wel-blue.pr-6.pl-6.btn(type="button") Write a recommendation
+
+      hr.profile-separation
+
+      .pt-2.text-center  Wish to have a chat
+
+      .pt-4.text-center
+        button.pr-6.pl-6.btn.btn-outline-dark(type="button") Contact me
+    

@@ -51,12 +51,9 @@ block content
       h4 it's about living a bit of the local life whith us.
       .container.pt-5.pl-0.pr-0
         .d-flex.flex-row.justify-content-center.flex-wrap
-          .p-3
-            include components/experience-card
-          .p-3
-            include components/experience-card
-          .p-3
-            include components/experience-card
+          each exp in exps
+            .p-3
+              include components/experience-card
 
       button.btn.btn-secondary.text-uppercase.mb-5.mt-5.wel-bg-blue.wel-color-white(type="button") Browse all
 

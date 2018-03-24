@@ -1,0 +1,34 @@
+if exp
+  .d-flex.justify-content-between.align-items-center.experience-card-form.experience-card
+    .p-2
+      .d-flex.justify-content-between.align-items-center
+        .experience-card-left-container
+          .mx-auto
+            img.experience-card-pic.rounded-circle(src=exp.travelerProfilePic alt="Profile picture")
+        .pl-4.pr-4.pt-2.pb-2 
+          p You asked to live :
+          h4.text-center.font-weight-bold #{exp.title}
+          span with 
+          span.font-weight-bold #{exp.travelerDisplayName}
+          p.pt-2
+            | on the #{exp.date.toLocaleDateString('en-GB', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })},
+            | with #{exp.nbTravellers} travellers!
+      p.m-4.p-4.experience-card-msg #{exp.travelerMsg}
+      .p-2.text-center
+        button.btn.btn-wel-pink(type="button") Go to conversation
+    .p-2.vertical-separation
+    .p-2.experience-card-form-container.text-center
+      label(for="experience-card-answer") Your answer
+      .form-group
+        textarea#experience-card-answer.form-control(rows="5")
+      .mb-3.d-flex.justify-content-center.align-items-center
+        .p-2
+          button.btn.btn-wel-blue(type="button") Yes!
+        .p-2
+          button.btn.btn-wel-yellow(type="button") I Can not
+      p
+        | If you are not available on this day and would like to propose another moment
+        | or if you need more details, you can chat with the traveller in your <b>conversation</b>.
+else
+  span.p-4 No bookings request pending. 
+    a(href="#") Do you want to find a new experience to live?

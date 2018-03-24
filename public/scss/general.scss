@@ -52,7 +52,7 @@ button{
 .gradient-rounded-btn{
   font-size: 13,76pt;
 
-  background: linear-gradient(to right, #dc5770 , #0a1235);
+  background: linear-gradient(to right, $wel-pink, $wel-blue);
   color: white;
 
   border: none;
@@ -64,8 +64,75 @@ button{
 
 .text-gradient{
   font-family: 'Aaux ProBlack', serif;
-  background: -webkit-linear-gradient(to right, #dc5770 , #0a1235);
-  background: linear-gradient(to right, #dc5770 , #0a1235);
+  background: -webkit-linear-gradient(to right, $wel-pink, $wel-blue);
+  background: linear-gradient(to right, $wel-pink, $wel-blue);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/************** Welcom Custom Button ***************/
+.btn-wel-pink{
+  color: $wel-white;
+  background-color: $wel-pink;
+  border-color: darken($wel-pink, 5%);
+
+  &:hover{
+    color: $wel-white;
+    background-color: darken($wel-pink, 10%);
+    border-color: darken($wel-pink, 15%);
+  }
+
+  &:active, &.active{
+    background-color: darken($wel-pink, 10%);
+    border-color: darken($wel-pink, 15%);
+  }
+
+  &:focus, &.focus{
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba($wel-pink, .5) !important;
+  }
+}
+
+.btn-wel-blue{
+  color: $wel-white;
+  background-color: $wel-blue;
+  border-color: darken($wel-blue, 5%);
+
+  &:hover{
+    color: $wel-white;
+    background-color: darken($wel-blue, 5%);
+    border-color: darken($wel-blue, 10%);
+  }
+
+  &:active, &.active{
+    background-color: darken($wel-blue, 5%);
+    border-color: darken($wel-blue, 10%);
+  }
+
+  &:focus, &.focus{
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba($wel-blue,.5) !important;
+  }
+}
+
+.btn-wel-yellow{
+  color: $wel-black;
+  background-color: $wel-yellow;
+  border-color: darken($wel-yellow, 5%);
+
+  &:hover{
+    color: $wel-black;
+    background-color: darken($wel-yellow, 10%);
+    border-color: darken($wel-yellow, 15%);
+  }
+
+  &:active, &.active{
+    background-color: darken($wel-yellow, 10%);
+    border-color: darken($wel-yellow, 15%);
+  }
+
+  &:focus, &.focus{
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba($wel-yellow,.5) !important;
+  }
 }
