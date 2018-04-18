@@ -1,35 +1,41 @@
-function isValidMandatoryString(value) {
-  if (value === '') { return false; }
-  return true;
+function createInvalideFeedback(id, msg) {
+  if (document.getElementById(id) === undefined || document.getElementById(id) === null) {
+    console.error('Id not found');
+    return;
+  }
+
+  const invalideDiv = document.createElement('div');
+  invalideDiv.classList.add('invalid-feedback');
+  const invalideSpan = document.createElement('span');
+  invalideSpan.append(msg);
+  invalideDiv.append(invalideSpan);
+
+  document.getElementById(id).parentNode.append(invalideDiv);
 }
 
-function isValidEmail(value) {
-  const emailRegex = /^(([a-zA-Z]|[0-9])|([-]|[_]|[.]))+[@](([a-zA-Z0-9])|([-])){2,63}[.](([a-zA-Z0-9]){2,63})+$/;
-  if (emailRegex.test(value)) { return true; }
-  return false;
+function checkServerValidity(errors) {
+  if (errors) {
+    errors.forEach((error) => {
+      const input = document.getElementsByName(error.param)[0];
+      if (input) {
+        input.classList.add('is-invalid');
+        input.value = error.value;
+      }
+    });
+  }
 }
 
-function checkSignUpForm() {
-  let isValid = true;
-  const form = $('form[name="signupForm"]')[0];
-
-  if (isValidMandatoryString(form.email.value)) {
-    if (isValidEmail(form.email.value)) {
-      $('#email_err')[0].innerHTML = '';
-    } else {
-      isValid = false;
-      $('#email_err')[0].innerHTML = "L'email n'est pas au bon format.";
+function setServerValidData(validData) {
+  if (validData) {
+    for (const key in validData) {
+      const input = document.getElementsByName(key)[0];
+      if (input.classList.contains('selectpicker')) {
+        $(`.selectpicker[name=${key}]`).selectpicker('val', validData[key]);
+      } else if (input.type === 'date') {
+        input.valueAsDate = new Date(validData[key]);
+      } else {
+        input.value = validData[key];
+      }
     }
-  } else {
-    isValid = false;
-    $('#email_err')[0].innerHTML = 'Email est obligatoire.';
   }
-
-  if (isValidMandatoryString(form.password.value)) {
-    $('#password_err')[0].innerHTML = '';
-  } else {
-    isValid = false;
-    $('#password_err')[0].innerHTML = 'Password est obligatoire.';
-  }
-  return isValid;
 }

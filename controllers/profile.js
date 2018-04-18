@@ -1,10 +1,20 @@
 const languages = require('../data/language');
 const adjectives = require('../data/adjective');
 const User = require('./../models/users');
+const Interest = require('../models/interests');
+const Tag = require('./../models/interests');
 const mongoose = require('mongoose');
+const myFs = require('../config/myFs');
 
 const { check, validationResult } = require('express-validator/check');
-const { sanitize } = require('express-validator/filter');
+const { sanitize, matchedData } = require('express-validator/filter');
+
+function calcAge(data) {
+  const now = new Date();
+  let age = now - data;
+  age = Math.floor(age / 1000 / 60 / 60 / 24 / 365);
+  return age;
+}
 
 exports.checkProfileData = [
   check('firstName', 'The size of the first name must be between 1 and 50 characters').trim().isLength({ max: 50 }),
@@ -16,12 +26,12 @@ exports.checkProfileData = [
     .trim().optional({ checkFalsy: true }).isMobilePhone('any', { strictMode: true }),
   check('city', 'Please, let the community know where you live').trim().isLength({ min: 1 }),
   check('gender', 'Please let us know what pronoun we should use').trim().isIn(['Man', 'Woman']),
-  check('birthdate', 'Please tell us your date of birth, it won\'t be displayed').isISO8601().isBefore(Date.now().toString()),
+  check('birthdate', 'Please tell us your date of birth, it won\'t be displayed').isISO8601().isBefore(),
   sanitize('birthdate').toDate(),
   check('adjective', 'Please chose the adjective that best describes you').trim().isLength({ min: 1 }),
   check('languageSpoken', 'Please tell us your spoken languages').trim().isLength({ min: 1 }),
   check('languageLearning').trim().optional({ checkFalsy: true }),
-  check('hobbies', 'Please chose at least one hobby').trim().isLength({ min: 1 }),
+  // check('tags[]', 'Please chose at least one hobby').trim().isLength({ min: 1 }),
   check('inputIntro', 'Please, tell us a little bit about you (30 signs min)').trim().isLength({ min: 30, max: 200 }),
   check('inputBio', 'Please, tell us a little bit about your life (100 signs min)').trim().isLength({ min: 100, max: 2000 }),
   check('inputSharing', 'Please, write something about what you would like to share (30 signs min)').trim().isLength({ min: 30, max: 600 }),
@@ -65,37 +75,49 @@ exports.checkProfileData = [
  * GET /
  * Profile Page
  */
-exports.getProfile = (req, res) => {
-  const data = {
-    profileHeaderPic: '/images/photo-paris10.jpg',
-    profilePic: '/images/default-profile-pic.jpg',
-    displayName: 'Thomasson',
-    nbRecommendation: 2,
-    description: 'A cool years old traveller from Copenhagen, Denmark.',
-    languageSpokenDesc: 'He speaks Danish and English, and he learns Spanish.',
-    shortDesc: 'So this is a small text to introduce the traveller, a hook, a short laius.</br>Two or three lines should be enough, it\'s just to day a quick </br> "hello, here\'s why you should meet me"',
-    shareCommunityDesc: 'I\'m ready to share my cooking skills, love of travels, and debate competittrisation like MOF',
-    aboutMe: ` This should be a longer text, from 400 up to 2000 characters, describing in extenso the traveller
-      and what he/she wants to say. This should be a longer text, from 400 up to 2000 characters,
-      describing in extenso the traveller and what he/she wants to say.</br></br>&nbsp;&nbsp;
-      
-      This should be a longer text, from 400 up to 2000 characters, describing in extenso the traveller
-      and what he/she wants to say. This should be a longer text, from 400 up to 2000 characters,
-      describing in extenso the traveller and what he/she wants to say. . This should be a longer text,
-      from 400 up to 2000 characters, describing in extenso the traveller and what he/she wants to say..</br></br>
-    
-      it should include some text management tool if possible`,
-    tripLived: 'I\'ve been to India (Kerala and Bengalore), to France, mostly Paris and Nice, and i Know my country pretty well too.',
-    travelPlans: 'I plan to go a few weeks to Costa Rica, and to the Baltic Countries, but I will go wherever there is cool travelers to meet!',
-    tags: ['Pizza', 'Ile de la cité', 'Fine wine', 'History', 'Architecture', 'Dis camion', 'Etc Etc Etc Etc Etc', 'Dis camion', 'Blop', 'Neighborhood'],
-    facebookLink: 'https://www.facebook.com/',
-    instagramLink: 'https://www.instagram.com',
-    twitterLink: 'https://twitter.com/',
-    webLink: 'https://www.twitch.tv',
-    isConnectedUser: true
-  };
+exports.getProfile = (req, res, next) => {
+  if (req.params.id) {
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      User.findById(req.params.id, (err, user) => {
+        if (err) {
+          next(err);
+        }
+        if (!user) { next(new Error('Wrong ID!')); }
 
-  res.render('profile/profile', { title: 'Profile', data });
+        if (!user.profile.nbRecommendation) { user.profile.nbRecommendation = 0; }
+
+        const age = calcAge(user.profile.birthdate);
+        const shortPresentationSentence = `${user.profile.adjective} ${age} years old traveller from ${user.profile.city}`;
+        const genderAdv = user.profile.gender === 'man' ? 'He' : 'She';
+        let i = 0;
+        let spokenLanguages = '';
+        if (user.profile.spokenLanguages && Array.isArray(user.profile.spokenLanguages)) {
+          user.profile.spokenLanguages.forEach((elem) => {
+            if (i++ > 0) spokenLanguages += ' and ';
+            spokenLanguages += elem.language;
+          });
+        }
+        i = 0;
+        let learningLanguages = '';
+        if (user.profile.learningLanguages && Array.isArray(user.profile.learningLanguages)) {
+          user.profile.learningLanguages.forEach((elem) => {
+            if (i++ > 0) learningLanguages += ' and ';
+            learningLanguages += elem.language;
+          });
+        }
+
+        let shortLearnSentence = `${genderAdv} speaks ${spokenLanguages}`;
+
+        if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
+
+        const isConnectedUser = user._id.equals(req.user._id);
+
+        res.render('profile/profile', { title: 'Profile', user, shortPresentationSentence, shortLearnSentence, isConnectedUser });
+      }).populate({ path: 'profile.interests', select: 'name _id', model: Interest });
+    } else { next(new Error('Wrong ID!')); }
+  } else {
+    next(new Error('Id not found'));
+  }
 };
 
 /**
@@ -103,215 +125,568 @@ exports.getProfile = (req, res) => {
  * Edit Profile Page
  */
 exports.getEditProfile = (req, res) => {
-  res.render('profile/edit-profile', { title: 'Edit Profile', languages, adjectives, user: req.user });
+  let coverPicInitialPreview = '';
+  let coverPicInitialPreviewConfig = '';
+  let profilePicInitialPreview = '';
+  let profilePicInitialPreviewConfig = '';
+
+  if (req.user.profile.coverPic !== undefined && req.user.profile.coverPic.length > 0) {
+    req.user.profile.coverPic.forEach((item) => {
+      coverPicInitialPreview += `'${item.picture}',`;
+      coverPicInitialPreviewConfig += `{caption: '${item.label}', width: '200px', url: '/profile/edit/cover-upload/delete', key: '${item._id}'},`;
+    });
+  }
+
+  if (req.user.profile.profilePic.picture !== undefined) {
+    profilePicInitialPreview = `'${req.user.profile.profilePic.picture}'`;
+    profilePicInitialPreviewConfig = `{caption: '${req.user.profile.profilePic.label}', width: '200px', url: '/profile/edit/profile-pic-upload/delete'}`;
+  }
+
+  res.render('profile/edit-profile', {
+    title: 'Edit Profile',
+    languages,
+    adjectives,
+    user: req.user,
+    coverPicInitialPreview,
+    coverPicInitialPreviewConfig,
+    profilePicInitialPreview,
+    profilePicInitialPreviewConfig
+  });
 };
 
 /**
  * POST /
  * Edit Profile Page
  */
-exports.postEditProfile = (req, res) => {
-  console.log(`data recup: ${JSON.stringify(req.body)}`);
-
+exports.postEditProfile = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    console.log(`errors 1:${JSON.stringify(errors)}`);
-
     return res.render('profile/edit-profile', {
       title: 'Edit Profile',
       languages,
       adjectives,
       user: req.user,
-      errors: errors.mapped()
+      errors: errors.array(),
+      validData: matchedData(req)
     });
   }
 
-  res.redirect('/profile');
+  // Get a promises array, one by tag
+  const pArray = req.body.tags.map(async (tag) => {
+    try {
+      const findTag = await Tag.findOne({ name: tag });
+
+      // If the tag alreeady exist, return tag id.
+      if (findTag !== null) {
+        return findTag._id;
+      }
+    } catch (err) {
+      next(err);
+    }
+
+    try {
+      // Else create a new Tag
+      const newTag = new Tag();
+      newTag.name = tag;
+      newTag._id = mongoose.Types.ObjectId();
+
+      await newTag.save();
+
+      return newTag._id;
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // Wait all promises
+  Promise.all(pArray).then((tagsId) => {
+    // Update user informations
+    User.findById(req.user._id, (err, user) => {
+      if (err) { next(err); }
+
+      user.email = req.body.email;
+      user.profile.nickName = req.body.nickName;
+      user.profile.lastName = req.body.lastName;
+      user.profile.firstName = req.body.firstName;
+      user.profile.phoneNumber = req.body.mobileNumber;
+      user.profile.city = req.body.city;
+      user.profile.gender = req.body.gender.toLowerCase();
+      user.profile.adjective = req.body.adjective;
+      user.profile.birthdate = req.body.birthdate;
+      if (Array.isArray(req.body.languageSpoken)) {
+        user.profile.spokenLanguages = req.body.languageSpoken.map(lang => ({
+          language: lang,
+          isoCode: ''
+        }));
+      } else if (typeof req.body.languageSpoken === 'string') {
+        user.profile.spokenLanguages = {
+          language: req.body.languageSpoken,
+          isoCode: ''
+        };
+      } else {
+        user.profile.spokenLanguages = null;
+      }
+      if (Array.isArray(req.body.languageLearning)) {
+        user.profile.learningLanguages = req.body.languageLearning.map(lang => ({
+          language: lang,
+          isoCode: ''
+        }));
+      } else if (typeof req.body.languageLearning === 'string') {
+        user.profile.learningLanguages = {
+          language: req.body.languageLearning,
+          isoCode: ''
+        };
+      } else {
+        user.profile.learningLanguages = null;
+      }
+      user.profile.intro = req.body.inputIntro;
+      user.profile.interests = tagsId;
+      user.profile.description = req.body.inputBio;
+      user.profile.shareWithCommunity = req.body.inputSharing;
+      user.profile.tripLived = req.body.inputTripLived;
+      user.profile.travelPlan = req.body.inputFutureTravel;
+      user.profile.facebookLink = req.body.facebookLink;
+      user.profile.twitterLink = req.body.twitterLink;
+      user.profile.instagramLink = req.body.instagramLink;
+      user.profile.otherLink = req.body.otherLink;
+
+      user.save((err) => {
+        if (err) { next(err); }
+
+        res.redirect(`/profile/${user._id}`);
+      });
+    });
+  });
 };
+
+/**
+ * POST /
+ * Upload profile cover images
+ */
+exports.postAddProfileCover = (req, res, next) => {
+  User.findById(req.user._id, (err, user) => {
+    if (err) { next(err); }
+
+    // If number of cover pic > 5, return an error
+    if (user.profile.coverPic.length >= 5) {
+      myFs.deleteTmpUploadImg(req.files[0]);
+      return res.json({
+        success: 'false',
+        error: 'Number of files for profile cover exceeds maximum allowed limit of 5.'
+      });
+    }
+
+    // Déplacer les fichiers dans la destination
+    myFs.moveProfileCoverImg(req.user._id, req.files[0])
+    .then((result) => {
+      const filePath = `/profile/${req.user._id}/${result.newFileName}`;
+
+      const id = mongoose.Types.ObjectId();
+      user.profile.coverPic.push({
+        picture: filePath,
+        label: result.newFileName,
+        _id: id
+      });
+
+      user.save((err) => {
+        if (err) return next(err);
+        return res.json({
+          success: 'true',
+          initialPreview: [`../../..${filePath}`],
+          initialPreviewConfig: [{ caption: result.newFileName, width: '200px', url: '/profile/edit/cover-upload/delete', key: id }],
+          append: true,
+          fileUrl: filePath
+        });
+      });
+    })
+    .catch((err) => { console.log(err); });
+  });
+};
+
+/**
+ * POST /
+ * Delete profile cover images
+ */
+exports.postDeleteProfileCover = (req, res, next) => {
+  User.findById(req.user._id, (err, user) => {
+    if (err) { next(err); }
+
+    const index = user.profile.coverPic.findIndex(item => item._id.equals(req.body.key));
+
+    const deleteItem = user.profile.coverPic.splice(index, 1);
+
+    myFs.deleteUploadImg(deleteItem)
+      .then((msg) => { console.log(msg); })
+      .catch((err) => { console.log(err); });
+
+    user.save((err) => {
+      if (err) return next(err);
+
+      console.log(req.body.key);
+
+      return res.json({ success: 'true', key: req.body.key, test: 'deleteFile' });
+    });
+  });
+};
+
+/**
+ * POST /
+ * Upload profile picture
+ */
+exports.postAddProfilePic = (req, res, next) => {
+  User.findById(req.user._id, (err, user) => {
+    if (err) { next(err); }
+
+    // Déplacer les fichiers dans la destination
+    myFs.moveProfileCoverImg(req.user._id, req.file)
+    .then((result) => {
+      // If there are already a picture, delete it
+      if (user.profile.profilePic.picture !== undefined) {
+        myFs.deleteProfilePic(user.profile.profilePic)
+          .then((msg) => { console.log(msg); })
+          .catch((err) => { console.log(err); });
+      }
+
+      const filePath = `/profile/${req.user._id}/${result.newFileName}`;
+
+      const id = mongoose.Types.ObjectId();
+
+      user.profile.profilePic = {
+        picture: filePath,
+        label: result.newFileName
+      };
+
+      user.save((err) => {
+        if (err) return next(err);
+        return res.json({
+          success: 'true',
+          initialPreview: [`../../..${filePath}`],
+          initialPreviewConfig: [{ caption: result.newFileName, width: '200px', url: '/profile/edit/cover-upload/delete', key: id }],
+          fileUrl: filePath
+        });
+      });
+    })
+    .catch((err) => { console.log(err); });
+  });
+};
+
+/**
+ * POST /
+ * Delete profile picture
+ */
+exports.postDeleteProfilePic = (req, res, next) => {
+  User.findById(req.user._id, (err, user) => {
+    if (err) { next(err); }
+
+    myFs.deleteProfilePic(user.profile.profilePic)
+      .then((msg) => { console.log(msg); })
+      .catch((err) => { console.log(err); });
+
+    user.profile.profilePic = {};
+
+    user.save((err) => {
+      if (err) return next(err);
+
+      return res.json({ success: 'true', key: req.body.key });
+    });
+  });
+};
+
 
 /**
  * GET /
  * Profile Page / Recommendations
  */
-exports.getRecommendation = (req, res) => {
-  const data = {
-    profileHeaderPic: '/images/photo-paris10.jpg',
-    profilePic: '/images/default-profile-pic.jpg',
-    displayName: 'Thomasson',
-    recommendationDescription: 'Really happy that the travellers I meet from all over the world like my experiences that much! It\'s perfect.',
-    nbRecommendation: 2,
-    description: 'A cool years old traveller from Copenhagen, Denmark.',
-    languageSpokenDesc: 'He speaks Danish and English, and he learns Spanish.',
-    isConnectedUser: false
-  };
+exports.getRecommendation = (req, res, next) => {
+  if (req.params.id) {
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      User.findById(req.params.id, (err, user) => {
+        if (err) {
+          next(err);
+        }
+        if (!user) { next(new Error('Wrong ID!')); }
 
-  const recommendations = [];
+        if (!user.profile.nbRecommendation) { user.profile.nbRecommendation = 0; }
 
-  // [{
-  //   profilePic: '/images/sampleProfilePic1.png',
-  //   displayName: 'Sam Gamji',
-  //   city: 'Detroit',
-  //   country: 'USA',
-  //   titleExperience: 'My First experience',
-  //   receiverDisplayName: '',
-  //   comment: 'User is really cool person, and smells good! An amazing time
-  // together for fucks sakes!',
-  //  },
-  //  {
-  //   profilePic: '/images/sampleProfilePic2.png',
-  //   displayName: 'Xiu Lui',
-  //   city: 'Taipei',
-  //   country: 'Taiwan',
-  //   titleExperience: '',
-  //   receiverDisplayName: 'Thomasson',
-  //   comment: 'User is really cool person, and smells good! An amazing time
-  // together for fucks sakes! zadazd azd azd azdaz treg sdg sdg rtheth rtze r
-  // qfdf xcvdfvd gzerg zt e rfd xdgf dgerre zr se sfsdgdfg erg ertg zr e fsdf
-  //  sdf tztzert zf zadazd azd azd azdaz treg sdg sdg rtheth rtze r qfdf
-  // xcvdfvd gzerg zt e rfd xdgf dgerre zr se sfsdgdfg erg ertg zr e fsdf sdf
-  // tztzert zf',
-  //   anwser: {
-  //     profilePic: '/images/default-profile-pic.jpg',
-  //     displayName: 'Thomasson',
-  //     comment: 'A pleasure amiga! We were realy lucky with the weather.
-  // fsdf sdf ez gsf dsfsd fqfqae fzeg sdfsdf srf erhdgfsdrfze hersef sf
-  // seqf e z gsdgsdf s ez ztzet sdfsdfg rgreteze z fdfs '
-  //   }
-  //  }];
+        const age = calcAge(user.profile.birthdate);
+        const shortPresentationSentence = `${user.profile.adjective} ${age} years old traveller from ${user.profile.city}`;
+        const genderAdv = user.profile.gender === 'man' ? 'He' : 'She';
+        let i = 0;
+        let spokenLanguages = '';
+        if (user.profile.spokenLanguages && Array.isArray(user.profile.spokenLanguages)) {
+          user.profile.spokenLanguages.forEach((elem) => {
+            if (i++ > 0) spokenLanguages += ' and ';
+            spokenLanguages += elem.language;
+          });
+        }
+        i = 0;
+        let learningLanguages = '';
+        if (user.profile.learningLanguages && Array.isArray(user.profile.learningLanguages)) {
+          user.profile.learningLanguages.forEach((elem) => {
+            if (i++ > 0) learningLanguages += ' and ';
+            learningLanguages += elem.language;
+          });
+        }
 
-  res.render('profile/recommendation', { title: 'Recommendations', data, recommendations });
+        let shortLearnSentence = `${genderAdv} speaks ${spokenLanguages}`;
+
+        if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
+
+        const isConnectedUser = user._id.equals(req.user._id);
+
+        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+        const data = {
+          recommendationDescription: 'Really happy that the travellers I meet from all over the world like my experiences that much! It\'s perfect.',
+        };
+
+        const recommendations = [];
+
+        // [{
+        //   profilePic: '/images/sampleProfilePic1.png',
+        //   displayName: 'Sam Gamji',
+        //   city: 'Detroit',
+        //   country: 'USA',
+        //   titleExperience: 'My First experience',
+        //   receiverDisplayName: '',
+        //   comment: 'User is really cool person, and smells good! An amazing time
+        // together for fucks sakes!',
+        //  },
+        //  {
+        //   profilePic: '/images/sampleProfilePic2.png',
+        //   displayName: 'Xiu Lui',
+        //   city: 'Taipei',
+        //   country: 'Taiwan',
+        //   titleExperience: '',
+        //   receiverDisplayName: 'Thomasson',
+        //   comment: 'User is really cool person, and smells good! An amazing time
+        // together for fucks sakes! zadazd azd azd azdaz treg sdg sdg rtheth rtze r
+        // qfdf xcvdfvd gzerg zt e rfd xdgf dgerre zr se sfsdgdfg erg ertg zr e fsdf
+        //  sdf tztzert zf zadazd azd azd azdaz treg sdg sdg rtheth rtze r qfdf
+        // xcvdfvd gzerg zt e rfd xdgf dgerre zr se sfsdgdfg erg ertg zr e fsdf sdf
+        // tztzert zf',
+        //   anwser: {
+        //     profilePic: '/images/default-profile-pic.jpg',
+        //     displayName: 'Thomasson',
+        //     comment: 'A pleasure amiga! We were realy lucky with the weather.
+        // fsdf sdf ez gsf dsfsd fqfqae fzeg sdfsdf srf erhdgfsdrfze hersef sf
+        // seqf e z gsdgsdf s ez ztzet sdfsdfg rgreteze z fdfs '
+        //   }
+        //  }];
+        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+
+        res.render('profile/recommendation', { title: 'Recommendations', data, recommendations, user, shortPresentationSentence, shortLearnSentence, isConnectedUser });
+      });
+    } else { next(new Error('Wrong ID!')); }
+  } else {
+    next(new Error('Id not found'));
+  }
 };
 
 /**
  * GET /
  * Profile Page / Experiences
  */
-exports.getExperience = (req, res) => {
-  const data = {
-    profileHeaderPic: '/images/photo-paris10.jpg',
-    profilePic: '/images/default-profile-pic.jpg',
-    displayName: 'Thomasson',
-    nbWelcomerRecommendations: 2,
-    experiencesDesc: `I'm so proud to be a welcomer ! So much to do in my city, 
-      but I prefer is to do that and that and this with beers and flowers.`
-  };
+exports.getExperience = (req, res, next) => {
+  if (req.params.id) {
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      User.findById(req.params.id, (err, user) => {
+        if (err) {
+          next(err);
+        }
+        if (!user) { next(new Error('Wrong ID!')); }
 
-  const exps = [{
-    headerPic: '/images/default-img-card.jpg',
-    nbRecommendation: 5,
-    profilePic: '/images/default-profile-pic.jpg',
-    displayName: 'Thomasson',
-    expDesc: 'Explore the wonderful Golden Triangle together'
-  },
-  {
-    headerPic: '/images/default-img-card.jpg',
-    nbRecommendation: 5,
-    profilePic: '/images/default-profile-pic.jpg',
-    displayName: 'Thomasson',
-    expDesc: 'Explore the wonderful Golden Triangle together'
-  },
-  {
-    headerPic: '/images/default-img-card.jpg',
-    nbRecommendation: 5,
-    profilePic: '/images/default-profile-pic.jpg',
-    displayName: 'Thomasson',
-    expDesc: 'Explore the wonderful Golden Triangle together'
-  },
-  {
-    headerPic: '/images/default-img-card.jpg',
-    nbRecommendation: 5,
-    profilePic: '/images/default-profile-pic.jpg',
-    displayName: 'Thomasson',
-    expDesc: 'Explore the wonderful Golden Triangle together'
-  },
-  {
-    headerPic: '/images/default-img-card.jpg',
-    nbRecommendation: 5,
-    profilePic: '/images/default-profile-pic.jpg',
-    displayName: 'Thomasson',
-    expDesc: 'Explore the wonderful Golden Triangle together'
-  }];
+        if (!user.profile.nbRecommendation) { user.profile.nbRecommendation = 0; }
 
-  // const exps = [];
+        const age = calcAge(user.profile.birthdate);
+        const shortPresentationSentence = `${user.profile.adjective} ${age} years old traveller from ${user.profile.city}`;
+        const genderAdv = user.profile.gender === 'man' ? 'He' : 'She';
+        let i = 0;
+        let spokenLanguages = '';
+        if (user.profile.spokenLanguages && Array.isArray(user.profile.spokenLanguages)) {
+          user.profile.spokenLanguages.forEach((elem) => {
+            if (i++ > 0) spokenLanguages += ' and ';
+            spokenLanguages += elem.language;
+          });
+        }
+        i = 0;
+        let learningLanguages = '';
+        if (user.profile.learningLanguages && Array.isArray(user.profile.learningLanguages)) {
+          user.profile.learningLanguages.forEach((elem) => {
+            if (i++ > 0) learningLanguages += ' and ';
+            learningLanguages += elem.language;
+          });
+        }
 
-  res.render('profile/experience', { title: 'Experiences', data, exps });
+        let shortLearnSentence = `${genderAdv} speaks ${spokenLanguages}`;
+
+        if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
+
+        const isConnectedUser = user._id.equals(req.user._id);
+
+        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+        const data = {
+          nbWelcomerRecommendations: 2,
+          experiencesDesc: `I'm so proud to be a welcomer ! So much to do in my city, 
+            but I prefer is to do that and that and this with beers and flowers.`
+        };
+
+        const exps = [{
+          headerPic: '/images/default-img-card.jpg',
+          nbRecommendation: 5,
+          profilePic: '/images/default-profile-pic.jpg',
+          displayName: 'Thomasson',
+          expDesc: 'Explore the wonderful Golden Triangle together'
+        },
+        {
+          headerPic: '/images/default-img-card.jpg',
+          nbRecommendation: 5,
+          profilePic: '/images/default-profile-pic.jpg',
+          displayName: 'Thomasson',
+          expDesc: 'Explore the wonderful Golden Triangle together'
+        },
+        {
+          headerPic: '/images/default-img-card.jpg',
+          nbRecommendation: 5,
+          profilePic: '/images/default-profile-pic.jpg',
+          displayName: 'Thomasson',
+          expDesc: 'Explore the wonderful Golden Triangle together'
+        },
+        {
+          headerPic: '/images/default-img-card.jpg',
+          nbRecommendation: 5,
+          profilePic: '/images/default-profile-pic.jpg',
+          displayName: 'Thomasson',
+          expDesc: 'Explore the wonderful Golden Triangle together'
+        },
+        {
+          headerPic: '/images/default-img-card.jpg',
+          nbRecommendation: 5,
+          profilePic: '/images/default-profile-pic.jpg',
+          displayName: 'Thomasson',
+          expDesc: 'Explore the wonderful Golden Triangle together'
+        }];
+
+        // const exps = [];
+        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+
+        res.render('profile/experience', { title: 'Experiences', data, exps, user, shortPresentationSentence, shortLearnSentence, isConnectedUser });
+      }).populate({ path: 'profile.interests', select: 'name _id', model: Interest });
+    } else { next(new Error('Wrong ID!')); }
+  } else {
+    next(new Error('Id not found'));
+  }
 };
 
 /**
  * GET /
  * Profile Page / Dashboard
  */
-exports.getDashboard = (req, res) => {
-  const data = {
-    profileHeaderPic: '/images/photo-paris10.jpg',
-    profilePic: '/images/default-profile-pic.jpg',
-    displayName: 'Thomasson',
-    nbRecommendation: 2,
-    isWelcomer: true,
-  };
+exports.getDashboard = (req, res, next) => {
+  if (req.params.id) {
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      User.findById(req.params.id, (err, user) => {
+        if (err) {
+          next(err);
+        }
+        if (!user) { next(new Error('Wrong ID!')); }
 
-  const exps = {
-    asTraveler1: {
+        if (!user.profile.nbRecommendation) { user.profile.nbRecommendation = 0; }
 
-    },
-    asTraveler: {
-      pending: [{
-        welcomerProfilePic: '/images/sampleProfilePic1.png',
-        title: 'Title to the experience which can be very long + link ti the exp... f zef ze fozef zeoifj zeoijf oziej fozef ',
-        welcomerDisplayName: 'Yohann',
-        date: new Date(Date.now()),
-        nbTravellers: 2,
-        expCover: '/images/expImg2.jpg'
-      }],
-      come: [{
-        welcomerProfilePic: '/images/sampleProfilePic2.png',
-        title: 'Title to the experience which can be very long + link ti the exp...',
-        welcomerDisplayName: 'JB',
-        date: new Date(Date.now()),
-        nbTravellers: 5,
-        expCover: '/images/expImg3.jpg'
-      }],
-      past: [{
-        welcomerProfilePic: '/images/sampleProfilePic2.png',
-        title: 'Title to the experience which can be very long + link ti the exp...',
-        welcomerDisplayName: 'Thomasson',
-        date: new Date(Date.now()),
-        nbTravellers: 1,
-        expCover: '/images/expImg1.jpg'
-      }]
-    },
-    asWelcomer1: {
+        const age = calcAge(user.profile.birthdate);
+        const shortPresentationSentence = `${user.profile.adjective} ${age} years old traveller from ${user.profile.city}`;
+        const genderAdv = user.profile.gender === 'man' ? 'He' : 'She';
+        let i = 0;
+        let spokenLanguages = '';
+        if (user.profile.spokenLanguages && Array.isArray(user.profile.spokenLanguages)) {
+          user.profile.spokenLanguages.forEach((elem) => {
+            if (i++ > 0) spokenLanguages += ' and ';
+            spokenLanguages += elem.language;
+          });
+        }
+        i = 0;
+        let learningLanguages = '';
+        if (user.profile.learningLanguages && Array.isArray(user.profile.learningLanguages)) {
+          user.profile.learningLanguages.forEach((elem) => {
+            if (i++ > 0) learningLanguages += ' and ';
+            learningLanguages += elem.language;
+          });
+        }
 
-    },
-    asWelcomer: {
-      pending: [{
-        travelerProfilePic: '/images/sampleProfilePic2.png',
-        title: 'Title to the experience which can be very long + link ti the exp...',
-        travelerDisplayName: 'Yohann',
-        date: new Date(Date.now()),
-        nbTravellers: 2,
-        expCover: '/images/expImg1.jpg',
-        travelerMsg: '[Message the traveller wrote] Hello! We are from Bishek and we would love to see Paris with you you you you you you you youyou you you youyou you you youyou you you youyou you you youyou you you you'
-      }],
-      come: [{
-        travelerProfilePic: '/images/sampleProfilePic1.png',
-        title: 'Title to the experience which can be very long + link ti the exp...',
-        travelerDisplayName: 'JB',
-        date: new Date(Date.now()),
-        nbTravellers: 5,
-        expCover: '/images/expImg2.jpg'
-      }],
-      past: [{
-        travelerProfilePic: '/images/sampleProfilePic2.png',
-        title: 'Title to the experience which can be very long + link ti the exp...',
-        travelerDisplayName: 'Thomasson',
-        date: new Date(Date.now()),
-        nbTravellers: 1,
-        expCover: '/images/expImg3.jpg'
-      }]
-    }
-  };
+        let shortLearnSentence = `${genderAdv} speaks ${spokenLanguages}`;
 
-  res.render('profile/dashboard', { title: 'Dashboard', data, exps });
+        if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
+
+        const isConnectedUser = user._id.equals(req.user._id);
+
+        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+        const exps = {
+          asTraveler1: {
+
+          },
+          asTraveler: {
+            pending: [{
+              welcomerProfilePic: '/images/sampleProfilePic1.png',
+              title: 'Title to the experience which can be very long + link ti the exp... f zef ze fozef zeoifj zeoijf oziej fozef ',
+              welcomerDisplayName: 'Yohann',
+              date: new Date(Date.now()),
+              nbTravellers: 2,
+              expCover: '/images/expImg2.jpg'
+            }],
+            come: [{
+              welcomerProfilePic: '/images/sampleProfilePic2.png',
+              title: 'Title to the experience which can be very long + link ti the exp...',
+              welcomerDisplayName: 'JB',
+              date: new Date(Date.now()),
+              nbTravellers: 5,
+              expCover: '/images/expImg3.jpg'
+            }],
+            past: [{
+              welcomerProfilePic: '/images/sampleProfilePic2.png',
+              title: 'Title to the experience which can be very long + link ti the exp...',
+              welcomerDisplayName: 'Thomasson',
+              date: new Date(Date.now()),
+              nbTravellers: 1,
+              expCover: '/images/expImg1.jpg'
+            }]
+          },
+          asWelcomer1: {
+
+          },
+          asWelcomer: {
+            pending: [{
+              travelerProfilePic: '/images/sampleProfilePic2.png',
+              title: 'Title to the experience which can be very long + link ti the exp...',
+              travelerDisplayName: 'Yohann',
+              date: new Date(Date.now()),
+              nbTravellers: 2,
+              expCover: '/images/expImg1.jpg',
+              travelerMsg: '[Message the traveller wrote] Hello! We are from Bishek and we would love to see Paris with you you you you you you you youyou you you youyou you you youyou you you youyou you you youyou you you you'
+            }],
+            come: [{
+              travelerProfilePic: '/images/sampleProfilePic1.png',
+              title: 'Title to the experience which can be very long + link ti the exp...',
+              travelerDisplayName: 'JB',
+              date: new Date(Date.now()),
+              nbTravellers: 5,
+              expCover: '/images/expImg2.jpg'
+            }],
+            past: [{
+              travelerProfilePic: '/images/sampleProfilePic2.png',
+              title: 'Title to the experience which can be very long + link ti the exp...',
+              travelerDisplayName: 'Thomasson',
+              date: new Date(Date.now()),
+              nbTravellers: 1,
+              expCover: '/images/expImg3.jpg'
+            }]
+          }
+        };
+        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+
+        res.render('profile/dashboard', { title: 'Dashboard', exps, user, shortPresentationSentence, shortLearnSentence, isConnectedUser });
+      }).populate({ path: 'profile.interests', select: 'name _id', model: Interest });
+    } else { next(new Error('Wrong ID!')); }
+  } else {
+    next(new Error('Id not found'));
+  }
 };

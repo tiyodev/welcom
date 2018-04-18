@@ -2,19 +2,6 @@
   max-width: 80%;
   width: 1140px;
 
-  // input{
-  //   border-bottom: 1px solid black;
-  //   border-top: none;
-  //   border-left: none;
-  //   border-right: none;
-  //   height: 50px;
-  //   width: 350px;
-  // }
-  // input::placeholder {
-  //   text-align: center;
-  //   font-family: 'Aaux ProLight', serif;
-  // }
-
   .form-separation{
     background-color: $wel-yellow;
     height: 2px;
@@ -22,3 +9,17 @@
   }
 }
 
+#tags-container{
+  .tags-item{
+    height: 45px;
+
+    button{
+      height: 44px; 
+      width: 50px;
+    }
+  }
+}
+
+#profile-carousel carousel-caption{
+  height: 0px;
+}

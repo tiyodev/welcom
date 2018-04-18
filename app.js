@@ -35,6 +35,7 @@ const users = require('./routes/users');
 const auth = require('./routes/auth');
 const footer = require('./routes/footer');
 const profile = require('./routes/profile');
+const tags = require('./routes/tags');
 
 /**
  * Create Express server.
@@ -76,13 +77,12 @@ app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
   // url with no csrf
-  if (req.path === '/account/set_profile/upload/profilePict' ||
-      req.path === '/account/set_profile/upload/profileCover' ||
-      req.path === '/contact-us' ||
+  if (req.path === '/contact-us' ||
       req.path.includes('/search') ||
       req.path.includes('/login') ||
       req.path.match(/^(\/experience\/upload\/gallerypict\/)(\w)+/) ||
-      req.path === '/experience/upload/gallerypict') {
+      req.path === '/profile/edit/cover-upload/add' ||
+      req.path === '/profile/edit/profile-pic-upload/add') {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -111,6 +111,7 @@ app.use((req, res, next) => {
 app.use('/', index);
 app.use('/', footer);
 app.use('/profile', profile);
+app.use('/tags', tags);
 app.use('/users', users);
 app.use('/auth', auth);
 

@@ -520,6 +520,15 @@ button {
     height: 2px;
     width: 50%; }
 
+#tags-container .tags-item {
+  height: 45px; }
+  #tags-container .tags-item button {
+    height: 44px;
+    width: 50px; }
+
+#profile-carousel carousel-caption {
+  height: 0px; }
+
 /************** This file define colors use for welcom ***************/
 #header-nav-btn {
   top: 30px; }
@@ -937,3 +946,13 @@ h5 {
 
 .container .row {
   width: 100%; }
+
+.markup {
+  white-space: pre-wrap;
+  word-wrap: break-word; }
+
+.ui-autocomplete {
+  max-height: 500px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden; }

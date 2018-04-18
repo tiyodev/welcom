@@ -1,39 +1,55 @@
 extends ../layout
 
 block content
+  #profile-carousel.carousel.slide(data-ride="carousel")
+    .carousel-inner
+      - let i = 0;
+      each pic in user.profile.coverPic
+        if i++ === 0
+          .carousel-item.active
+            img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
+        else
+          .carousel-item
+            img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
 
-  img.img-header-profile.img-fluid(src=data.profileHeaderPic alt="Profile header")
+    a.carousel-control-prev(href="#profile-carousel" role="button" data-slide="prev")
+      span.carousel-control-prev-icon(aria-hidden="true")
+      span.sr-only Previous
+    a.carousel-control-next(href="#profile-carousel" role="button" data-slide="next")
+      span.carousel-control-next-icon(aria-hidden="true")
+      span.sr-only Next
+
   .profile-social-icn.d-flex.flex-row.justify-content-center.align-items-center.flex-wrap
     .pl-5.pr-5
-      a(href=data.facebookLink target="_blank")
+      a(href=user.profile.facebookLink target="_blank")
         img(src="/images/facebook.png" alt="facebook")
     .pl-5.pr-5
-      a(href=data.instagramLink target="_blank")
+      a(href=user.profile.instagramLink target="_blank")
         img(src="/images/insta.png" alt="insta")
     .profile-social-icn-separator
     .pl-5.pr-5
-      a(href=data.twitterLink target="_blank")
+      a(href=user.profile.twitterLink target="_blank")
         img(src="/images/twitter.png" alt="twitter")
     .pl-5.pr-5
-      a(href=data.webLink target="_blank")
+      a(href=user.profile.otherLink target="_blank")
         img(src="/images/darkHeart.png" alt="darkHeart")
   .img-profile.mx-auto
-    img.img-profile-picture.rounded-circle(src=data.profilePic alt="Profile picture")
+    img.img-profile-picture.rounded-circle(src=(user.profile.profilePic.picture !== undefined ? user.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
 
   #profile-content.m-auto
     .pt-4.pb-4.text-center
-      h2 #{data.displayName}
-      h4.green-txt X #{data.nbRecommendation} positive recommendations
+      h2 #{user.profile.nickName}
+      h4.green-txt X #{user.profile.nbRecommendation} positive recommendations
       p.pt-2 
-        | #{data.description} 
+        | #{shortPresentationSentence} 
         br
-        | #{data.languageSpokenDesc}
+        | #{shortLearnSentence}
 
     nav.nav.nav-pills.nav-fill.nav-primary.font-weight-bold
-      a.nav-item.nav-link(href="/profile") Profile
-      a.nav-item.nav-link(href="/profile/recommendation") Recommendations
-      a.nav-item.nav-link.active(href="/profile/experience") Experiences
-      a.nav-item.nav-link(href="/profile/dashboard") Dashboard
+      a.nav-item.nav-link(href=`/profile/${user._id}`) Profile
+      a.nav-item.nav-link(href=`/profile/${user._id}/recommendation`) Recommendations
+      a.nav-item.nav-link.active(href=`/profile/${user._id}/experience`) Experiences
+      a.nav-item.nav-link(href=`/profile/${user._id}/dashboard`) Dashboard
 
     .pt-5.pb-4.text-center
       span #{data.displayName} has 

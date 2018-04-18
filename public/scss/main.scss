@@ -150,3 +150,15 @@ h5{
 .container .row{
   width: 100%;
 }
+
+.markup{
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.ui-autocomplete {
+  max-height: 500px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+}

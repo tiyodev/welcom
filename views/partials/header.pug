@@ -1,10 +1,7 @@
-//- - console.log('ybo');
-//- - console.log(locals.user);
-
 nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
   .container
     a.navbar-brand(href="/") 
-      img.header-logo(src='../images/welcom-logo-horizontal-header.svg')
+      img.header-logo(src='/images/welcom-logo-horizontal-header.svg')
     button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarNav")
       span.navbar-toggler-icon
     #navbarNav.navbar-collapse.collapse
@@ -27,7 +24,7 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
             a.underline-yellow.text-uppercase.nav-link(href="/readblog") Read our blog
           li.nav-item.m-auto.pl-2.pr-2
             a#message-icon.nav-link(href="#")
-              .fa.fa-envelope-o.fa-2x
+              .far.fa-envelope-open.fa-2x
               span.badge.badge-pill 5
           li.nav-item.m-auto.dropdown
             a#navbarDropdown.nav-link(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
@@ -37,7 +34,7 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
                 img#header-profile-picture.rounded-circle(src=locals.user.profile.picture)
 
             .dropdown-menu(aria-labelledby="navbarDropdown")
-              a.dropdown-item(href="/profile") Profile
+              a.dropdown-item(href=`/profile/${locals.user._id}`) Profile
               .dropdown-divider
               a.dropdown-item(href="/logout") Sign out
 
@@ -80,17 +77,17 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
               .mt-2
                 button.wel-bg-blue(type="submit") 
                   a(href='/auth/facebook')
-                    i.fa.fa-facebook.wel-color-white
+                    i.fab.fa-facebook-f.wel-color-white
                       | &nbsp;&nbsp; Your Facebook account                                    
               .mt-2
                 button.wel-bg-pink(type="submit") 
                   a(href='/auth/twitter')
-                    i.fa.fa-twitter.wel-color-white
+                    i.fab.fa-twitter.wel-color-white
                       | &nbsp;&nbsp; Your Twitter account
               .mt-2
                 button.wel-bg-yellow(type="submit") 
                   a(href='/auth/google')
-                    i.fa.fa-google-plus.wel-color-white
+                    i.fab.fa-google-plus-g.wel-color-white
                       | &nbsp;&nbsp; Your Google account
               .mt-4
                 a(href='#' onclick="$('#joinus').modal('hide');$('#sign-in-modal').modal('toggle');") Already a member ?
@@ -132,17 +129,17 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
               .mt-2
                 button.wel-bg-blue(type="submit") 
                   a(href='/auth/facebook')
-                    i.fa.fa-facebook.wel-color-white
+                    i.fab.fa-facebook-f.wel-color-white
                       | &nbsp;&nbsp; Your Facebook account                                    
               .mt-2
                 button.wel-bg-pink(type="submit") 
                   a(href='/auth/twitter')
-                    i.fa.fa-twitter.wel-color-white
+                    i.fab.fa-twitter.wel-color-white
                       | &nbsp;&nbsp; Your Twitter account
               .mt-2
                 button.wel-bg-yellow(type="submit") 
                   a(href='/auth/google')
-                    i.fa.fa-google-plus.wel-color-white
+                    i.fab.fa-google-plus-g.wel-color-white
                       | &nbsp;&nbsp; Your Google account
               .mt-4
                 a(href='#' onclick="$('#sign-in-modal').modal('hide');$('#joinus').modal('toggle');$('#joinus').modal('handleUpdate');") Not yet a member ? Join us !

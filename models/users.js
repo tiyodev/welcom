@@ -30,14 +30,20 @@ const userSchema = new Schema({
   lastChangeEmail: Date,
   /* Profile */
   profile: {
-    coverPic: String,
-    profilePic: String,
+    coverPic: [{
+      label: String,
+      picture: String
+    }],
+    profilePic: {
+      label: String,
+      picture: String
+    },
     nickName: String,
     firstName: String,
     lastName: String,
     phoneNumber: String,
     city: String,
-    gender: { type: String, enum: ['woman', 'male'] },
+    gender: { type: String, enum: ['woman', 'man'] },
     adjective: String,
     birthdate: Date,
     spokenLanguages: [{
@@ -54,10 +60,11 @@ const userSchema = new Schema({
     shareWithCommunity: String,
     tripLived: String,
     travelPlan: String,
-    facebookLing: String,
+    facebookLink: String,
     twitterLink: String,
     instagramLink: String,
-    otherLink: String
+    otherLink: String,
+    nbRecommendation: { type: Number, min: 0, default: 0 }
   }
 }, { timestamps: true });
 

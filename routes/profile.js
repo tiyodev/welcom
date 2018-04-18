@@ -2,12 +2,18 @@ const express = require('express');
 
 const router = express.Router();
 const profileController = require('./../controllers/profile');
+const passportConfig = require('./../config/passport');
+const uploadConfig = require('./../config/upload');
 
-router.get('/', profileController.getProfile);
-router.get('/edit', profileController.getEditProfile);
-router.post('/edit', profileController.checkProfileData, profileController.postEditProfile);
-router.get('/recommendation', profileController.getRecommendation);
-router.get('/experience', profileController.getExperience);
-router.get('/dashboard', profileController.getDashboard);
+router.get('/:id', passportConfig.isAuthenticated, profileController.getProfile);
+router.get('/:id/edit', passportConfig.isAuthenticated, profileController.getEditProfile);
+router.post('/edit', passportConfig.isAuthenticated, profileController.checkProfileData, profileController.postEditProfile);
+router.post('/edit/cover-upload/add', passportConfig.isAuthenticated, uploadConfig.uploadProfile.array('input-cover[]', 5), profileController.postAddProfileCover);
+router.post('/edit/cover-upload/delete', passportConfig.isAuthenticated, profileController.postDeleteProfileCover);
+router.post('/edit/profile-pic-upload/add', passportConfig.isAuthenticated, uploadConfig.uploadProfile.single('input-picture'), profileController.postAddProfilePic);
+router.post('/edit/profile-pic-upload/delete', passportConfig.isAuthenticated, profileController.postDeleteProfilePic);
+router.get('/:id/recommendation', passportConfig.isAuthenticated, profileController.getRecommendation);
+router.get('/:id/experience', passportConfig.isAuthenticated, profileController.getExperience);
+router.get('/:id/dashboard', passportConfig.isAuthenticated, profileController.getDashboard);
 
 module.exports = router;

@@ -5,6 +5,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const User = require('../models/users');
+const Interest = require('../models/interests');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -12,25 +13,20 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   User.findOne({ _id: id, isActive: true }, (err, user) => {
-    console.error(err);
+    if (err) { console.error(err); }
     done(err, user);
-  });
-  // .populate('profile.interests');
+  }).populate({ path: 'profile.interests', select: 'name _id', model: Interest });
 });
 
 /**
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-  console.log(`YBO . email ${email}`);
-  console.log(`YBO . password ${password}`);
-
   User.findOne({ email: email.toLowerCase() }, (err, user) => {
     if (!user) {
       return done(null, false, { msg: `Email ${email} not found.` });
     }
     user.comparePassword(password, (err, isMatch) => {
-      console.log(`YBO . isMatch ${isMatch}`);
       if (isMatch) {
         return done(null, user);
       }
@@ -128,8 +124,6 @@ passport.use(new TwitterStrategy({
   callbackURL: '/auth/twitter/callback',
   passReqToCallback: true
 }, (req, accessToken, tokenSecret, profile, done) => {
-  console.log(profile);
-
   if (req.user) {
     User.findOne({ twitter: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
@@ -184,8 +178,6 @@ passport.use(new GoogleStrategy({
   callbackURL: '/auth/google/callback',
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
-  console.log(profile);
-
   if (req.user) {
     User.findOne({ google: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
@@ -246,7 +238,7 @@ exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/login');
+  res.redirect('/');
 };
 
 /**

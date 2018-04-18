@@ -1,14 +1,62 @@
 extends ../layout
 
 block content
-  .p-0.img-header-content
-    img.img-header-profile.img-fluid(src=(user.profile.coverPic !== undefined ? user.profile.coverPic : '/images/default-cover-pic.jpg')  alt="Profile header")
-    button.img-profile-cover-upload.btn.btn-wel-blue(type="button")
-      .span.fa.fa-camera.fa-3x
+  #profile-carousel.carousel.slide(data-ride="carousel")
+    .carousel-inner
+      - let i = 0;
+      each pic in user.profile.coverPic
+        if i++ === 0
+          .carousel-item.active
+            img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label data-key-carousel=pic._id)
+        else
+          .carousel-item
+            img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label data-key-carousel=pic._id)
+    
+    carousel-caption.d-none.d-md-block
+      button.img-profile-cover-upload.btn.btn-wel-blue(type="button" data-toggle="modal" data-target="#uploadProfileCover")
+        .span.fas.fa-camera.fa-3x
+
+    a.carousel-control-prev(href="#profile-carousel" role="button" data-slide="prev")
+      span.carousel-control-prev-icon(aria-hidden="true")
+      span.sr-only Previous
+    a.carousel-control-next(href="#profile-carousel" role="button" data-slide="next")
+      span.carousel-control-next-icon(aria-hidden="true")
+      span.sr-only Next
+
   .pb-6.mx-auto.img-profile
-    img.img-profile-edit-picture.rounded-circle(src=(user.profile.profilePic !== undefined ? user.profile.profilePic : '/images/default-profile-pic.jpg') alt="Profile picture")
-    button.img-profile-pic-upload.btn.btn-wel-blue(type="button")
-      .span.fa.fa-camera.fa-3x
+    img.img-profile-edit-picture.rounded-circle(src=(user.profile.profilePic.picture !== undefined ? user.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
+    button.img-profile-pic-upload.btn.btn-wel-blue(type="button" data-toggle="modal" data-target="#uploadProfilePicture")
+      .span.fas.fa-camera.fa-3x
+
+  <!-- Upload profile cover Modal -->
+  #uploadProfileCover.modal.fade(tabindex="-1" role="dialog" aria-labelledby="uploadProfileCover" aria-hidden="true")
+    .modal-dialog.modal-lg(role="document")
+      .modal-content
+        .modal-header
+          h5#uploadProfileCoverLabel.modal-title Upload cover file
+          button.close(type="button" data-dismiss="modal" aria-label="Close")
+            span(aria-hidden="true") x
+        .modal-body
+          .file-loading
+            input#input-cover(name="input-cover[]" type="file" multiple)
+          #cover-file-errors
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+  
+  <!-- Upload profile picture Modal -->
+  #uploadProfilePicture.modal.fade(tabindex="-1" role="dialog" aria-labelledby="uploadProfilePicture" aria-hidden="true")
+    .modal-dialog.modal-lg(role="document")
+      .modal-content
+        .modal-header
+          h5#uploadProfileCoverLabel.modal-title Upload profile picture
+          button.close(type="button" data-dismiss="modal" aria-label="Close")
+            span(aria-hidden="true") x
+        .modal-body
+          .file-loading
+            input#input-picture(name="input-picture" type="file")
+          #picture-file-errors
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-dismiss="modal") Close
 
   #profile-edit-content.pt-6.m-auto
     .pt-4.pb-4.text-center
@@ -17,32 +65,42 @@ block content
         | and the more it is compelte, the easier it is to create bonds with other members
         | of the community!
 
-    form(action="/profile/edit", method="post")
+    form#profile-form(action="/profile/edit" method="post" novalidate)
       input(type='hidden' name='_csrf' value=_csrf id="_csrf")
-
+      
       h2.p-4.text-center Personal informations
       .form-row
         .form-group.col-md-6
           label(for="inputFirstName") First Name
           input#inputFirstName.form-control(type="text" name="firstName" placeholder="First Name" value=user.profile.firstName)
+          .invalid-feedback
+            span The size of the first name must be between 1 and 50 characters.
         .form-group.col-md-6
           label(for="inputLastName") Last Name
           input#inputLastName.form-control(type="text" name="lastName" placeholder="Last Name" value=user.profile.lastName)
+          .invalid-feedback
+            span The size of the first name must be between 1 and 50 characters.
       .form-row
         .form-group.col-md-6
           label(for="inputNickname") Nickname
-          input#inputNickname.form-control(type="text" name="nickName" placeholder="Nickname" value=user.profile.nickName)
+          input#inputNickname.form-control(type="text" name="nickName" placeholder="Nickname" value=user.profile.nickName required)
+          .invalid-feedback
+            span Please chose a nickname (2 to 20 signs).
           small (if no nickname, your first name will be displayed.)
         .form-group.col-md-6
           label(for="inputEmail") Email
-          input#inputEmail.form-control(type="email" name="email" placeholder="Email" value=user.email)
+          input#inputEmail.form-control(type="email" name="email" placeholder="Email" value=user.email required)
+          .invalid-feedback
+            span A valid email is needed.
       .form-row
         .form-group.col-md-6
           label(for="inputMobileNumber") Mobile Number
           input#inputMobileNumber.form-control(type="tel" name="mobileNumber" placeholder="Mobile Number" value=user.profile.phoneNumber)
-        .form-group.col-md-6
-          label(for="inputPassword") Password
-          input#inputPassword.form-control(type="password" name="password" placeholder="Password" value=user.password)
+          .invalid-feedback
+            span The mobile phone number must be supplied with the country code and therefore must start with +
+        //- .form-group.col-md-6
+        //-   label(for="inputPassword") Password
+        //-   input#inputPassword.form-control(type="password" name="password" placeholder="Password" value=user.password)
       .form-group
         p (It won't be displayed on your profile, it's only if we need to 
           | contact you quickly - no spam or ads)
@@ -54,32 +112,39 @@ block content
       .form-row
         .form-group.col-md-6
           label(for="inputCurrentCity") Current City
-          input#inputCurrentCity.form-control(type="text" name="city" placeholder="Current City" value=user.profile.city)
+          input#inputCurrentCity.form-control(type="text" name="city" placeholder="Current City" value=user.profile.city required)
+          .invalid-feedback
+            span Please, let the community know where you live.
         .form-group.col-md-6
           label(for="inputGender") Gender
-          select#inputGender.form-control(name="gender")
-            option(selected=(user.profile.gender === 'Man')) Man
-            option(selected=(user.profile.gender === 'Woman')) Woman
+          select#inputGender.form-control(name="gender" required)
+            option(value="") Choose...
+            option(selected=(user.profile.gender === 'man')) Man
+            option(selected=(user.profile.gender === 'woman')) Woman
+          .invalid-feedback
+            span Please let us know what pronoun we should use
 
       .form-row
         .form-group.col-md-6
           label(for="inputBirthDate") Date of birth
-          input#inputBirthDate.form-control(type="date" name="birthdate" placeholder="Date of birth" value=user.profile.birthdate)
+          input#inputBirthDate.form-control(type="date" name="birthdate" placeholder="Date of birth" required)
           small (It won't be displayed on your profile, only your age will.)
+          .invalid-feedback
+            span Please tell us your date of birth, it won't be displayed.
         .form-group.col-md-6
           label(for="inputDescribeAdj") Chose the adjective that best describes you as a traveller in this list: 
-          select#inputDescribeAdj.form-control.selectpicker(data-live-search="true" data-size="8" name="adjective")
+          select#inputDescribeAdj.form-control.selectpicker(data-live-search="true" data-size="8" name="adjective" required)
             option(value="") Choose...
             each adj in adjectives
-              option= adj
+              option(selected=(user.profile.adjective === adj))= adj
            
       .form-row
         .form-group.col-md-6
           label(for="inputLanguageSpoken") Languages spoken (like, enough to have a conversation with other travellers):
-          select#inputLanguageSpoken.form-control.selectpicker(multiple data-live-search="true" data-max-options="6" data-size="8" name="languageSpoken")
+          select#inputLanguageSpoken.form-control.selectpicker(multiple data-live-search="true" data-max-options="6" data-size="8" name="languageSpoken" required)
             each language in languages
               option= language.name
-                  
+                
         .form-group.col-md-6
           label(for="inputLanguageLearning") Languages you are currently learning:  
           select#inputLanguageLearning.form-control.selectpicker(multiple data-live-search="true" data-max-options="2" data-size="8" name="languageLearning")
@@ -93,22 +158,34 @@ block content
       .form-row
         .form-group.col-md-12
           label(for="inputIntro") Your intro (it's a short text that will appear on top of your profile like a status):
-          textarea#inputIntro.form-control(name="inputIntro" cols="30" rows="5" value=user.profile.intro)
+          textarea#inputIntro.form-control(name="inputIntro" cols="30" rows="5" required) #{user.profile.intro}
+          .invalid-feedback
+            span Please, tell us a little bit about you (30 signs min).
       .form-row
-        .form-group.col-md-12
+        .input-group.col-md-12.pb-4
           label(for="inputHobbie") What are your hobbies, interests, passions ?
           p (You don't have to list all of them, but shared interests are a good start point to create bonds.
             | Like foods, drinks, places, movies, unicorns, activities, etc. You can add 5 to 20.)
-          select#inputHobbie.form-control.selectpicker(multiple data-live-search="true" data-max-options="20" data-size="5" name="hobbies")
-            option foods
-            option drinks
-            option movies
+          input#tags.form-control(type="text" name="hobbies" placeholder="Hobbies" aria-label="Hobbies" aria-describedby="hobbies-btn")
+          .input-group-append
+            button#tags-btn.input-group-text(type="button") +
+          
+        .input-group.col-md-12
+          .profile-tags
+            #tags-container.mb-3.d-flex.justify-content-start.bd-highlight
+              each tag in user.profile.interests
+                .mr-2.tags-item.border.border-danger.rounded
+                  button.btn.btn-danger(type="button" onclick="deleteTag(this)")
+                    span.fas.fa-trash-alt
+                  span.tags-item-value.pl-3.pr-3 #{tag.name}
+                  input(type="hidden" name="tags[]" value=tag.name data-id=tag._id)
       .form-row
         .form-group.col-md-12
           label(for="inputBio") Your bio: a much bigger space where you can write what you want other members to know
             | about you. Let us know who you are!
-          textarea#inputBio.form-control(name="inputBio" cols="30" rows="10" value=user.profile.description)
-      
+          textarea#inputBio.form-control(name="inputBio" cols="30" rows="10" required) #{user.profile.description}
+          .invalid-feedback
+            span Please, tell us a little bit about your life (100 signs min).
       hr.mt-6.form-separation
 
       h2.p-4.text-center The traveller in you
@@ -116,16 +193,22 @@ block content
       .form-row
         .form-group.col-md-12
           label(for="inputSharing") What would you like to share whith the community?
-          textarea#inputSharing.form-control(name="inputSharing" cols="30" rows="5" placeholder="Passion for languages, for history, for sport? Even just time, thoughts and smiles ais good!" value=user.profile.shareWithCommunity)
+          textarea#inputSharing.form-control(name="inputSharing" cols="30" rows="5" placeholder="Passion for languages, for history, for sport? Even just time, thoughts and smiles ais good!" required) #{user.profile.shareWithCommunity}
+          .invalid-feedback
+            span Please, write something about what you would like to share (30 signs min).
       .form-row
         .form-group.col-md-12
           label(for="inputTripLived") What trips have you lived?
-          textarea#inputTripLived.form-control(name="inputTripLived" cols="30" rows="5" placeholder="Paris already? Amsterdam, Berlin, a small place in your country, or even... Kingslanding?" value=user.profile.tripLived)
+          textarea#inputTripLived.form-control(name="inputTripLived" cols="30" rows="5" placeholder="Paris already? Amsterdam, Berlin, a small place in your country, or even... Kingslanding?") #{user.profile.tripLived}
+          .invalid-feedback
+            span Between 20 and 300 characters.
       .form-row
         .form-group.col-md-12
           label(for="inputFutureTravel") Do you have travel plans for the future?
-          textarea#inputFutureTravel.form-control(name="inputFutureTravel" cols="30" rows="5" placeholder="Whether big or small plans, very precise or just ideas." value=user.profile.travelPlan)
-
+          textarea#inputFutureTravel.form-control(name="inputFutureTravel" cols="30" rows="5" placeholder="Whether big or small plans, very precise or just ideas.") #{user.profile.travelPlan}
+          .invalid-feedback
+            span Between 20 and 300 characters.
+              
       hr.mt-6.form-separation
 
       h2.p-4.text-center Your network
@@ -140,34 +223,38 @@ block content
 
       .form-row
         .form-group.col-md-6
-          //- label(for="inputFacebook") Facebook link
           .input-group
             .input-group-prepend
               .input-group-text 
                 img(src="/images/facebook.png" alt="facebook")
-            input#inputFacebook.form-control(type="text" name="facebookLink" placeholder="Facebook URL" value=user.profile.facebookLing)
+            input#inputFacebook.form-control(type="text" name="facebookLink" placeholder="Facebook URL" value=user.profile.facebookLink)
+            .invalid-feedback
+              span Please let us a valid URL.
         .form-group.col-md-6
-          //- label(for="inputInstagram") Instagram link
           .input-group
             .input-group-prepend
               .input-group-text 
                 img(src="/images/insta.png" alt="insta")
             input#inputInstagram.form-control(type="text" name="instagramLink" placeholder="Instagram URL" value=user.profile.instagramLink)
+            .invalid-feedback
+              span Please let us a valid URL.
       .form-row
         .form-group.col-md-6
-          //- label(for="inputTwitter") Twitter link
           .input-group
             .input-group-prepend
               .input-group-text 
                 img(src="/images/twitter.png" alt="twitter")
             input#inputTwitter.form-control(type="text" name="twitterLink" placeholder="Twitter URL" value=user.profile.twitterLink)
+            .invalid-feedback
+              span Please let us a valid URL.
         .form-group.col-md-6
-          //- label(for="inputOtherLink") Other link
           .input-group
             .input-group-prepend
               .input-group-text 
                 img(src="/images/darkHeart.png" alt="darkHeart" height="48px" width="48px")
             input#inputOtherLink.form-control(type="text" name="otherLink" placeholder="Other URL" value=user.profile.otherLink)
+            .invalid-feedback
+              span Please let us a valid URL.  
             small This last one is for other networks and websites: your blog, your Couchsurfing profile, etc.
       
       hr.mt-6.form-separation
@@ -176,3 +263,161 @@ block content
 
       .pb-6.text-center
         button.pr-6.pl-6.btn.btn-wel-pink.font-weight-bold(type="submit") Save profile
+
+block css
+  link(rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
+  link(rel='stylesheet' href='https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.css')
+block js
+  script(type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqCyG4uB3iF1UcPsb9x6gr2Cr6NGZgNNA&libraries=places&callback=initAutocompleteEditProfile" async defer)
+  script(type="text/javascript" src="/js/autocomplete-city.js")
+  script(type="text/javascript" src="/js/autocomplete-tag.js")
+  script(type="text/javascript" src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js")
+  script(type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+  script.
+    (function() {
+
+      // Add manual validation for selectpicker
+      let form = $("#profile-form")[0];
+      form.onsubmit = function(event){
+        createInvalideFeedback("inputDescribeAdj", "Please chose the adjective that best describes you.");
+        createInvalideFeedback("inputLanguageSpoken", "Please tell us your spoken languages (at least one).");
+        createInvalideFeedback("inputHobbie", "Please chose at least one hobby.");
+        
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');      
+      };
+
+      $('#input-cover').fileinput({
+        allowedFileExtensions: ['png', 'jpeg', 'jpg'],
+        initialPreviewAsData: true,
+        initialPreview: [#{coverPicInitialPreview}],
+        initialPreviewConfig: [#{coverPicInitialPreviewConfig}],
+        initialPreviewFileType: 'image',
+        maxFileCount: 5,
+        minFileCount: 1,
+        language: 'EN',
+        layoutTemplates: [],
+        overwriteInitial: false,
+        theme: "fas",
+        type: 'POST',
+        showRemove: false, // hide remove button
+        showUpload: false, // hide upload button        
+        uploadAsync: true,
+        uploadUrl: '/profile/edit/cover-upload/add',
+        validateInitialCount: true,
+        deleteExtraData: {
+          _csrf: '#{_csrf}'
+        }
+      }).on("filebatchselected", function(event, files) {
+        // trigger upload method immediately after files are selected
+        $('#input-cover').fileinput("upload");
+      }).on('fileuploaded', function(event, data, previewId, index) {
+        let carouselContainer = document.getElementsByClassName('carousel-inner')[0];
+
+        const carouselItem = document.createElement('div');
+        carouselItem.classList.add('carousel-item');
+
+        const carouselImg = document.createElement('img');
+        carouselImg.classList.add('img-header-profile','d-block','w-100');
+        carouselImg.setAttribute('src', data.response.fileUrl);
+        carouselImg.setAttribute('alt', data.response.initialPreviewConfig[0].caption);
+        carouselImg.setAttribute('data-key-carousel', data.response.initialPreviewConfig[0].key);
+
+        carouselItem.appendChild(carouselImg);
+        carouselContainer.appendChild(carouselItem);
+      }).on('filebeforedelete', function(event, key) {
+        return new Promise(function(resolve, reject) {
+          swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.value) {
+              resolve();
+            }
+            else {
+              reject();
+            }
+          })
+        });
+      }).on('filedeleted', function(event, key, jqXHR, data) {
+        let carouselItemToRemove = $(`[data-key-carousel='${key}']`)[0].parentNode;
+
+        // Delete item
+        carouselItemToRemove.parentNode.removeChild(carouselItemToRemove);
+      }); ;
+
+      $('#input-picture').fileinput({
+        allowedFileExtensions: ['png', 'jpeg', 'jpg'],
+        initialPreviewAsData: true,
+        initialPreview: [#{profilePicInitialPreview}],
+        initialPreviewConfig: [#{profilePicInitialPreviewConfig}],
+        initialPreviewFileType: 'image',
+        language: 'EN',
+        layoutTemplates: [],
+        overwriteInitial: true,
+        theme: "fas",
+        type: 'POST',
+        showRemove: false, // hide remove button
+        showUpload: false, // hide upload button        
+        uploadAsync: true,
+        uploadUrl: '/profile/edit/profile-pic-upload/add',
+        validateInitialCount: true,
+        deleteExtraData: {
+          _csrf: '#{_csrf}'
+        }
+      }).on("filebatchselected", function(event, files) {
+        // trigger upload method immediately after files are selected
+        $('#input-picture').fileinput("upload");
+      }).on('fileuploaded', function(event, data, previewId, index) {
+        $('.img-profile-edit-picture')[0].src = data.response.fileUrl;
+      }).on('filebeforedelete', function(event, key) {
+        return new Promise(function(resolve, reject) {
+          swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.value) {
+              resolve();
+            }
+            else {
+              reject();
+            }
+          })
+        });
+      }).on('filedeleted', function(event, key, jqXHR, data) {
+        $('.img-profile-edit-picture')[0].src = '/images/default-profile-pic.jpg';
+      });      
+
+      // Initialize input Date
+      document.getElementById("inputBirthDate").valueAsDate = new Date("#{user.profile.birthdate}");
+
+      // Initialize tag autocomplete
+      autocomplete_tag('tags', {limit: 5, btnId: 'tags-btn'});
+
+      // Initialize Spoken Languages
+      if(`#{user.profile.spokenLanguages}` !== "")
+        $('#inputLanguageSpoken').selectpicker('val', Array.from(!{JSON.stringify(user.profile.spokenLanguages)}, x => x.language));
+      
+      // Initialize Learning Languages
+      if(`#{user.profile.learningLanguages}` !== "")
+        $('#inputLanguageLearning').selectpicker('val', Array.from(!{JSON.stringify(user.profile.learningLanguages)}, x => x.language));
+    
+      // Set valid data
+      setServerValidData(!{JSON.stringify(validData)});
+
+      // Set Error data
+      checkServerValidity(!{JSON.stringify(errors)});      
+    })();
