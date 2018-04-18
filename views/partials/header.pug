@@ -28,10 +28,7 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
               span.badge.badge-pill 5
           li.nav-item.m-auto.dropdown
             a#navbarDropdown.nav-link(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
-              if !locals.user.profile.picture
-                img#header-profile-picture.rounded-circle(src="/images/default-profile-pic.jpg")
-              else
-                img#header-profile-picture.rounded-circle(src=locals.user.profile.picture)
+              img#header-profile-picture.rounded-circle(src=(user.profile.profilePic.picture !== undefined ? user.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
 
             .dropdown-menu(aria-labelledby="navbarDropdown")
               a.dropdown-item(href=`/profile/${locals.user._id}`) Profile

@@ -545,7 +545,8 @@ button {
     #wel-nav-bar .underline-yellow:hover {
       border-bottom-color: #ffd14e; }
   #wel-nav-bar #header-profile-picture {
-    width: 75px; }
+    width: 75px;
+    height: 75px; }
   #wel-nav-bar #message-icon .badge {
     background-color: #ffd14e;
     margin-left: -10px;
