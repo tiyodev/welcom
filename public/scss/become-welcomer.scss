@@ -1,0 +1,34 @@
+.become-welcomer-content{
+  @media (min-width: 280px) {
+    &-img{
+      width: 250px;
+    }
+  }
+  @media (min-width: 450px) {
+    &-img{
+      width: 400px;
+    }
+  }
+  @media (min-width: 576px) {
+    &-img{
+      width: 400px;
+    }
+  }
+  @media (min-width: 768px) {
+    &-img{
+      width: 600px;
+    }
+  }
+  @media (min-width: 992px) {
+    &-img{
+      width: 100%;
+      max-width: 600px;
+    }
+  }
+}
+
+.become-welcomer-log-content{
+  width: 50%;
+  border: solid 2px black;
+  border-radius: 20px;
+}

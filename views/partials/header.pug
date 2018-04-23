@@ -31,6 +31,9 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
               img#header-profile-picture.rounded-circle(src=(user.profile.profilePic.picture !== undefined ? user.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
 
             .dropdown-menu(aria-labelledby="navbarDropdown")
+              if !locals.user.isWelcomer
+                a.dropdown-item(href=`/welcomer/become`) Become welcomer
+                .dropdown-divider
               a.dropdown-item(href=`/profile/${locals.user._id}`) Profile
               .dropdown-divider
               a.dropdown-item(href="/logout") Sign out

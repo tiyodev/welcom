@@ -240,6 +240,15 @@ button {
     border-radius: 25px;
     width: 170px;
     height: 50px; }
+  #multi-part .item-becoming-welcomer a {
+    background-color: transparent;
+    color: white !important;
+    border: 2px white solid;
+    border-radius: 25px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    padding-left: 30px;
+    padding-right: 30px; }
   #multi-part .item-becoming-welcomer p, #multi-part .item-becoming-welcomer h2 {
     width: 350px;
     margin: auto; }
@@ -844,6 +853,32 @@ button {
     border-left: solid 3px #ebebeb; }
   .experience-card-msg {
     border: solid 1px #ebebeb; }
+
+@media (min-width: 280px) {
+  .become-welcomer-content-img {
+    width: 250px; } }
+
+@media (min-width: 450px) {
+  .become-welcomer-content-img {
+    width: 400px; } }
+
+@media (min-width: 576px) {
+  .become-welcomer-content-img {
+    width: 400px; } }
+
+@media (min-width: 768px) {
+  .become-welcomer-content-img {
+    width: 600px; } }
+
+@media (min-width: 992px) {
+  .become-welcomer-content-img {
+    width: 100%;
+    max-width: 600px; } }
+
+.become-welcomer-log-content {
+  width: 50%;
+  border: solid 2px black;
+  border-radius: 20px; }
 
 /*************** Override font family *************************************************/
 p, a, span {

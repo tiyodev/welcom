@@ -11,7 +11,6 @@ const userSchema = new Schema({
   registrationDate: Date,
   isActive: { type: Boolean, default: true },
   isAdmin: { type: Boolean, default: false },
-  isWelcomer: { type: Boolean, default: false },
   /* OAuth */
   twitter: String,
   google: String,
@@ -28,6 +27,9 @@ const userSchema = new Schema({
   validEmailToken: String,
   validEmailTokenExpires: Date,
   lastChangeEmail: Date,
+  /* welcomer */
+  isWelcomer: { type: Boolean, default: false },
+  welcomerReason: String,
   /* Profile */
   profile: {
     coverPic: [{

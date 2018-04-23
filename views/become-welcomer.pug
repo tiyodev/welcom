@@ -1,0 +1,194 @@
+extends layout
+
+block content
+  .wel-bg-blue.wel-color-white.p-6
+    h1.text-center To meet travellers is to meet the whole world
+  
+  .wel-bg-white
+    .become-welcomer-content.container
+      .row.pt-6.justify-content-center
+        .col.align-self-center.text-center.order-lg-first.order-last
+          img.become-welcomer-content-img(src='/images/become-welcomer/devenir-welcomer-welcome.jpg')
+        .col.align-self-center
+          h2.text-center Why Welcom' ?
+          p 
+            | We are a <b>new generation</b> of travellers, interested in meeting people and 
+            | living people and living authentic experiences.
+
+          p 
+            | The mission of Welcom' is to allow <b>meetings and exchanges</b> between travellers
+            | and Parisians.
+
+          p
+            | We think the nicest thing to say to a stranger is simply "welcome"!
+      .row.pt-4.justify-content-center.text-center
+        p.font-weight-bold
+          | We want to shit Paris from the most touristic city in the world to the most 
+          | welcoming city in the world!
+  .wel-bg-grey-middle-light
+    .become-welcomer-content.container
+      .row.pt-6
+        .col.align-self-center
+          h2.text-center Why Welcom' ?
+          p 
+            | Welcomers are not professionals: <b>we are individuals, 
+            | travel enthusiasts</b>, not tour guides.
+
+          p 
+            | We share our city, our local life, our favorite places, with 
+            | curious travellers, just as we like to meet locals when we 
+            | travel somewhere.
+
+          p
+            | We make travellers live Parisian expeiences on <b>our free time</b>,
+            | when we have a couple hours to share.
+        .col.align-self-center.text-center
+          img.become-welcomer-content-img(src='/images/become-welcomer/devenir-welcomer-who-are-w.jpg')
+      .row.pt-4.justify-content-center.text-center
+        p.font-weight-bold
+          | We welcomer are simply Parisians that are home between two trips, ready to help
+          | travellers to enjoy Paris!
+  .wel-bg-white
+    .become-welcomer-content.container
+      .row.pt-6
+        .col.align-self-center.text-center.order-lg-first.order-last
+          img.become-welcomer-content-img(src='/images/become-welcomer/devenir-welcomer-exp.jpg')
+        .col.align-self-center
+          h2.text-center What is an experience ?
+          p 
+            | An experience is an activity, a hobby, something banal like going
+            | for a stroll and having a drink, or something more specific like
+            | talking about the history of a neighborhood.
+
+          p 
+            | Actually, it can be <b>any activity you would like to share</b> whith friends
+            | of friends for a couple hours.
+          p
+            | Above all, it serves as <b>a pretext to meet</b> and have a chat about Paris, life,
+            | travelling, plans, food, history, politics, nature... Anything!
+      .row.pt-4.justify-content-center.text-center
+        p.font-weight-bold
+          | An experience mostly is a pretext to meet around a shared interest and get
+          | to know each others.
+  .wel-bg-grey-middle-light
+    .become-welcomer-content.container
+      .row.pt-6
+        .col.align-self-center
+          h2.text-center Why become a welcomer ?
+          p 
+            | There are dozens of reasons to become welcomers, everyone has their own.
+            | But the most consensual is... <b>Kindness</b>. Be friendly whith travellers who 
+            | sincerly want to discover the Parisian life, as we like to meet nice
+            | people when we travel.
+
+          p 
+            | Being a welcomer also allows you to discover our own city 
+            | with the eyes of a first-time.
+
+          p
+            | Oh, and it will allow you to <b>meet people from all over the world</b>... so many
+            | future travel opportunities!
+        .col.text-center
+          img.become-welcomer-content-img(src='/images/become-welcomer/image amis partout dans le monde.png')
+      .row.pt-4.justify-content-center.text-center
+        p.font-weight-bold
+          | Meeting travellers is already travelling, isn't it ?
+  .wel-bg-white
+    .become-welcomer-content.container
+      .row.pt-6
+        .col.align-self-center.text-center.order-lg-first.order-last
+          img.become-welcomer-content-img(src='/images/become-welcomer/devenir-welcomer-renonctre.jpg')
+        .col.align-self-center
+          h2.text-center How to become a welcomer ?
+          p 
+            | To make sure that everything is going well in the community, we want
+            | to meet the members who want to become welcomers and explain everything
+            | to them.
+
+          p 
+            | After we meet, we offer you a welcomer profile and you can start creating
+            | your experiences!
+      .row.pt-4.justify-content-center.text-center
+        if user && user.isWelcomer
+          p.font-weight-bold
+            | You are already a welcomer, aren't you ?
+            br
+            | The best thing you can do now (except creating experiences and meeting travellers) is 
+            | to tell your Parisian friends to become a welcomers too!
+        else
+          p.font-weight-bold
+            | It starts here, send us a message to tell us you want to be a welcomer:
+            br
+            | (Welcom' only exists in Paris and its region right now; if you are not Parisian,
+            | you can still send us a message and maybe someday you will be the first 
+            | welcomer in your city.)
+
+      if user && !user.isWelcomer
+        form#become-welcomer-form.pt-4(method="post" action="/welcomer/become" novalidate)
+          input(type='hidden' name='_csrf' value=_csrf id="_csrf")
+
+          .form-row
+            .form-group.col-md-12
+              label(for="inputBecomeWelcomer") Why do you want to become a welcomer? Tell us everything :)
+              textarea#inputBecomeWelcomer.form-control(name="inputBecomeWelcomer" cols="30" rows="7" disabled=(user.isWelcomer || user === undefined || user.welcomerReason !== undefined) required) #{user !== undefined ? user.welcomerReason : ''}
+              .invalid-feedback
+                span Please, tell us why do you want to become a welcomer. (100 signs min)
+
+          .text-center
+            button.pr-6.pl-6.btn.btn-wel-pink.font-weight-bold(type="submit" disabled=(user.isWelcomer || user === undefined || user.welcomerReason !== undefined)) Send
+
+          if user.welcomerReason !== undefined && !user.isWelcomer
+            h3.pt-4.text-center We received your message!
+            p.pt-2.text-center
+              | Thank you for wanting to become a welcomer! We will answer you as soon as possible.
+              br
+              | In the meantime, you can look at these experiences offered by other welcomers that we like
+              | a lot and get inspired: 
+            
+            .container.pt-2.pl-0.pr-0
+              .d-flex.flex-row.justify-content-center.flex-wrap
+                each exp in exps
+                  .p-3
+                    include components/experience-card
+
+      if !user
+        .p-4.m-4.mx-auto.become-welcomer-log-content.wel-bg-grey-middle-light
+          h3.text-center Please join or log in
+          p To send a a request, you have to be connected (so we can see your profile and contact you.)
+
+          .container
+            .row.justify-content-around
+              .col-4
+                button.gradient-rounded-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(data-target="#joinus" data-toggle="modal" type="button") Join us
+              .col-4
+                a.underline-yellow.text-uppercase.nav-link.text-gradient(data-target="#sign-in-modal" data-toggle="modal" href="#") Sign in
+
+      p.pt-4 You can also contact us to make a comment about this page or just say bonjour.
+
+      p.font-weight-bold 
+        | See you soon in the welcomers community! 
+        br
+        | JB & Yohann
+
+block js
+  script.
+    (function() {
+
+      // Add manual validation for selectpicker
+      let form = $("#become-welcomer-form")[0];
+      if(form){
+        form.onsubmit = function(event){
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');      
+        };
+      }
+
+      // Set valid data
+      setServerValidData(!{JSON.stringify(validData)});
+
+      // Set Error data
+      checkServerValidity(!{JSON.stringify(errors)});      
+    })();
