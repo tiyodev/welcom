@@ -1,34 +1,26 @@
-//- .card.experience-card-item
-//-   img.img-fluid.card-img-top(src=exp.headerPic alt="Card image cap")
-//-   .card-block.p-2
-//-     .container
-//-       .row.no-gutters.card-block-img-row
-//-         .col.exp-creator
-//-           span.exp-creator-with with 
-//-           p.exp-creator-name.p-0.m-0 #{exp.displayName}
-//-         .col
-//-           img.mx-auto.d-block.rounded-circle(src=exp.profilePic alt="...")
-//-         .col
-//-           span.position-absolute.nb-reco #{exp.nbRecommendation} 
-//-           span.position-absolute.icon-reco.fa.fa-smile-o.fa-2x
-
-//-       .row.pt-3.pl-5.pb-4
-//-         p.card-text #{exp.expDesc}
-
 .card.experience-card-item
   img.img-fluid.card-img-top(src=exp.headerPic alt="Card image cap")
-  .card-block.p-2
-    .container
-      .row.d-flex.justify-content-center.no-gutters.card-block-img-row
+  .card-block
+    .container.p-0
+      .row.pr-2.pl-2.d-flex.justify-content-start.no-gutters.card-block-img-row
         .p-0
-          img.mx-auto.d-block.rounded-circle(src=exp.profilePic alt="...")
-        .p-0.exp-creator
+          img.mx-auto.d-block.rounded-circle(src=exp.profilePic alt="experience cover")
+        .p-0.mx-auto.exp-creator
           span.exp-creator-with with 
-          p.exp-creator-name.p-0.m-0 #{exp.displayName}
-
-      .row.pt-3.pl-5.pb-4
+          p.exp-creator-name #{exp.displayName}
+      .row.pr-2.pl-2.pt-4.no-gutters
         p.card-text #{exp.expDesc}
-      .row.pt-3.pl-5.pb-4
-        span.position-absolute.nb-reco #{exp.nbRecommendation} 
-        span.position-absolute.icon-reco.far.fa-smile.fa-2x
-    
+      hr.mt-3.mb-3.p-0
+      .row.pr-2.pl-2.pb-2.no-gutters.justify-content-between.font-weight-bold
+        .experience-card-item-paying
+          if exp.isFree
+            img.experience-card-item-paying-ico(src='/images/icon/icon-free-blue.svg' alt="Experience paying icon")
+          else
+            img.experience-card-item-paying-ico(src='/images/icon/icon-paying-yellow.svg' alt="Experience free icon")
+        .experience-card-item-reco
+          if exp.nbRecommendation === undefined || exp.nbRecommendation === 0
+            span New !
+          else
+            span.experience-card-item-reco-nb #{exp.nbRecommendation} 
+            span.experience-card-item-reco-ico.far.fa-smile.fa-2x
+        

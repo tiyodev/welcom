@@ -8,7 +8,7 @@
 
         .card-text{
             font-family: "Aaux ProMedium";
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
         &-img-row{
@@ -17,39 +17,45 @@
 
             .rounded-circle{
                 border: 5px solid $wel-grey-middle-light;
-                width: 100px;
-                height: 100px;
+                width: 120px;
+                height: 120px;
                 margin-top:-60px;
             }
 
             .exp-creator{
-                margin-top: -10px !important;
+                width: 180px;
 
                 &-name{
                     font-family: "Aaux ProBold";
-                    font-size: 1.2rem;
-                    margin-top: -10px !important;
+                    font-size: 1rem;
+                    line-height: 1.1rem;
+                    word-break: break-all;
+                    margin-top: -7px;
                 }
 
                 &-with{
                     font-family: "Aaux ProRegular";
                     font-size: 0.8rem;
+                    vertical-align: text-top;
                 }
             }
         }
     }
-}
 
-.nb-reco{
-    left: 17px;
-    font-size: 1.2rem;
-    font-weight: bold;  
-    color: #41b866;
-    top: -2px;
-}
+    &-reco{
+        &-nb{
+            padding-right: 5px;
+            font-size: 1.2rem;
+            color: $wel-pink;
+            vertical-align: super;
+            display: inline-block;
+        }
+        &-ico{
+            color: $wel-pink;
+        }
+    }
 
-.icon-reco{
-    color: #41b866;
-    font-weight: bold;
-    top: -2px;
+    &-paying-ico{
+        width: 2em;
+    }
 }

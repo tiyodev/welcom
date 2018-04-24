@@ -737,36 +737,37 @@ button {
     background-color: #ebebeb; }
     .experience-card-item .card-block .card-text {
       font-family: "Aaux ProMedium";
-      font-size: 1.2rem; }
+      font-size: 1rem; }
     .experience-card-item .card-block-img-row {
       height: 100px;
       margin-bottom: -55px; }
       .experience-card-item .card-block-img-row .rounded-circle {
         border: 5px solid #ebebeb;
-        width: 100px;
-        height: 100px;
+        width: 120px;
+        height: 120px;
         margin-top: -60px; }
       .experience-card-item .card-block-img-row .exp-creator {
-        margin-top: -10px !important; }
+        width: 180px; }
         .experience-card-item .card-block-img-row .exp-creator-name {
           font-family: "Aaux ProBold";
-          font-size: 1.2rem;
-          margin-top: -10px !important; }
+          font-size: 1rem;
+          line-height: 1.1rem;
+          word-break: break-all;
+          margin-top: -7px; }
         .experience-card-item .card-block-img-row .exp-creator-with {
           font-family: "Aaux ProRegular";
-          font-size: 0.8rem; }
-
-.nb-reco {
-  left: 17px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #41b866;
-  top: -2px; }
-
-.icon-reco {
-  color: #41b866;
-  font-weight: bold;
-  top: -2px; }
+          font-size: 0.8rem;
+          vertical-align: text-top; }
+  .experience-card-item-reco-nb {
+    padding-right: 5px;
+    font-size: 1.2rem;
+    color: #dc5770;
+    vertical-align: super;
+    display: inline-block; }
+  .experience-card-item-reco-ico {
+    color: #dc5770; }
+  .experience-card-item-paying-ico {
+    width: 2em; }
 
 /************** This file define colors use for welcom ***************/
 #community-says .rounded-circle {
