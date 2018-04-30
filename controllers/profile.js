@@ -2,6 +2,7 @@ const languages = require('../data/language');
 const adjectives = require('../data/adjective');
 const User = require('./../models/users');
 const Interest = require('../models/interests');
+const Experience = require('./../models/experiences');
 const Tag = require('./../models/interests');
 const mongoose = require('mongoose');
 const myFs = require('../config/myFs');
@@ -110,9 +111,11 @@ exports.getProfile = (req, res, next) => {
 
         if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
 
-        const isConnectedUser = user._id.equals(req.user._id);
+        const isConnectedUser = user._id.equals(req.account._id);
 
-        res.render('profile/profile', { title: 'Profile', user, shortPresentationSentence, shortLearnSentence, isConnectedUser });
+        res.render('profile/profile', {
+          title: 'Profile', user, shortPresentationSentence, shortLearnSentence, isConnectedUser
+        });
       }).populate({ path: 'profile.interests', select: 'name _id', model: Interest });
     } else { next(new Error('Wrong ID!')); }
   } else {
@@ -130,23 +133,23 @@ exports.getEditProfile = (req, res) => {
   let profilePicInitialPreview = '';
   let profilePicInitialPreviewConfig = '';
 
-  if (req.user.profile.coverPic !== undefined && req.user.profile.coverPic.length > 0) {
-    req.user.profile.coverPic.forEach((item) => {
+  if (req.account.profile.coverPic !== undefined && req.account.profile.coverPic.length > 0) {
+    req.account.profile.coverPic.forEach((item) => {
       coverPicInitialPreview += `'${item.picture}',`;
       coverPicInitialPreviewConfig += `{caption: '${item.label}', width: '200px', url: '/profile/edit/cover-upload/delete', key: '${item._id}'},`;
     });
   }
 
-  if (req.user.profile.profilePic.picture !== undefined) {
-    profilePicInitialPreview = `'${req.user.profile.profilePic.picture}'`;
-    profilePicInitialPreviewConfig = `{caption: '${req.user.profile.profilePic.label}', width: '200px', url: '/profile/edit/profile-pic-upload/delete'}`;
+  if (req.account.profile.profilePic.picture !== undefined) {
+    profilePicInitialPreview = `'${req.account.profile.profilePic.picture}'`;
+    profilePicInitialPreviewConfig = `{caption: '${req.account.profile.profilePic.label}', width: '200px', url: '/profile/edit/profile-pic-upload/delete'}`;
   }
 
   res.render('profile/edit-profile', {
     title: 'Edit Profile',
     languages,
     adjectives,
-    user: req.user,
+    user: req.account,
     coverPicInitialPreview,
     coverPicInitialPreviewConfig,
     profilePicInitialPreview,
@@ -166,7 +169,7 @@ exports.postEditProfile = (req, res, next) => {
       title: 'Edit Profile',
       languages,
       adjectives,
-      user: req.user,
+      user: req.account,
       errors: errors.array(),
       validData: matchedData(req)
     });
@@ -174,35 +177,37 @@ exports.postEditProfile = (req, res, next) => {
 
   // Get a promises array, one by tag
   const pArray = req.body.tags.map(async (tag) => {
-    try {
-      const findTag = await Tag.findOne({ name: tag });
+    if (tag !== undefined && tag !== null && tag !== '') {
+      try {
+        const findTag = await Tag.findOne({ name: tag });
 
-      // If the tag alreeady exist, return tag id.
-      if (findTag !== null) {
-        return findTag._id;
+        // If the tag alreeady exist, return tag id.
+        if (findTag !== null) {
+          return findTag._id;
+        }
+      } catch (err) {
+        next(err);
       }
-    } catch (err) {
-      next(err);
-    }
 
-    try {
-      // Else create a new Tag
-      const newTag = new Tag();
-      newTag.name = tag;
-      newTag._id = mongoose.Types.ObjectId();
+      try {
+        // Else create a new Tag
+        const newTag = new Tag();
+        newTag.name = tag;
+        newTag._id = mongoose.Types.ObjectId();
 
-      await newTag.save();
+        await newTag.save();
 
-      return newTag._id;
-    } catch (err) {
-      next(err);
+        return newTag._id;
+      } catch (err) {
+        next(err);
+      }
     }
   });
 
   // Wait all promises
   Promise.all(pArray).then((tagsId) => {
     // Update user informations
-    User.findById(req.user._id, (err, user) => {
+    User.findById(req.account._id, (err, user) => {
       if (err) { next(err); }
 
       user.email = req.body.email;
@@ -265,7 +270,7 @@ exports.postEditProfile = (req, res, next) => {
  * Upload profile cover images
  */
 exports.postAddProfileCover = (req, res, next) => {
-  User.findById(req.user._id, (err, user) => {
+  User.findById(req.account._id, (err, user) => {
     if (err) { next(err); }
 
     // If number of cover pic > 5, return an error
@@ -278,29 +283,31 @@ exports.postAddProfileCover = (req, res, next) => {
     }
 
     // Déplacer les fichiers dans la destination
-    myFs.moveProfileCoverImg(req.user._id, req.files[0])
-    .then((result) => {
-      const filePath = `/profile/${req.user._id}/${result.newFileName}`;
+    myFs.moveProfileCoverImg(req.account._id, req.files[0])
+      .then((result) => {
+        const filePath = `/profile/${req.account._id}/${result.newFileName}`;
 
-      const id = mongoose.Types.ObjectId();
-      user.profile.coverPic.push({
-        picture: filePath,
-        label: result.newFileName,
-        _id: id
-      });
-
-      user.save((err) => {
-        if (err) return next(err);
-        return res.json({
-          success: 'true',
-          initialPreview: [`../../..${filePath}`],
-          initialPreviewConfig: [{ caption: result.newFileName, width: '200px', url: '/profile/edit/cover-upload/delete', key: id }],
-          append: true,
-          fileUrl: filePath
+        const id = mongoose.Types.ObjectId();
+        user.profile.coverPic.push({
+          picture: filePath,
+          label: result.newFileName,
+          _id: id
         });
-      });
-    })
-    .catch((err) => { console.log(err); });
+
+        user.save((err) => {
+          if (err) return next(err);
+          return res.json({
+            success: 'true',
+            initialPreview: [`../../..${filePath}`],
+            initialPreviewConfig: [{
+              caption: result.newFileName, width: '200px', url: '/profile/edit/cover-upload/delete', key: id
+            }],
+            append: true,
+            fileUrl: filePath
+          });
+        });
+      })
+      .catch((err) => { console.error(err); });
   });
 };
 
@@ -309,7 +316,7 @@ exports.postAddProfileCover = (req, res, next) => {
  * Delete profile cover images
  */
 exports.postDeleteProfileCover = (req, res, next) => {
-  User.findById(req.user._id, (err, user) => {
+  User.findById(req.account._id, (err, user) => {
     if (err) { next(err); }
 
     const index = user.profile.coverPic.findIndex(item => item._id.equals(req.body.key));
@@ -317,14 +324,11 @@ exports.postDeleteProfileCover = (req, res, next) => {
     const deleteItem = user.profile.coverPic.splice(index, 1);
 
     myFs.deleteUploadImg(deleteItem)
-      .then((msg) => { console.log(msg); })
-      .catch((err) => { console.log(err); });
+      .then((msg) => { console.info(msg); })
+      .catch((err) => { console.error(err); });
 
     user.save((err) => {
       if (err) return next(err);
-
-      console.log(req.body.key);
-
       return res.json({ success: 'true', key: req.body.key, test: 'deleteFile' });
     });
   });
@@ -335,39 +339,41 @@ exports.postDeleteProfileCover = (req, res, next) => {
  * Upload profile picture
  */
 exports.postAddProfilePic = (req, res, next) => {
-  User.findById(req.user._id, (err, user) => {
+  User.findById(req.account._id, (err, user) => {
     if (err) { next(err); }
 
     // Déplacer les fichiers dans la destination
-    myFs.moveProfileCoverImg(req.user._id, req.file)
-    .then((result) => {
+    myFs.moveProfileCoverImg(req.account._id, req.file)
+      .then((result) => {
       // If there are already a picture, delete it
-      if (user.profile.profilePic.picture !== undefined) {
-        myFs.deleteProfilePic(user.profile.profilePic)
-          .then((msg) => { console.log(msg); })
-          .catch((err) => { console.log(err); });
-      }
+        if (user.profile.profilePic.picture !== undefined) {
+          myFs.deleteProfilePic(user.profile.profilePic)
+            .then((msg) => { console.info(msg); })
+            .catch((err) => { console.error(err); });
+        }
 
-      const filePath = `/profile/${req.user._id}/${result.newFileName}`;
+        const filePath = `/profile/${req.account._id}/${result.newFileName}`;
 
-      const id = mongoose.Types.ObjectId();
+        const id = mongoose.Types.ObjectId();
 
-      user.profile.profilePic = {
-        picture: filePath,
-        label: result.newFileName
-      };
+        user.profile.profilePic = {
+          picture: filePath,
+          label: result.newFileName
+        };
 
-      user.save((err) => {
-        if (err) return next(err);
-        return res.json({
-          success: 'true',
-          initialPreview: [`../../..${filePath}`],
-          initialPreviewConfig: [{ caption: result.newFileName, width: '200px', url: '/profile/edit/cover-upload/delete', key: id }],
-          fileUrl: filePath
+        user.save((err) => {
+          if (err) return next(err);
+          return res.json({
+            success: 'true',
+            initialPreview: [`../../..${filePath}`],
+            initialPreviewConfig: [{
+              caption: result.newFileName, width: '200px', url: '/profile/edit/cover-upload/delete', key: id
+            }],
+            fileUrl: filePath
+          });
         });
-      });
-    })
-    .catch((err) => { console.log(err); });
+      })
+      .catch((err) => { console.error(err); });
   });
 };
 
@@ -376,12 +382,12 @@ exports.postAddProfilePic = (req, res, next) => {
  * Delete profile picture
  */
 exports.postDeleteProfilePic = (req, res, next) => {
-  User.findById(req.user._id, (err, user) => {
+  User.findById(req.account._id, (err, user) => {
     if (err) { next(err); }
 
     myFs.deleteProfilePic(user.profile.profilePic)
-      .then((msg) => { console.log(msg); })
-      .catch((err) => { console.log(err); });
+      .then((msg) => { console.info(msg); })
+      .catch((err) => { console.error(err); });
 
     user.profile.profilePic = {};
 
@@ -433,9 +439,9 @@ exports.getRecommendation = (req, res, next) => {
 
         if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
 
-        const isConnectedUser = user._id.equals(req.user._id);
+        const isConnectedUser = user._id.equals(req.account._id);
 
-        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
         const data = {
           recommendationDescription: 'Really happy that the travellers I meet from all over the world like my experiences that much! It\'s perfect.',
         };
@@ -473,9 +479,11 @@ exports.getRecommendation = (req, res, next) => {
         // seqf e z gsdgsdf s ez ztzet sdfsdfg rgreteze z fdfs '
         //   }
         //  }];
-        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
 
-        res.render('profile/recommendation', { title: 'Recommendations', data, recommendations, user, shortPresentationSentence, shortLearnSentence, isConnectedUser });
+        res.render('profile/recommendation', {
+          title: 'Recommendations', data, recommendations, user, shortPresentationSentence, shortLearnSentence, isConnectedUser
+        });
       });
     } else { next(new Error('Wrong ID!')); }
   } else {
@@ -522,55 +530,33 @@ exports.getExperience = (req, res, next) => {
 
         if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
 
-        const isConnectedUser = user._id.equals(req.user._id);
+        const isConnectedUser = user._id.equals(req.account._id);
 
-        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
         const data = {
           nbWelcomerRecommendations: 2,
           experiencesDesc: `I'm so proud to be a welcomer ! So much to do in my city, 
             but I prefer is to do that and that and this with beers and flowers.`
         };
+        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
 
-        const exps = [{
-          headerPic: '/images/default-img-card.jpg',
-          nbRecommendation: 5,
-          profilePic: '/images/default-profile-pic.jpg',
-          displayName: 'Thomasson',
-          expDesc: 'Explore the wonderful Golden Triangle together'
-        },
-        {
-          headerPic: '/images/default-img-card.jpg',
-          nbRecommendation: 5,
-          profilePic: '/images/default-profile-pic.jpg',
-          displayName: 'Thomasson',
-          expDesc: 'Explore the wonderful Golden Triangle together'
-        },
-        {
-          headerPic: '/images/default-img-card.jpg',
-          nbRecommendation: 5,
-          profilePic: '/images/default-profile-pic.jpg',
-          displayName: 'Thomasson',
-          expDesc: 'Explore the wonderful Golden Triangle together'
-        },
-        {
-          headerPic: '/images/default-img-card.jpg',
-          nbRecommendation: 5,
-          profilePic: '/images/default-profile-pic.jpg',
-          displayName: 'Thomasson',
-          expDesc: 'Explore the wonderful Golden Triangle together'
-        },
-        {
-          headerPic: '/images/default-img-card.jpg',
-          nbRecommendation: 5,
-          profilePic: '/images/default-profile-pic.jpg',
-          displayName: 'Thomasson',
-          expDesc: 'Explore the wonderful Golden Triangle together'
-        }];
+        Experience.find({ creator: user._id }, '_id creator coverPic title isFree nbRecommendation', (err, exps) => {
+          if (err) { next(err); }
 
-        // const exps = [];
-        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
-
-        res.render('profile/experience', { title: 'Experiences', data, exps, user, shortPresentationSentence, shortLearnSentence, isConnectedUser });
+          res.render('profile/experience', {
+            title: 'Experiences',
+            data,
+            exps,
+            user,
+            shortPresentationSentence,
+            shortLearnSentence,
+            isConnectedUser,
+            isExpEditable: true,
+            isExpViewable: true
+          });
+        })
+          .populate({ path: 'interests', select: 'name _id', model: Interest })
+          .populate({ path: 'creator', select: 'profile.profilePic profile.firstName profile.nickName', model: User });
       }).populate({ path: 'profile.interests', select: 'name _id', model: Interest });
     } else { next(new Error('Wrong ID!')); }
   } else {
@@ -617,9 +603,9 @@ exports.getDashboard = (req, res, next) => {
 
         if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
 
-        const isConnectedUser = user._id.equals(req.user._id);
+        const isConnectedUser = user._id.equals(req.account._id);
 
-        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
         const exps = {
           asTraveler1: {
 
@@ -681,9 +667,11 @@ exports.getDashboard = (req, res, next) => {
             }]
           }
         };
-        /** ***************** TEMP DATA => JUST FOR FRONT ***************************/
+        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
 
-        res.render('profile/dashboard', { title: 'Dashboard', exps, user, shortPresentationSentence, shortLearnSentence, isConnectedUser });
+        res.render('profile/dashboard', {
+          title: 'Dashboard', exps, user, shortPresentationSentence, shortLearnSentence, isConnectedUser
+        });
       }).populate({ path: 'profile.interests', select: 'name _id', model: Interest });
     } else { next(new Error('Wrong ID!')); }
   } else {

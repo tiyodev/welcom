@@ -46,6 +46,9 @@ button {
   height: 40px;
   width: calc(100% + 20px); }
 
+.gradient-rounded-btn:active {
+  background: linear-gradient(to right, #dc5770, #0a1235) !important; }
+
 .text-gradient {
   font-family: 'Aaux ProBlack', serif;
   background: linear-gradient(to right, #dc5770, #0a1235);
@@ -193,6 +196,17 @@ button {
   height: 50px;
   font-family: "Aaux ProBold";
   border: none; }
+
+#experiences .experiences-btn {
+  background-color: #0a1235;
+  color: #ffffff !important;
+  border: 2px #ffffff solid;
+  text-decoration: none;
+  border-radius: 25px;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  padding-left: 30px;
+  padding-right: 30px; }
 
 /*************** Learn more **********************************************/
 #learn-more img {
@@ -538,6 +552,68 @@ button {
 #profile-carousel carousel-caption {
   height: 0px; }
 
+#exp-content {
+  max-width: 80%;
+  width: 1140px; }
+  #exp-content .form-separation {
+    background-color: #ffd14e;
+    height: 2px;
+    width: 50%; }
+
+#tags-container .tags-item {
+  height: 45px; }
+  #tags-container .tags-item button {
+    height: 44px;
+    width: 50px; }
+
+#exp-carousel carousel-caption {
+  height: 0px; }
+
+.exp-carousel-img-header {
+  width: 100vw;
+  height: auto;
+  max-height: 500px;
+  min-height: 300px;
+  -o-object-fit: cover;
+  object-fit: cover;
+  -o-object-position: bottom;
+  object-position: bottom; }
+
+.exp-carousel-cover-upload {
+  width: 110px;
+  height: 70px;
+  bottom: 285px;
+  left: calc((100% - 110px) / 2);
+  position: relative;
+  border-radius: 50%;
+  color: #ffd14e; }
+  .exp-carousel-cover-upload:hover {
+    color: #ffd14e; }
+
+#exp-view-content {
+  max-width: 95%;
+  width: 1140px; }
+  #exp-view-content .exp-view-border-container {
+    border: solid 2px #868686;
+    border-radius: 10px;
+    background-color: #f4f4f4;
+    min-width: 330px; }
+    #exp-view-content .exp-view-border-container-input, #exp-view-content .exp-view-border-container-label {
+      max-width: 125px; }
+  #exp-view-content-recommendation-component p {
+    color: #dc5770;
+    font-size: 1.4rem; }
+  #exp-view-content-component-container {
+    min-width: 330px; }
+  #exp-view-content .exp-view-separation {
+    background-color: #ffd14e;
+    height: 2px;
+    width: 50%; }
+  #exp-view-content .exp-view-separation-grey {
+    background-color: #f4f4f4;
+    height: 2px;
+    width: 50%; }
+
 /************** This file define colors use for welcom ***************/
 #header-nav-btn {
   top: 30px; }
@@ -561,7 +637,7 @@ button {
     margin-left: -10px;
     display: inline; }
 
-#join-us-form input {
+#joinus-modal #join-us-form input {
   border-bottom: 1px solid black;
   border-top: none;
   border-left: none;
@@ -569,27 +645,27 @@ button {
   height: 50px;
   width: 80%; }
 
-#join-us-form input::-webkit-input-placeholder {
+#joinus-modal #join-us-form input::-webkit-input-placeholder {
   text-align: center;
   font-family: 'Aaux ProLight', serif; }
 
-#join-us-form input:-ms-input-placeholder {
+#joinus-modal #join-us-form input:-ms-input-placeholder {
   text-align: center;
   font-family: 'Aaux ProLight', serif; }
 
-#join-us-form input::-ms-input-placeholder {
+#joinus-modal #join-us-form input::-ms-input-placeholder {
   text-align: center;
   font-family: 'Aaux ProLight', serif; }
 
-#join-us-form input::placeholder {
+#joinus-modal #join-us-form input::placeholder {
   text-align: center;
   font-family: 'Aaux ProLight', serif; }
 
-#join-us-form a {
+#joinus-modal #join-us-form a {
   border: none;
   color: #000000; }
 
-#join-us-form .join-us-btn button {
+#joinus-modal #join-us-form .join-us-btn button {
   background-color: #ffffff;
   color: #000000;
   border: 2px solid #dc5770;
@@ -598,24 +674,33 @@ button {
   width: 170px;
   height: 50px; }
 
-#join-us-form .terms-of-use {
+#joinus-modal #join-us-form .terms-of-use {
   width: 80%; }
 
-#join-us-form .social-btn button {
-  border: none;
-  border-radius: 25px;
-  width: 80%;
-  height: 50px; }
-
-#join-us-form .social-btn i {
-  font-weight: bold !important; }
-
-#join-us-form hr {
+#joinus-modal #join-us-form hr {
   height: 3px;
   color: #ffd14e;
   background-color: #ffd14e;
   border: none;
   width: 60%; }
+
+.social-btn button {
+  border: none;
+  border-radius: 25px;
+  width: 80%;
+  height: 50px; }
+
+.social-btn a {
+  border-radius: 25px;
+  width: 80%;
+  height: 50px;
+  line-height: 35px; }
+
+.social-btn i {
+  font-weight: bold !important; }
+
+.social-btn .social-link {
+  color: #000000; }
 
 #sign-in-modal-form input:not(#remember-me) {
   border-bottom: 1px solid black;
@@ -730,9 +815,14 @@ button {
   .recommendation-answer-profile-pic {
     height: 125px; }
 
-/************** This file define colors use for welcom ***************/
+#experience-card {
+  color: #000000;
+  text-decoration: none; }
+
 .experience-card-item {
   width: 20rem; }
+  .experience-card-item-title {
+    height: 75px; }
   .experience-card-item .card-block {
     background-color: #ebebeb; }
     .experience-card-item .card-block .card-text {
@@ -880,6 +970,30 @@ button {
   width: 50%;
   border: solid 2px black;
   border-radius: 20px; }
+
+#experience-list-container {
+  max-width: 80%;
+  width: 1140px; }
+  #experience-list-container .experience-list-ico {
+    width: 2em; }
+  #experience-list-container .experience-list-tip-item {
+    max-width: 350px; }
+  #experience-list-container .experience-list-item-note {
+    min-width: 350px;
+    width: 350px;
+    height: 150px; }
+  #experience-list-container .experience-list-item-square {
+    min-width: 350px;
+    width: 350px;
+    height: 275px; }
+    #experience-list-container .experience-list-item-square-border-blue {
+      border: solid 2px #0a1235; }
+    #experience-list-container .experience-list-item-square-border-yellow {
+      border: solid 2px #ffd14e; }
+    #experience-list-container .experience-list-item-square-border-pink {
+      border: solid 2px #dc5770; }
+  #experience-list-container hr {
+    border-top: 2px solid #868686; }
 
 /*************** Override font family *************************************************/
 p, a, span {

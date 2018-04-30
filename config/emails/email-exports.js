@@ -114,8 +114,6 @@ function makeTextTemplate(templateArgs) {
 //  */
 // exports.sendMail = function sendMail(userEmail, subject, templateArgs) {
 //   return new Promise((resolve, reject) => {
-//     console.log(`YBO A : ${apiKey}`);
-
 //     const apiInstance = new SibApiV3Sdk.SMTPApi();
 //     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(
 //       {
@@ -131,7 +129,6 @@ function makeTextTemplate(templateArgs) {
 
 //     apiInstance.sendTransacEmail(sendSmtpEmail)
 //     .then((data) => {
-//       console.log(`SendInBlue API called successfully. Returned data: ${data}`);
 //       resolve(data);
 //     })
 //     .catch((error) => {
@@ -165,16 +162,8 @@ exports.sendMail = function sendMail(userEmail, subject, templateArgs) {
       json: true
     };
 
-    console.log(`YBO A : ${JSON.stringify(options)}`);
-
     request(options, (error, response, body) => {
       if (error) reject(error);
-
-     // console.log(response);
-      console.log(`YBO B body : ${JSON.stringify(body)}`);
-      console.log(`YBO C response : ${JSON.stringify(response)}`);
-      console.log(`YBO D error : ${JSON.stringify(error)}`);
-
       resolve(body);
     });
   });

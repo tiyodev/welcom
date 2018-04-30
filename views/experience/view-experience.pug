@@ -1,0 +1,182 @@
+extends ../layout
+
+block content
+  #exp-carousel.carousel.slide(data-ride="carousel")
+    .carousel-inner
+      if exp.coverPic === undefined || exp.coverPic.length === 0
+        .carousel-item.active
+          img.d-block.w-100.exp-carousel-img-header(src='/images/defaut-experience-cover.jpg' alt='Default experience cover')
+      else
+        - let i = 0;
+        each pic in exp.coverPic
+          if i++ === 0
+            .carousel-item.active
+              img.d-block.w-100.exp-carousel-img-header(src=pic.picture alt=pic.label)
+          else
+            .carousel-item
+              img.d-block.w-100.exp-carousel-img-header(src=pic.picture alt=pic.label)
+
+    a.carousel-control-prev(href="#exp-carousel" role="button" data-slide="prev")
+      span.carousel-control-prev-icon(aria-hidden="true")
+      span.sr-only Previous
+    a.carousel-control-next(href="#exp-carousel" role="button" data-slide="next")
+      span.carousel-control-next-icon(aria-hidden="true")
+      span.sr-only Next
+      
+  #exp-view-content.container
+    .row.justify-content-center
+      .p-4.col-md-8.col-sm-12
+        #exp-view-content-hook.pt-4.text-center
+          p.markup #{exp.hook}
+        #exp-view-content-welcomer-pres.pt-4.text-left
+          h4.font-weight-bold About your welcomer, #{exp.creator.profile.firstName}
+          p 
+            | #{shortPresentationSentence}
+            br
+            | #{shortLearnSentence}
+          a(href=`/profile/${exp.creator._id}`) See complete profile
+        #exp-view-content-tags.pt-4
+          .exp-view-tags
+            .d-flex.align-content-between.flex-wrap.mb-3
+              each tag in exp.interests
+                .p-2.m-2.border.border-secondary.rounded #{tag.name}
+        #exp-view-content-description.pt-4
+          h4.font-weight-bold About the experience:
+          p.markup #{exp.description}
+
+        if exp.chargeReason !== undefined && exp.chargeReason !== null && exp.chargeReason !== ''
+          hr.exp-view-separation.mt-6.mb-6
+
+          #exp-view-content-description
+            h4.font-weight-bold #{exp.creator.profile.firstName} will use the revenues for:
+            p.markup #{exp.chargeReason}
+
+        hr.exp-view-separation.mt-6.mb-6
+
+        #exp-view-content-dont-forget
+          h4.font-weight-bold Don't forget:
+          p #{exp.dontForget}
+        
+        hr.exp-view-separation.mt-6.mb-6
+
+        #exp-view-content-meeting-point
+          h4.font-weight-bold Meeting point address:
+          p #{exp.meetingPointAddr}
+          if exp.meetingPointIndications !== undefined  && exp.meetingPointIndications !== ''
+            h4.font-weight-bold Meeting point indication:
+            p #{exp.meetingPointIndications}
+          if (exp.meetingPointAddrLocation !== undefined && exp.meetingPointAddrLocation !== null && exp.meetingPointAddrLocation !== '' && exp.meetingPointAddrLocation.lat !== null && exp.meetingPointAddrLocation.lng !== null)
+            #map(style="width:400px; height:400px")
+
+        hr.exp-view-separation.mt-6.mb-6
+
+        #exp-view-content-recommendations
+          h4.text-center.font-weight-bold What the travellers think about this experience:
+          each recommendation in recommendations
+            include ../components/recommendation.pug
+
+          if exp.nbRecommendation !== undefined && exp.nbRecommendation !== null && exp.nbRecommendation > 0
+            h4.text-center Would you like to get more recommendations on your experience?
+          else
+            h4.text-center 
+              | Your experience has no recommendations yet.
+              br
+              | Would you like to get one ?
+              
+          p.mx-auto.w-75.pt-4.text-center 
+            | If you want more recommendations, you can ask your friends to register and give you one.
+            br
+            | Members don't need to book an experiences together to write each others recommendations.
+            br
+            | You too, if you know someone and want the community to trust them and their experiences
+            | like they deserve, juste give a recommendation. 
+            br
+            | It's the same for your friends or the members that know you: they can give a 
+            | recommendation to your experience to build trust!
+
+      #exp-view-content-component-container.col-md-4.col-sm-8
+        #exp-view-content-recommendation-component
+          if exp.nbRecommendation !== undefined && exp.nbRecommendation !== null && exp.nbRecommendation > 0
+            p.mt-4.m-0.p-4.exp-view-border-container.text-center X #{exp.nbRecommendation} positive recommendations
+          else
+            p.mt-4.m-0.p-4.exp-view-border-container.text-center This experience is new
+        #exp-view-content-booking-free-component
+          form#exp-view-content-booking-free-component-form(action=`/experience/${exp._id}/booking` method="post" novalidate)
+            .mt-4.p-4.exp-view-border-container.text-center
+              h3.pb-4 
+                | Live this experience with 
+                br
+                | #{exp.creator.profile.firstName}
+              p.pb-4
+                i.mr-2.fas.fa-euro-sign
+                if exp.amountCharge !== undefined && exp.amountCharge !== null && exp.amountCharge > 0
+                  | <b>#{exp.amountCharge}</b> #{exp.isChargeGroup ? 'for the groupe' : ''} #{exp.isChargeTraveller ? 'per traveller' : ''}
+                else
+                  | Free
+                br
+                i.mr-2.fas.fa-users
+                | Between <b>#{exp.travellerNbMin}</b> and <b>#{exp.travellerNbMax}</b> people
+                br
+                i.mr-2.fas.fa-hourglass-half
+                | For <b>#{exp.durationMin}</b> to <b>#{exp.durationMax}</b> hours
+              if locals.account
+                .container.mx-auto
+                  .row
+                    .col-6
+                      label.exp-view-border-container-label(for="booking-date") Date
+                    .col-6
+                      label.exp-view-border-container-label(for="booking-nb-travellers") Travellers
+                    
+                    .col-6
+                      input#booking-date.exp-view-border-container-input(type="Date")
+                    .col-6
+                      input#booking-nb-travellers.exp-view-border-container-input(name="bookingNbTravellers" type="number" min=exp.travellerNbMin max=exp.travellerNbMax step="1" value=exp.travellerNbMin)
+              else
+                h3.text-center Please join or log in
+                p To book an experience, you have to be connected.
+                .container.mx-auto
+                  .row
+                    .col-6
+                      button.gradient-rounded-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(data-target="#joinus" data-toggle="modal" type="button") Join us
+                    .col-6
+                      a.underline-yellow.text-uppercase.nav-link.text-gradient(data-target="#sign-in-modal" data-toggle="modal" href="#") Sign in
+
+              if locals.account
+                .pt-4.text-center
+                  button.pr-6.pl-6.btn.btn-wel-pink.font-weight-bold(type="submit") Request booking
+        #exp-view-content-why-part-community-component
+          .mt-4.p-4.exp-view-border-container.text-center
+            h4 Why be a part of Welcom' community?
+            ul.text-left.pt-4
+              li.pt-2 We are all travellers helping each others.
+              li.pt-2 Meeting Parisians is the best way to enjoy the real Paris.
+              li.pt-2 We are always here to help you.
+        if locals.account && !locals.account._id.equals(exp.creator._id)
+          #exp-view-content-questions-component
+            .mt-4.p-4.exp-view-border-container.text-center
+              h4 Do you have a question ?
+              .pt-4.text-center
+                a.pr-6.pl-6.btn.btn-wel-pink.font-weight-bold(href="") Send a message
+        if locals.account && locals.account._id.equals(exp.creator._id)
+          #exp-view-content-edit-exp-component
+            .mt-4.p-4.text-center
+              a.pr-6.pl-6.btn.btn-wel-yellow.font-weight-bold(href=`/experience/${exp._id}/edit`) Edit this experience
+
+block js
+  script.
+    function initMap() {
+      let addr = #{exp.meetingPointAddrLocation};
+
+      if(addr !== undefined && addr !== null && addr.lat !== null && addr.lng !== null){
+        let latLng = {lat: addr.lat, lng: addr.lng};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: latLng
+        });
+        var marker = new google.maps.Marker({
+          position: latLng,
+          map: map
+        });
+      }
+    }
+  script(type="text/javascript" src=`https://maps.googleapis.com/maps/api/js?key=${locals.googleApi}&callback=initMap` async defer)

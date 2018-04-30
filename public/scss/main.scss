@@ -5,6 +5,8 @@
 @import 'footer';
 @import 'profile';
 @import 'edit-profile';
+@import 'create-exp';
+@import 'view-exp';
 @import 'partials/header';
 @import 'partials/footer';
 @import 'components/recommendation';
@@ -14,6 +16,7 @@
 @import 'components/story-card-title';
 @import 'components/experience-component';
 @import 'become-welcomer';
+@import 'experience-list';
 
 /*************** Override font family *************************************************/
 p, a, span{

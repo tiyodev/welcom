@@ -1,0 +1,351 @@
+extends ../layout
+
+block content
+  #exp-carousel.carousel.slide(data-ride="carousel")
+    .carousel-inner
+      if exp.coverPic === undefined || exp.coverPic.length === 0
+        .carousel-item.active
+          img.d-block.w-100.exp-carousel-img-header(src='/images/defaut-experience-cover.jpg' alt='Default experience cover')
+      else
+        - let i = 0;
+        each pic in exp.coverPic
+          if i++ === 0
+            .carousel-item.active
+              img.d-block.w-100.exp-carousel-img-header(src=pic.picture alt=pic.label)
+          else
+            .carousel-item
+              img.d-block.w-100.exp-carousel-img-header(src=pic.picture alt=pic.label)
+    
+    carousel-caption.d-none.d-md-block
+      button.btn.btn-wel-blue.exp-carousel-cover-upload(type="button" data-toggle="modal" data-target="#uploadExpCover")
+        .span.fas.fa-camera.fa-3x
+
+    a.carousel-control-prev(href="#exp-carousel" role="button" data-slide="prev")
+      span.carousel-control-prev-icon(aria-hidden="true")
+      span.sr-only Previous
+    a.carousel-control-next(href="#exp-carousel" role="button" data-slide="next")
+      span.carousel-control-next-icon(aria-hidden="true")
+      span.sr-only Next
+
+  <!-- Upload profile cover Modal -->
+  #uploadExpCover.modal.fade(tabindex="-1" role="dialog" aria-labelledby="uploadExpCover" aria-hidden="true")
+    .modal-dialog.modal-lg(role="document")
+      .modal-content
+        .modal-header
+          h5#uploadExpCoverLabel.modal-title Upload cover file
+          button.close(type="button" data-dismiss="modal" aria-label="Close")
+            span(aria-hidden="true") x
+        .modal-body
+          .file-loading
+            input#input-cover(name="input-cover[]" type="file" multiple)
+          #cover-file-errors
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+
+  #exp-content.pt-6.m-auto
+    .pt-4.pb-4.text-center
+      p 
+        | Tip: The more your experience is described, the more the travellers will want to live it with you!
+        br
+        | Please, do not try to make it the best presented, the most "hype", the coolest, etc.
+        br
+        | What matters is meeting people, the experience is the pretext, the context of the meeting.
+        br
+        | So, just describe your experience like you would describe it to a friend of a friend: be honest,
+        | keep your own style, and now will be a super welcomer!
+
+    hr.mt-6.form-separation
+
+    form#profile-form(action=`/experience/${exp._id}/edit` method="post" novalidate)
+      input(type='hidden' name='_csrf' value=_csrf id="_csrf")
+      input(type='hidden' name='expId' value=exp._id id="expId")
+      
+      h2.p-4.text-center The base
+
+      .form-row
+        .form-group.col-md-12
+          label(for="inputTitle") Title of your experience:
+          input#inputTitle.form-control(type="text" name="inputTitle" placeholder="Title" value=exp.title required)
+          .invalid-feedback
+            span Please chose a title (2 to 50 signs).
+          small (It is better if the title summarize the experience and starts with a verb: discover, run, learn, etc.)
+
+      .form-row
+        .form-group.col-md-12
+          label(for="inputHook") The hook:
+          textarea#inputHook.form-control(type="text" name="inputHook" placeholder="Hook" cols="30" rows="5" required) #{exp.hook}
+          .invalid-feedback
+            span Please chose a hook (2 to 200 signs).
+          small (a short text to describe the experience, that will appear on top of the page)
+
+      .form-row
+        .input-group.col-md-12.pb-4
+          label(for="inputTags") What interests and passion is your experience linked to?
+          p (You don't have to list all of them, but shared interests are a good start point to create bonds.
+            | Like foods, drinks, places, movies, unicorns, activities, etc. You can add 5 to 20.)
+          input#tags.form-control(type="text" name="tags" placeholder="Interests" aria-label="inputTags" aria-describedby="tags-btn")
+          .input-group-append
+            button#tags-btn.input-group-text(type="button") +
+          .invalid-feedback
+            span Please chose at least one tag.
+
+        .input-group.col-md-12
+          .experience-tags
+            #tags-container.mb-3.d-flex.justify-content-start.bd-highlight.flex-wrap
+              if exp.interests !== undefined
+                each tag in exp.interests
+                  .mb-2.mr-2.border.border-danger.rounded.tags-item
+                    button.btn.btn-danger(type="button" onclick="deleteTag(this)")
+                      span.fas.fa-trash-alt
+                    span.tags-item-value.pl-3.pr-3 #{tag.name}
+                    input(type="hidden" name="tags[]" value=tag.name data-id=tag._id)
+
+      hr.mt-6.form-separation
+
+      h2.p-4.text-center Settings
+
+      .form-row
+        .form-group.col-md-12
+          label.pr-4 Is that experience free?
+          .custom-control.custom-radio.custom-control-inline
+            input#customRadioExpFree.custom-control-input(type="radio" name="expFree" value="true" checked=exp.isFree onchange="expFreeChanged(this.value, customRadioChargeGroup, customRadioChargeTrav, inputAmountCharge, inputChargeReason)" required)
+            label.custom-control-label(for="customRadioExpFree") Yes, I do that for pleasure
+          .custom-control.custom-radio.custom-control-inline
+            input#customRadioExpNotFree.custom-control-input(type="radio" name="expFree" value="false" checked=!exp.isFree onchange="expFreeChanged(this.value, customRadioChargeGroup, customRadioChargeTrav, inputAmountCharge, inputChargeReason)" required)
+            label.custom-control-label(for="customRadioExpNotFree") No, I have to charge it
+          .invalid-feedback
+            span Please specify if your experience is free or not.
+      
+      .form-row
+        .form-group.col-md-12
+          label.pr-4 Choose a type of charge?
+          .custom-control.custom-radio.custom-control-inline
+            input#customRadioChargeGroup.custom-control-input(type="radio" name="expChargeType" data-invalid-container="type-charge-invalid-container" onchange="setInvalidInput(this)" value="group" checked=exp.isChargeGroup)
+            label.custom-control-label(for="customRadioChargeGroup") Group charge
+          .custom-control.custom-radio.custom-control-inline
+            input#customRadioChargeTrav.custom-control-input(type="radio" name="expChargeType" data-invalid-container="type-charge-invalid-container" onchange="setInvalidInput(this)" value="traveller" checked=exp.isChargeTraveller)
+            label.custom-control-label(for="customRadioChargeTrav") Charge per traveller
+          #type-charge-invalid-container.invalid-feedback
+            span Please specify if your experience is charged by group or by traveller.
+
+      .form-row.form-group
+        label.col-4.col-form-label(for="inputAmountCharge") How much will you charge the travellers?
+        .input-group.col-2
+          input#inputAmountCharge.form-control(type="number" min="1" step="1" name="inputAmountCharge" data-invalid-container="amount-charge-invalid-container" onchange="setInvalidInput(this)" value=exp.amountCharge) 
+          .input-group-append
+            .input-group-text €
+        #amount-charge-invalid-container.invalid-feedback
+          span Please specify how much you want to charge for your experience, or chose the "free experience option" above.
+
+      .form-row
+        .form-group.col-md-12
+          label(for="inputChargeReason") What will you use the revenues for?
+          textarea#inputChargeReason.form-control(name="inputChargeReason" cols="30" rows="5" onchange="setInvalidInput(this)") #{exp.chargeReason}
+          .invalid-feedback
+            span Please specify what will you use the revenues? (2 to 300 signs)
+          small 
+            | (Tip: The travellers love to know what project you'll found with the revenues. Is it an associative project? Your next trip? 
+            | A passion like art or history? Or even your studies? etc.)
+
+      .form-row
+        .form-group.col-md-12
+          label How many travellers can follow you at the same time ?
+          .form-group.row
+            label.col-1.col-form-label(for="inputTravellerNbMin") From
+            .col-2
+              input#inputTravellerNbMin.form-control(name="inputTravellerNbMin" type="number" min="1" max="8" step="1" value=exp.travellerNbMin data-invalid-dependent='inputTravellerNbMax' data-invalid-container="many-travellers-error" onchange="setInvalidInput(this)" required)
+            label.col-1.col-form-label(for="inputTravellerNbMax") to
+            .col-2
+              input#inputTravellerNbMax.form-control(name="inputTravellerNbMax" type="number" min="1" max="8" step="1" value=exp.travellerNbMax data-invalid-dependent='inputTravellerNbMin' data-invalid-container="many-travellers-error" onchange="setInvalidInput(this)" required)
+          #many-travellers-error.invalid-feedback
+            span Please specify how many travellers (of the same group) you can meet at once (you can chose one to eight).
+          small (Tip: one is cool to meet solo travelers, 8 is the maximum you can handle without being a pro.)
+
+      .form-row
+        .form-group.col-md-12
+          label How much time will the experience last ?
+          .form-group.row
+            label.col-1.col-form-label(for="inputDurationMin") From
+            .col-2
+              input#inputDurationMin.form-control(name="inputDurationMin" type="number" min="1" max="6" step="0.5" value=exp.durationMin data-invalid-dependent='inputDurationMax' data-invalid-container="how-much-error" onchange="setInvalidInput(this)" required)
+            label.col-1.col-form-label(for="inputDurationMax") to
+            .col-2
+              input#inputDurationMax.form-control(name="inputDurationMax" type="number" min="1" max="6" step="0.5" value=exp.durationMax data-invalid-dependent='inputDurationMin' data-invalid-container="how-much-error" onchange="setInvalidInput(this)" required)
+            p hours.
+          #how-much-error.invalid-feedback
+            span Please specify how much hours your experience lasts (can be approximate).
+          small (Tip: Try to be precise to within 30mn, for the travellers to know what they are booking.)
+
+      hr.mt-6.form-separation
+
+      h2.p-4.text-center The details  
+
+      .form-row
+        .form-group.col-md-12
+          label(for="inputDescription") The description:
+          p 
+            | A much bigger space where you can write what you want travellers to know about your experience. 
+            br
+            | let them know what they can hope for!
+          p
+            | Tip: Try to write a few lines about
+          ul
+            li The spirit of the experience (or, "why you decided to create it")
+            li The theme (mostly local life, history, food, chat, sport, etc.)
+            li Some storied about the pictures you put on top
+            li The course of the experience (itinerary, points of interest)
+            li What the travellers have to know before (lot of steps, bad areas, vegan food, etc.)
+            li Personnal feelings and memories about this experience.
+          p 
+            | If you have a few availability in your tipycal week, you can also add your favorite to meet travellers,
+            | like week-ends or evenings (to avoid booking requests you couldn't accept).
+          
+          textarea#inputDescription.form-control(name="inputDescription" cols="30" rows="5" placeholder=`Let's go: you have a lot of space to tell the travellers everything they have to know about your experience before booking and living it.` required) #{exp.description}
+          .invalid-feedback
+            span Please write a description, so the travellers can fully understand what your experience is about. (200 to 2000 signs)
+
+      .form-row
+        .form-group.col-md-12
+          label(for="inputIncluded") What is included?
+          textarea#inputIncluded.form-control(name="inputIncluded" cols="30" rows="5" placeholder=`A beer on a terrace, a ticket to a museum, or just smiles and pictures.`) #{exp.included}
+          .invalid-feedback
+            span "What is included" must be between 1 and 1000 characters.
+
+      .form-row
+        .form-group.col-md-6
+          label(for="inputMeetingPointAddr") Meeting point address:
+          input#inputMeetingPointAddr.form-control(type="text" name="inputMeetingPointAddr" placeholder="Meeting point address" value=exp.meetingPointAddr required)
+          .invalid-feedback
+            span Please specify the meeting point address.
+        .form-group.col-md-6
+          label(for="inputMeetingPointIndications") Meeting point indications:
+          input#inputMeetingPointIndications.form-control(type="text" name="inputMeetingPointIndications" placeholder=`In front of the Red Dungeon, that statue, etc.` value=exp.meetingPointIndications)
+          .invalid-feedback
+            span "Meeting point indications" must be between 1 and 100 characters.
+
+      .form-row
+        .form-group.col-md-12
+          label(for="inputDontForget") Don't forget?
+          textarea#inputDontForget.form-control(name="inputDontForget" cols="30" rows="5" placeholder=`What do the travellers have to not forget ? Rain clothes, camera, curiosity, etc.`) #{exp.dontForget}
+          .invalid-feedback
+            span "Don't forget" must be between 1 and 200 characters.
+
+      hr.mt-6.form-separation
+
+      h3.p-4.text-center All setup, well done!
+
+      .pb-6.text-center
+        button.pr-6.pl-6.btn.btn-wel-pink.font-weight-bold(type="submit") Save
+
+block css
+  link(rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
+  link(rel='stylesheet' href='https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.css')
+block js
+  script(type="text/javascript" src=`https://maps.googleapis.com/maps/api/js?key=${locals.googleApi}&libraries=places&callback=initAutocompleteExperience` async defer)
+  script(type="text/javascript" src="/js/autocomplete-city.js")
+  script(type="text/javascript" src="/js/autocomplete-tag.js")
+  script(type="text/javascript" src="/js/experience-utils.js")
+  script(type="text/javascript" src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js")
+  script(type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+  script.
+    (function() {
+      // Add manual validation for selectpicker
+      let form = $("#profile-form")[0];
+      if(form !== undefined || form !== null){
+        form.onsubmit = function(event){    
+          checkValidityExpCharge(document.querySelector('input[name="expFree"]:checked').value, customRadioChargeGroup, customRadioChargeTrav, inputAmountCharge, inputChargeReason);
+          setInvalidInput(inputTravellerNbMin);
+          setInvalidInput(inputDurationMin);
+          setInvalidInput(tags);
+
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');      
+        };
+      }
+
+      $('#input-cover').fileinput({
+        allowedFileExtensions: ['png', 'jpeg', 'jpg'],
+        initialPreviewAsData: true,
+        initialPreview: [#{coverPicInitialPreview}],
+        initialPreviewConfig: [#{coverPicInitialPreviewConfig}],
+        initialPreviewFileType: 'image',
+        maxFileCount: 5,
+        minFileCount: 1,
+        language: 'EN',
+        layoutTemplates: [],
+        overwriteInitial: false,
+        theme: "fas",
+        type: 'POST',
+        showRemove: false, // hide remove button
+        showUpload: false, // hide upload button        
+        uploadAsync: true,
+        uploadUrl: '/experience/edit/cover-upload/add',
+        validateInitialCount: true,
+        uploadExtraData: {
+          _csrf: '#{_csrf}',
+          exp_id: '#{exp._id}',
+          edit_exp: true
+        },
+        deleteExtraData: {
+          _csrf: '#{_csrf}',
+          exp_id: '#{exp._id}'
+        }
+      }).on("filebatchselected", function(event, files) {
+        // trigger upload method immediately after files are selected
+        $('#input-cover').fileinput("upload");
+      }).on('fileuploaded', function(event, data, previewId, index) {
+        let carouselContainer = document.getElementsByClassName('carousel-inner')[0];
+
+        const carouselItem = document.createElement('div');
+        carouselItem.classList.add('carousel-item');
+
+        const carouselImg = document.createElement('img');
+        carouselImg.classList.add('exp-carousel-img-header','d-block','w-100');
+        carouselImg.setAttribute('src', data.response.fileUrl);
+        carouselImg.setAttribute('alt', data.response.initialPreviewConfig[0].caption);
+        carouselImg.setAttribute('data-key-carousel', data.response.initialPreviewConfig[0].key);
+
+        carouselItem.appendChild(carouselImg);
+        carouselContainer.appendChild(carouselItem);
+      }).on('filebeforedelete', function(event, key) {
+        return new Promise(function(resolve, reject) {
+          swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete image!'
+          }).then((result) => {
+            if (result.value) {
+              resolve();
+            }
+            else {
+              reject();
+            }
+          })
+        });
+      }).on('filedeleted', function(event, key, jqXHR, data) {
+        let carouselItemToRemove = $(`[data-key-carousel='${key}']`)[0].parentNode;
+
+        // Delete item
+        carouselItemToRemove.parentNode.removeChild(carouselItemToRemove);
+      }); ;
+
+      // Initialize tag autocomplete
+      autocomplete_tag('tags', {limit: 20, btnId: 'tags-btn'});
+    
+      // Set valid data
+      setServerValidData(!{JSON.stringify(validData)});
+
+      // Set Error data
+      checkServerValidity(!{JSON.stringify(errors)});   
+
+      // Initialize experience free radio button
+      expFreeChanged(document.querySelector('input[name="expFree"]:checked').value, customRadioChargeGroup, customRadioChargeTrav, inputAmountCharge, inputChargeReason)
+     
+    })();

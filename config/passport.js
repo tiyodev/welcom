@@ -1,11 +1,19 @@
-const _ = require('lodash');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
-const TwitterStrategy = require('passport-twitter').Strategy;
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const { Strategy: LocalStrategy } = require('passport-local');
+const { Strategy: FacebookStrategy } = require('passport-facebook');
+const { Strategy: TwitterStrategy } = require('passport-twitter');
+const { OAuth2Strategy: GoogleStrategy } = require('passport-google-oauth');
+
 const User = require('../models/users');
 const Interest = require('../models/interests');
+
+
+// const _ = require('lodash');
+// const LocalStrategy = require('passport-local').Strategy;
+// const FacebookStrategy = require('passport-facebook').Strategy;
+// const TwitterStrategy = require('passport-twitter').Strategy;
+// const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -13,7 +21,6 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   User.findOne({ _id: id, isActive: true }, (err, user) => {
-    if (err) { console.error(err); }
     done(err, user);
   }).populate({ path: 'profile.interests', select: 'name _id', model: Interest });
 });
@@ -23,10 +30,12 @@ passport.deserializeUser((id, done) => {
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
   User.findOne({ email: email.toLowerCase() }, (err, user) => {
+    if(err) { return done(err); }
     if (!user) {
       return done(null, false, { msg: `Email ${email} not found.` });
     }
     user.comparePassword(password, (err, isMatch) => {
+      if(err) { return done(err); }
       if (isMatch) {
         return done(null, user);
       }
@@ -57,26 +66,39 @@ passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_ID,
   clientSecret: process.env.FACEBOOK_SECRET,
   callbackURL: '/auth/facebook/callback',
-  profileFields: ['name', 'email', 'link', 'locale', 'timezone', 'birthday', 'currency', 'education', 'favorite_athletes', 'favorite_teams', 'gender', 'languages', 'location', 'middle_name', 'name_format', 'quotes', 'sports', 'website', 'work'],
+  profileFields: ['email', 'link', 'birthday', 'gender', 'location', 'first_name', 'last_name', 'picture'],
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
-  if (req.user) {
-    console.log(profile);
-
+  if (req.account) {
     User.findOne({ facebook: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
         req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
         done(err);
       } else {
-        User.findById(req.user.id, (err, user) => {
+        User.findById(req.account.id, (err, user) => {
           if (err) { return done(err); }
+
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken });
-          user.profile.lastName = user.profile.lastName || profile.name.familyName;
-          user.profile.firstName = user.profile.firstName || profile.name.givenName;
-          user.profile.gender = user.profile.gender || profile._json.gender;
-          user.profile.picture = user.profile.picture || `https://graph.facebook.com/${profile.id}/picture?type=large`;
+
+          user.email = profile._json.email;
+          user.profile.facebookLink = profile._json.link;
+          user.profile.firstName = profile._json.first_name;
+          user.profile.lastName = profile._json.last_name;
+          if(profile._json.gender && profile._json.gender === 'male'){
+            user.profile.gender = 'man';
+          } else if(profile._json.gender && profile._json.gender === 'female'){
+            user.profile.gender = 'woman';
+          }
+          if(profile._json.location){
+            user.profile.city = profile._json.location.name
+          }
+          if (profile._json.picture && profile._json.picture.data){
+            user.profile.profilePic = {
+              picture: `https://graph.facebook.com/${profile.id}/picture?type=large`
+            }
+          }
 
           user.save((err) => {
             req.flash('info', { msg: 'Facebook account has been linked.' });
@@ -98,14 +120,28 @@ passport.use(new FacebookStrategy({
           done(err);
         } else {
           const user = new User();
-          user.email = profile._json.email;
+          
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken });
-          user.profile.lastName = profile.name.familyName;
-          user.profile.firstName = profile.name.givenName;
-          user.profile.gender = profile._json.gender;
-          user.profile.picture = `https://graph.facebook.com/${profile.id}/picture?type=large`;
-          user.profile.location = (profile._json.location) ? profile._json.location.name : '';
+
+          user.email = profile._json.email;
+          user.profile.facebookLink = profile._json.link;
+          user.profile.firstName = profile._json.first_name;
+          user.profile.lastName = profile._json.last_name;
+          if(profile._json.gender && profile._json.gender === 'male'){
+            user.profile.gender = 'man';
+          } else if(profile._json.gender && profile._json.gender === 'female'){
+            user.profile.gender = 'woman';
+          }
+          if(profile._json.location){
+            user.profile.city = profile._json.location.name
+          }
+          if (profile._json.picture && profile._json.picture.data){
+            user.profile.profilePic = {
+              picture: `https://graph.facebook.com/${profile.id}/picture?type=large`
+            }
+          }
+
           user.save((err) => {
             done(err, user);
           });
@@ -124,20 +160,34 @@ passport.use(new TwitterStrategy({
   callbackURL: '/auth/twitter/callback',
   passReqToCallback: true
 }, (req, accessToken, tokenSecret, profile, done) => {
-  if (req.user) {
+  if (req.account) {
     User.findOne({ twitter: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
         req.flash('errors', { msg: 'There is already a Twitter account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
         done(err);
       } else {
-        User.findById(req.user.id, (err, user) => {
+        User.findById(req.account.id, (err, user) => {
           if (err) { return done(err); }
           user.twitter = profile.id;
           user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
-          user.profile.pseudonyme = user.profile.name || profile.displayName;
-          user.profile.location = user.profile.location || profile._json.location;
-          user.profile.picture = user.profile.picture || profile._json.profile_image_url_https;
+
+          user.profile.nickName = profile._json.name;
+          user.profile.city = profile._json.location;
+          user.profile.profilePic = {
+            picture: profile._json.profile_image_url
+          }
+          user.profile.coverPic = [];
+          user.profile.coverPic.push({
+            picture: profile._json.profile_banner_url
+          });
+
+          if(profile._json.entities !== undefined
+            && profile._json.entities.url !== undefined
+            && profile._json.entities.url.urls !== undefined){
+              user.profile.otherLink = profile._json.entities.url.urls[0].expanded_url;
+            }
+
           user.save((err) => {
             if (err) { return done(err); }
             req.flash('info', { msg: 'Twitter account has been linked.' });
@@ -158,11 +208,26 @@ passport.use(new TwitterStrategy({
       // so we can "fake" a twitter email address as follows:
       user.twitter = profile.id;
       user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
-      user.email = `${profile.username}@twitter.com`;
-      user.profile.pseudonyme = profile.displayName;
-      user.profile.location = profile._json.location;
-      user.profile.picture = profile._json.profile_image_url_https;
+
+      user.profile.nickName = profile._json.name;
+      user.profile.city = profile._json.location;
+      user.profile.profilePic = {
+        picture: profile._json.profile_image_url
+      }
+      user.profile.coverPic = [];
+      user.profile.coverPic.push({
+        picture: profile._json.profile_banner_url
+      });
+
+      if(profile._json.entities !== undefined
+        && profile._json.entities.url !== undefined
+        && profile._json.entities.url.urls !== undefined){
+          user.profile.otherLink = profile._json.entities.url.urls[0].expanded_url;
+        }
+
       user.save((err) => {
+        if (err) { return done(err); }
+        req.flash('info', { msg: 'Twitter account has been linked.' });
         done(err, user);
       });
     });
@@ -178,22 +243,37 @@ passport.use(new GoogleStrategy({
   callbackURL: '/auth/google/callback',
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
-  if (req.user) {
+  if (req.account) {
     User.findOne({ google: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
         req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
         done(err);
       } else {
-        User.findById(req.user.id, (err, user) => {
+        User.findById(req.account.id, (err, user) => {
           if (err) { return done(err); }
           user.google = profile.id;
           user.tokens.push({ kind: 'google', accessToken });
-          user.profile.firstName = user.profile.firstName || profile.name.givenName;
-          user.profile.lastName = user.profile.familyName || profile.name.familyName;
-          // user.profile.gender = user.profile.gender || profile._json.gender;
-          user.profile.picture = user.profile.picture || profile._json.image.url;
-          user.profile.location = user.profile.location || profile.language;
+
+          if(profile._json.emails !== undefined && profile._json.emails.length > 0) {
+            user.email = profile._json.emails[0].value;
+          }
+
+          if(profile._json.name !== undefined) {
+            user.profile.lastName = profile._json.name.familyName;
+            user.profile.firstName = profile._json.name.givenName;
+          }
+
+          if(profile._json.image !== undefined) {
+            const img = profile._json.image.url.split('?')[0];
+
+            if(img !== undefined){
+              user.profile.profilePic = {
+                picture: img
+              };
+            }
+          }
+
           user.save((err) => {
             req.flash('info', { msg: 'Google account has been linked.' });
             done(err, user);
@@ -214,14 +294,28 @@ passport.use(new GoogleStrategy({
           done(err);
         } else {
           const user = new User();
-          user.email = profile.emails[0].value;
           user.google = profile.id;
           user.tokens.push({ kind: 'google', accessToken });
-          user.profile.firstName = profile.name.givenName;
-          user.profile.lastName = profile.name.familyName;
-          // user.profile.gender = profile._json.gender;
-          user.profile.picture = profile._json.image.url;
-          user.profile.location = profile.language;
+
+          if(profile._json.emails !== undefined && profile._json.emails.length > 0) {
+            user.email = profile._json.emails[0].value;
+          }
+
+          if(profile._json.name !== undefined) {
+            user.profile.lastName = profile._json.name.familyName;
+            user.profile.firstName = profile._json.name.givenName;
+          }
+
+          if(profile._json.image !== undefined) {
+            const img = profile._json.image.url.split('?')[0];
+
+            if(img !== undefined){
+              user.profile.profilePic = {
+                picture: img
+              };
+            }
+          }
+
           user.save((err) => {
             done(err, user);
           });
@@ -235,6 +329,8 @@ passport.use(new GoogleStrategy({
  * Login Required middleware.
  */
 exports.isAuthenticated = (req, res, next) => {
+  if(req.account !== undefined)
+
   if (req.isAuthenticated()) {
     return next();
   }

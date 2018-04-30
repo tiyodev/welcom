@@ -31,15 +31,18 @@ const profileStorage = multer.diskStorage({
 
 const experienceStorage = multer.diskStorage({
   destination(req, file, cb) {
-    // Mettre les fichiers dans un dossier temporaire
-    const tmpFolder = path.join(__dirname, '..', 'uploads/tmp');
+    const fileRoot = path.join(__dirname, '..', 'uploads/exp');
+    const fileDestination = path.join(fileRoot, 'tmp');
 
-    // Si le dossier temporaire n'existe pas alors le créer
-    if (!fs.existsSync(tmpFolder)) {
-      fs.mkdirSync(tmpFolder);
+    // Si le dossier root n'existe pas alors le créer
+    if (!fs.existsSync(fileRoot)) {
+      fs.mkdirSync(fileRoot);
     }
-
-    cb(null, tmpFolder);
+    // Si le dossier destination n'existe pas alors le créer
+    if (!fs.existsSync(fileDestination)) {
+      fs.mkdirSync(fileDestination);
+    }
+    cb(null, fileDestination);
   },
   filename(req, file, cb) {
     let extension = '';

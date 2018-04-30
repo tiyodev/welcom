@@ -7,19 +7,19 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
     #navbarNav.navbar-collapse.collapse
       ul.navbar-nav.ml-auto
         li.pt-4(role="separator")
-        if !locals.user
+        if !locals.account
           li.nav-item.m-auto.pl-3.pr-5
             button.gradient-rounded-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(data-target="#joinus" data-toggle="modal" type="button") Join us
           li.nav-item.m-auto.pl-2.pr-2
             a.underline-yellow.text-uppercase.nav-link(href="/learnmore") Learn more
           li.nav-item.m-auto.pl-2.pr-2
             a.underline-yellow.text-uppercase.nav-link(href="/readblog") Read our blog
-          if !locals.user
+          if !locals.account
             li.nav-item.m-auto.pl-2.pr-2
               a.underline-yellow.text-uppercase.nav-link.text-gradient(data-target="#sign-in-modal" data-toggle="modal" href="#") Sign in
         else
           li.nav-item.m-auto.pl-3.pr-5
-            a.nav-link.btn.gradient-rounded-btn.text-uppercase.wel-color-white(href="/" role="button") Experiences
+            a.nav-link.btn.gradient-rounded-btn.text-uppercase.wel-color-white(href="/experience/list" role="button") Experiences
           li.nav-item.m-auto.pl-2.pr-2
             a.underline-yellow.text-uppercase.nav-link(href="/readblog") Read our blog
           li.nav-item.m-auto.pl-2.pr-2
@@ -28,13 +28,16 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
               span.badge.badge-pill 5
           li.nav-item.m-auto.dropdown
             a#navbarDropdown.nav-link(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
-              img#header-profile-picture.rounded-circle(src=(user.profile.profilePic.picture !== undefined ? user.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
+              img#header-profile-picture.rounded-circle(src=(locals.account.profile.profilePic.picture !== undefined ? locals.account.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
 
             .dropdown-menu(aria-labelledby="navbarDropdown")
-              if !locals.user.isWelcomer
+              if !locals.account.isWelcomer
                 a.dropdown-item(href=`/welcomer/become`) Become welcomer
                 .dropdown-divider
-              a.dropdown-item(href=`/profile/${locals.user._id}`) Profile
+              if locals.account.isWelcomer
+                a.dropdown-item(href=`/experience/create`) Create a new experience
+                .dropdown-divider
+              a.dropdown-item(href=`/profile/${locals.account._id}`) Profile
               .dropdown-divider
               a.dropdown-item(href="/logout") Sign out
 
@@ -42,12 +45,16 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
 #joinus.modal.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel")
   .modal-dialog(role="document")
     .modal-content
-      .modal-header.wel-bg-blue.wel-color-yellow
-        h3.modal-title.m-auto Join our travellers community
-        button.close(type="button" data-dismiss="modal" aria-label="Close")
-          span.wel-color-yellow(aria-hidden="true") &times;
+      .wel-bg-blue.wel-color-white
+        .row.modal-header.border-0
+          .col-1
+          .col-10.text-center
+            h3.modal-title.m-auto  Join our travellers community
+          .col-1
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span.wel-color-yellow(aria-hidden="true") X
       #joinus-modal.modal-body
-        form#join-us-form.form-horizontal(name="signupForm" action="/signup" method='POST' onsubmit="return checkSignUpForm()")
+        form#join-us-form.form-horizontal(name="signupForm" action="/signup" method='POST')
           input(type='hidden', name='_csrf', value=_csrf)
 
           .item.text-center
@@ -72,39 +79,39 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
               hr
               p.text-center Or join us with :
 
-          .form-group
-            .social-btn.text-center
-              .mt-2
-                button.wel-bg-blue(type="submit") 
-                  a(href='/auth/facebook')
-                    i.wel-color-white
-                      .fab.fa-facebook-f
-                      | &nbsp;&nbsp; Your Facebook account                                    
-              .mt-2
-                button.wel-bg-pink(type="submit") 
-                  a(href='/auth/twitter')
-                    i.wel-color-white
-                      .fab.fa-twitter
-                      | &nbsp;&nbsp; Your Twitter account
-              .mt-2
-                button.wel-bg-yellow(type="submit") 
-                  a(href='/auth/google')
-                    i.wel-color-white
-                      .fab.fa-google-plus-g
-                      | &nbsp;&nbsp; Your Google account
-              .mt-4
-                a(href='#' onclick="$('#joinus').modal('hide');$('#sign-in-modal').modal('toggle');") Already a member ?
+        .social-btn.text-center
+          .mt-2
+            a.btn.btn-wel-blue(href='/auth/facebook')
+              i.wel-color-white
+                .fab.fa-facebook-f
+                | &nbsp;&nbsp; Your Facebook account                                    
+          .mt-2
+            a.btn.btn-wel-pink(href='/auth/twitter')
+              i.wel-color-white
+                .fab.fa-twitter
+                | &nbsp;&nbsp; Your Twitter account
+          .mt-2
+            a.btn.btn-wel-yellow(href='/auth/google')
+              i.wel-color-white
+                .fab.fa-google-plus-g
+                | &nbsp;&nbsp; Your Google account
+          .mt-4
+            a.social-link(href='#' onclick="$('#joinus').modal('hide');$('#sign-in-modal').modal('toggle');") Already a member ?
 
 <!-- Sing in Modal -->
 #sign-in-modal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="sign in modal")
   .modal-dialog(role="document")
     .modal-content
-      .modal-header.wel-bg-blue.wel-color-yellow
-        h3.modal-title.m-auto  Welcome back !
-        button.close(type="button" data-dismiss="modal" aria-label="Close")
-          span.wel-color-yellow(aria-hidden="true") &times;
+      .wel-bg-blue.wel-color-white
+        .row.modal-header.border-0
+          .col-2
+          .col-8.text-center
+            h3.modal-title.m-auto  Welcome back !
+          .col-2
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span.wel-color-yellow(aria-hidden="true") X
       #sign-in-modal-body.modal-body
-        form#sign-in-modal-form.form-horizontal(name="signupForm" action="/login" method='POST' onsubmit="return checkSignUpForm()")
+        form#sign-in-modal-form.form-horizontal(name="signupForm" action="/login" method='POST')
           input(type='hidden', name='_csrf', value=_csrf)
 
           .item.text-center
@@ -127,25 +134,21 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
               hr
               p.text-center Or sign in with :
 
-          .form-group
-            .social-btn.text-center
-              .mt-2
-                button.wel-bg-blue(type="submit") 
-                  a(href='/auth/facebook')
-                    i.wel-color-white
-                      .fab.fa-facebook-f
-                      | &nbsp;&nbsp; Your Facebook account                                    
-              .mt-2
-                button.wel-bg-pink(type="submit") 
-                  a(href='/auth/twitter')
-                    i.wel-color-white
-                      .fab.fa-twitter
-                      | &nbsp;&nbsp; Your Twitter account
-              .mt-2
-                button.wel-bg-yellow(type="submit") 
-                  a(href='/auth/google')
-                    i.wel-color-white
-                      .fab.fa-google-plus-g
-                      | &nbsp;&nbsp; Your Google account
-              .mt-4
-                a(href='#' onclick="$('#sign-in-modal').modal('hide');$('#joinus').modal('toggle');$('#joinus').modal('handleUpdate');") Not yet a member ? Join us !
+        .social-btn.text-center
+          .mt-2
+            a.btn.btn-wel-blue(href='/auth/facebook')
+              i.wel-color-white
+                .fab.fa-facebook-f
+                | &nbsp;&nbsp; Your Facebook account                                    
+          .mt-2
+            a.btn.btn-wel-pink(href='/auth/twitter')
+              i.wel-color-white
+                .fab.fa-twitter
+                | &nbsp;&nbsp; Your Twitter account
+          .mt-2
+            a.btn.btn-wel-yellow(href='/auth/google')
+              i.wel-color-white
+                .fab.fa-google-plus-g
+                | &nbsp;&nbsp; Your Google account
+          .mt-4
+            a.social-link(href='#' onclick="$('#sign-in-modal').modal('hide');$('#joinus').modal('toggle');$('#joinus').modal('handleUpdate');") Not yet a member ? Join us !

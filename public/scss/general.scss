@@ -62,6 +62,10 @@ button{
   width: calc(100% + 20px);
 }
 
+.gradient-rounded-btn:active{
+  background: linear-gradient(to right, $wel-pink, $wel-blue) !important;
+}
+
 .text-gradient{
   font-family: 'Aaux ProBlack', serif;
   background: -webkit-linear-gradient(to right, $wel-pink, $wel-blue);

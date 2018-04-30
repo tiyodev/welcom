@@ -1,0 +1,38 @@
+#exp-view-content{
+  max-width: 95%;
+  width: 1140px;
+
+  .exp-view-border-container{
+    border: solid 2px $wel-grey;
+    border-radius: 10px;
+    background-color: $wel-grey-light;
+    min-width: 330px;
+
+    &-input, &-label{
+      max-width: 125px;
+    }
+  }
+
+  &-recommendation-component{
+    p{
+      color: $wel-pink;
+      font-size: 1.4rem;
+    }
+  }
+
+  &-component-container{
+    min-width: 330px;
+  }
+
+  .exp-view-separation{
+    background-color: $wel-yellow;
+    height: 2px;
+    width: 50%;
+  }
+
+  .exp-view-separation-grey{
+    background-color: $wel-grey-light;
+    height: 2px;
+    width: 50%;
+  }
+}

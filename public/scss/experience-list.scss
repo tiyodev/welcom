@@ -1,0 +1,47 @@
+#experience-list-container{
+  max-width: 80%;
+  width: 1140px;
+
+  .experience-list{
+    &-ico{
+      width: 2em;
+    }
+
+    &-tip-item{
+      max-width: 350px;
+    }
+
+    &-item{
+      &-note{
+        min-width: 350px;
+        width: 350px;
+        height: 150px;
+      }
+  
+      &-square{
+        min-width: 350px;
+        width: 350px;
+        height: 275px;
+  
+        &-border{
+          &-blue{
+            border: solid 2px $wel-blue;
+          }
+      
+          &-yellow{
+            border: solid 2px $wel-yellow;
+          }
+      
+          &-pink{
+            border: solid 2px $wel-pink;
+          }
+        }
+      }
+    }
+  }
+
+  hr{
+    border-top: 2px solid $wel-grey;
+  }
+}
+

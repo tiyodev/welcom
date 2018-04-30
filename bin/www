@@ -16,7 +16,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
 
 mongoose.connection.on('connected', () => {
-  console.log('%s MongoDB connection established!', chalk.green('✓'));
+  console.info('%s MongoDB connection established!', chalk.green('✓'));
 });
 
 mongoose.connection.on('error', () => {
@@ -89,7 +89,7 @@ function onListening() {
   const bind = typeof addr === 'string'
     ? `pipe ${addr}`
     : `port ${addr.port}`;
-  console.log('%s Express server listening on %s in %s mode.', chalk.green('✓'), bind, app.get('env'));
+  console.info('%s Express server listening on %s in %s mode.', chalk.green('✓'), bind, app.get('env'));
   debug(`Listening on ${bind}`);
 }
 
@@ -101,11 +101,11 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 process.on('uncaughtException', (err) => {
-  console.log(' UNCAUGHT EXCEPTION ');
-  console.log(`[Inside 'uncaughtException' event] ${err.stack}` || err.message);
+  console.error(' UNCAUGHT EXCEPTION ');
+  console.error(`[Inside 'uncaughtException' event] ${err.stack}` || err.message);
 });
 
 process.on('unhandledRejection', (err) => {
-  console.log(' UNHANDLED REJECTION ');
-  console.log(`[Inside 'unhandledRejection' event] ${err.stack}` || err.message);
+  console.error(' UNHANDLED REJECTION ');
+  console.error(`[Inside 'unhandledRejection' event] ${err.stack}` || err.message);
 });

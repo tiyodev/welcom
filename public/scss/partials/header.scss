@@ -38,61 +38,74 @@
     }
 }
 
-#join-us-form{
-    input{
-        border-bottom : 1px solid black;
-        border-top: none;
-        border-left: none;
-        border-right: none;
-        height: 50px;
-        width: 80%;
-    }
+#joinus-modal{
+    #join-us-form{
+        input{
+            border-bottom : 1px solid black;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            height: 50px;
+            width: 80%;
+        }
+        
+        input::placeholder {
+            text-align: center;
+            font-family: 'Aaux ProLight', serif;
+        }
     
-    input::placeholder {
-        text-align: center;
-        font-family: 'Aaux ProLight', serif;
+        a{
+            border: none;
+            color: $wel-black;
+        }
+    
+        .join-us-btn{
+            button{
+                background-color: $wel-white;
+                color: $wel-black;
+                border: 2px solid $wel-pink;
+                border-radius: 25px;
+                font-weight: bold;
+                width: 170px;
+                height: 50px;
+            }
+        }
+    
+        .terms-of-use{
+            width: 80%;
+        }
+    
+        hr{
+            height: 3px;
+            color: $wel-yellow;
+            background-color: $wel-yellow;
+            border: none;
+            width: 60%;
+        }
+    }
+}
+
+.social-btn{
+    button{
+        border: none;
+        border-radius: 25px;
+        width: 80%;
+        height: 50px;            
     }
 
     a{
-        border: none;
-        color: $wel-black;
-    }
-
-    .join-us-btn{
-        button{
-            background-color: $wel-white;
-            color: $wel-black;
-            border: 2px solid $wel-pink;
-            border-radius: 25px;
-            font-weight: bold;
-            width: 170px;
-            height: 50px;
-        }
-    }
-
-    .terms-of-use{
+        border-radius: 25px;
         width: 80%;
+        height: 50px; 
+        line-height: 35px;
     }
 
-    .social-btn{
-        button{
-            border: none;
-            border-radius: 25px;
-            width: 80%;
-            height: 50px;            
-        }
-
-        i{
-            font-weight: bold !important;
-        }
+    i{
+        font-weight: bold !important;
     }
 
-    hr{
-        height: 3px;
-        color: $wel-yellow;
-        background-color: $wel-yellow;
-        border: none;
-        width: 60%;
+    .social-link{
+        color: $wel-black;
     }
 }
 

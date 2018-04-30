@@ -34,7 +34,7 @@ exports.getBecomeWelcomer = (req, res) => {
     expDesc: 'Explore the wonderful Golden Triangle together'
   }];
 
-  res.render('become-welcomer', { title: 'Become welcomer', user: req.user, exps });
+  res.render('become-welcomer', { title: 'Become welcomer', user: req.account, exps });
 };
 
 /**
@@ -74,7 +74,7 @@ exports.postBecomeWelcomer = (req, res, next) => {
     expDesc: 'Explore the wonderful Golden Triangle together'
   }];
 
-  User.findById(req.user._id, (err, user) => {
+  User.findById(req.account._id, (err, user) => {
     if (err) { next(err); }
 
     user.welcomerReason = req.body.inputBecomeWelcomer;

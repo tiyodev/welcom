@@ -15,3 +15,8 @@ function initAutocompleteEditProfile(){
   });
 }
 
+function initAutocompleteExperience(){
+  google.maps.event.addDomListener(window, 'load', () => {
+    initializeAutocomplete('inputMeetingPointAddr');
+  });
+}

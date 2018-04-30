@@ -272,7 +272,7 @@ block css
   link(rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
   link(rel='stylesheet' href='https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.css')
 block js
-  script(type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqCyG4uB3iF1UcPsb9x6gr2Cr6NGZgNNA&libraries=places&callback=initAutocompleteEditProfile" async defer)
+  script(type="text/javascript" src=`https://maps.googleapis.com/maps/api/js?key=${locals.googleApi}&libraries=places&callback=initAutocompleteEditProfile` async defer)
   script(type="text/javascript" src="/js/autocomplete-city.js")
   script(type="text/javascript" src="/js/autocomplete-tag.js")
   script(type="text/javascript" src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js")

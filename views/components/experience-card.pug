@@ -1,26 +1,35 @@
-.card.experience-card-item
-  img.img-fluid.card-img-top(src=exp.headerPic alt="Card image cap")
-  .card-block
-    .container.p-0
-      .row.pr-2.pl-2.d-flex.justify-content-start.no-gutters.card-block-img-row
-        .p-0
-          img.mx-auto.d-block.rounded-circle(src=exp.profilePic alt="experience cover")
-        .p-0.mx-auto.exp-creator
-          span.exp-creator-with with 
-          p.exp-creator-name #{exp.displayName}
-      .row.pr-2.pl-2.pt-4.no-gutters
-        p.card-text #{exp.expDesc}
-      hr.mt-3.mb-3.p-0
-      .row.pr-2.pl-2.pb-2.no-gutters.justify-content-between.font-weight-bold
-        .experience-card-item-paying
-          if exp.isFree
-            img.experience-card-item-paying-ico(src='/images/icon/icon-free-blue.svg' alt="Experience paying icon")
-          else
-            img.experience-card-item-paying-ico(src='/images/icon/icon-paying-yellow.svg' alt="Experience free icon")
-        .experience-card-item-reco
-          if exp.nbRecommendation === undefined || exp.nbRecommendation === 0
-            span New !
-          else
-            span.experience-card-item-reco-nb #{exp.nbRecommendation} 
-            span.experience-card-item-reco-ico.far.fa-smile.fa-2x
-        
+a#experience-card(href=`/experience/${exp._id}`)
+  .card.experience-card-item
+    if exp.coverPic === undefined || exp.coverPic.length === 0
+      img.img-fluid.card-img-top(src='/images/defaut-experience-cover.jpg' alt='Default experience cover')
+    else
+      img.img-fluid.card-img-top(src=exp.coverPic[0].picture alt=exp.coverPic[0].label)
+    .card-block
+      .container.p-0
+        .row.pr-2.pl-2.d-flex.justify-content-start.no-gutters.card-block-img-row
+          .p-0
+            img.mx-auto.d-block.rounded-circle(src=(exp.creator.profile.profilePic.picture !== undefined ? exp.creator.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
+          .p-0.mx-auto.exp-creator
+            span.exp-creator-with with 
+            p.exp-creator-name #{exp.creator.profile.nickName !== (undefined || null || '') ? exp.creator.profile.nickName : exp.creator.profile.firstName}
+        .row.pr-2.pl-2.pt-4.no-gutters.experience-card-item-title
+          p.mx-auto.card-text #{exp.title}
+        hr.mt-3.mb-3.p-0
+        .row.pr-2.pl-2.pb-2.no-gutters.justify-content-around.font-weight-bold
+          .experience-card-item-paying
+            if exp.isFree
+              img.experience-card-item-paying-ico(src='/images/icon/icon-free-blue.svg' alt="Experience paying icon")
+            else
+              img.experience-card-item-paying-ico(src='/images/icon/icon-paying-yellow.svg' alt="Experience free icon")
+          .experience-card-item-reco
+            if exp.nbRecommendation === undefined || exp.nbRecommendation === 0
+              span New !
+            else
+              span.experience-card-item-reco-nb #{exp.nbRecommendation} 
+              span.experience-card-item-reco-ico.far.fa-smile.fa-2x
+        if isExpEditable || isExpViewable
+          hr.mt-3.mb-3.p-0
+          .row.pr-2.pl-2.pb-2.no-gutters.justify-content-center.font-weight-bold
+            if isExpEditable
+              .item
+                a.btn.btn-secondary(href=`/experience/${exp._id}/edit`) Edit

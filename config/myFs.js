@@ -1,26 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 
-exports.moveExperienceImg = (expId, file) => new Promise((resolve, reject) => {
+exports.moveExperienceCoverImg = (expId, file) => new Promise((resolve, reject) => {
+  const extension = file.filename.split('.').pop();
   // Déplacer l'image dans le dossier définitif
-  const folderRoot = path.join(__dirname, '..', 'uploads/experience');
-  const folderDestination = path.join(folderRoot, expId);
-  const newFileName = `${expId}_${file.filename}`;
+  const folderRoot = path.join(__dirname, '..', 'uploads/exp');
+  const folderDestination = path.join(folderRoot, expId.toString());
+  const newFileName = `${file.filename.substring(0, file.filename.lastIndexOf('.'))}-${expId}.${extension}`;
   const newPath = path.join(folderDestination, newFileName);
-
   // Si le dossier root n'existe pas alors le créer
   if (!fs.existsSync(folderRoot)) {
     fs.mkdirSync(folderRoot);
   }
-
   // Si le dossier destination n'existe pas alors le créer
   if (!fs.existsSync(folderDestination)) {
     fs.mkdirSync(folderDestination);
   }
-
   const source = fs.createReadStream(file.path);
   const desti = fs.createWriteStream(newPath);
-
   source.pipe(desti);
 
   source.on('end', () => {

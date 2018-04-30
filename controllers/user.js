@@ -29,19 +29,19 @@ function updateValidEmailToken(user) {
     if (Date.now() > user.validEmailTokenExpires.getTime()) {
       // Si l'utilisateur n'a toujours pas validé son mail, un nouveau est recréé
       createRandomToken()
-      .then((newToken) => {
-        User.findById(user._id, (err, user) => {
-          user.validEmailToken = newToken;
-          user.validEmailTokenExpires = Date.now() + 3600000;
-          user.save((err) => {
-            if (err) {
-              console.error(err);
-              reject(err);
-            }
-            resolve(newToken);
+        .then((newToken) => {
+          User.findById(user._id, (err, user) => {
+            user.validEmailToken = newToken;
+            user.validEmailTokenExpires = Date.now() + 3600000;
+            user.save((err) => {
+              if (err) {
+                console.error(err);
+                reject(err);
+              }
+              resolve(newToken);
+            });
           });
         });
-      });
     } else {
       resolve(user.validEmailToken);
     }
@@ -56,26 +56,26 @@ function updateValidEmailToken(user) {
 function setPasswordResetToken(resetEmail) {
   return new Promise((resolve, reject) => {
     User.getUserByEmail(resetEmail)
-    .then((user) => {
-      createRandomToken()
-      .then((token) => {
-        user.passwordResetToken = token;
-        user.passwordResetExpires = Date.now() + 3600000; // 1 hour
-        user.save((err) => {
-          if (err) {
-            console.error(err);
+      .then((user) => {
+        createRandomToken()
+          .then((token) => {
+            user.passwordResetToken = token;
+            user.passwordResetExpires = Date.now() + 3600000; // 1 hour
+            user.save((err) => {
+              if (err) {
+                console.error(err);
+                reject(err);
+              }
+              resolve([user.email, token]);
+            });
+          })
+          .catch((err) => {
             reject(err);
-          }
-          resolve([user.email, token]);
-        });
+          });
       })
       .catch((err) => {
         reject(err);
       });
-    })
-    .catch((err) => {
-      reject(err);
-    });
   });
 }
 
@@ -87,25 +87,25 @@ function setPasswordResetToken(resetEmail) {
 function resetPasswordByToken(token, password) {
   return new Promise((resolve, reject) => {
     User
-    .findOne({ passwordResetToken: token })
-    .where('passwordResetExpires').gt(Date.now())
-    .exec((err, user) => {
-      if (err) {
-        reject(err);
-      }
-      if (!user) {
-        reject('Password reset token is invalid or has expired.');
-      }
-      user.password = password;
-      user.passwordResetToken = undefined;
-      user.passwordResetExpires = undefined;
-      user.save((err) => {
+      .findOne({ passwordResetToken: token })
+      .where('passwordResetExpires').gt(Date.now())
+      .exec((err, user) => {
         if (err) {
-          reject('An error occured while reseting the password');
+          reject(err);
         }
-        resolve(user);
+        if (!user) {
+          reject(new Error('Password reset token is invalid or has expired.'));
+        }
+        user.password = password;
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+        user.save((err) => {
+          if (err) {
+            reject(new Error('An error occured while reseting the password'));
+          }
+          resolve(user);
+        });
       });
-    });
   });
 }
 
@@ -114,7 +114,7 @@ function resetPasswordByToken(token, password) {
  * Log out.
  */
 exports.getLogin = (req, res) => {
-  if (req.user) {
+  if (req.account) {
     res.redirect('/');
   }
   res.render('login', {
@@ -133,45 +133,34 @@ exports.postLogin = (req, res, next) => {
 
   const errors = req.validationErrors();
 
-  console.log(`errors : ${JSON.stringify(errors)}`);
-
   if (errors) {
     req.flash('errors', errors);
     return res.redirect('/');
   }
 
-  passport.authenticate('local', (err, user, info) => {
-    console.log(`err : ${err}`);
-    console.log(`user : ${user}`);
-    console.log(`info : ${JSON.stringify(info)}`);
-
+  passport.authenticate('local', {assignProperty: 'user'},(err, user, info) => {
     if (err) { return next(err); }
     if (!user) {
-      console.log('ybo A');
       req.flash('errors', info);
       return res.redirect('/');
     }
     if (!user.validEmail) {
-      console.log('ybo B');
       updateValidEmailToken(user)
         .then((newToken) => {
           Emails.sendMail(user.email, 'Confirm your email address', { templateName: 'validEmail', host: req.headers.host, token: newToken })
-          .then(() => {
-            req.flash('info', { msg: `An email has been sent again to ${user.email} with a new link valid for one hour. Please validate it to log in.` });
-            return res.redirect('/');
-          })
-          .catch((err) => {
-            console.error(err);
-            req.flash('error', { msg: 'Problem with the email. Please contact hello@welcom.city.' });
-            return res.redirect('/');
-          });
+            .then(() => {
+              req.flash('info', { msg: `An email has been sent again to ${user.email} with a new link valid for one hour. Please validate it to log in.` });
+              return res.redirect('/');
+            })
+            .catch((err) => {
+              req.flash('error', { msg: 'Problem with the email. Please contact hello@welcom.city.' });
+              return res.redirect('/');
+            });
         })
         .catch((err) => {
-          console.error(err);
           return res.redirect('/');
         });
     } else {
-      console.log('ybo C');
       req.logIn(user, (err) => {
         if (err) {
           return next(err);
@@ -200,7 +189,7 @@ exports.getForgot = (req, res) => {
   if (req.isAuthenticated()) {
     return res.redirect('/');
   }
-  res.render('account/forgot', {
+  res.render('account/forgot-pwd', {
     title: 'Forgot Password'
   });
 };
@@ -225,10 +214,10 @@ exports.postForgot = (req, res) => {
       const email = mailAndToken[0];
       const token = mailAndToken[1];
       Emails.sendMail(email, 'Reset your password', { templateName: 'resetPassword', host: req.headers.host, token })
-      .then(() => {
-        req.flash('info', { msg: `An e-mail has been sent to ${email} with further instructions.` });
-        res.redirect('/');
-      });
+        .then(() => {
+          req.flash('info', { msg: `An e-mail has been sent to ${email} with further instructions.` });
+          res.redirect('/');
+        });
     }).catch((err) => {
       req.flash('errors', { msg: err });
       res.redirect('/forgot');
@@ -252,7 +241,7 @@ exports.getReset = (req, res, next) => {
         req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
         return res.redirect('/forgot');
       }
-      res.render('account/reset', {
+      res.render('account/reset-pwd', {
         title: 'Password Reset'
       });
     });
@@ -274,28 +263,28 @@ exports.postReset = (req, res) => {
   }
 
   resetPasswordByToken(req.params.token, req.body.password)
-  .then((user) => {
-    req.logIn((user, (err) => {
-      console.error(err);
-    }))
-    .then(() => {
-      Emails.sendMail(user.email, 'Your password has been changed', { templateName: 'confirmationChangePassword' })
+    .then((user) => {
+      req.logIn((user, (err) => {
+        console.error(err);
+      }))
         .then(() => {
-          req.flash('success', { msg: 'Success! Your password has been reseted.' });
-          res.redirect('/');
+          Emails.sendMail(user.email, 'Your password has been changed', { templateName: 'confirmationChangePassword' })
+            .then(() => {
+              req.flash('success', { msg: 'Success! Your password has been reseted.' });
+              res.redirect('/');
+            })
+            .catch((err) => {
+              console.error(err);
+            });
         })
         .catch((err) => {
           console.error(err);
         });
     })
     .catch((err) => {
-      console.error(err);
+      req.flash('errors', { msg: err });
+      res.redirect('/');
     });
-  })
-  .catch((err) => {
-    req.flash('errors', { msg: err });
-    res.redirect('/');
-  });
 };
 
 /**
@@ -307,7 +296,6 @@ exports.getVerifyEmail = (req, res, next) => {
     .findOne({ validEmailToken: req.params.validEmailToken })
     .where('validEmailTokenExpires').gt(Date.now())
     .exec((err, user) => {
-      console.log(`ybo1 user : ${JSON.stringify(user)}`);
       if (err) {
         return next(err);
       }
@@ -324,24 +312,17 @@ exports.getVerifyEmail = (req, res, next) => {
       user.validEmailTokenExpires = undefined;
 
       user.save((err) => {
-        console.log('test 1');
         if (err) {
-          console.log('test 1.1');
           return next(err);
         }
 
         return res.redirect('/');
 
-        // console.log('test 2');
         // req.logIn(user, (err) => {
-        //   console.log('test 3');
         //   if (err) {
-        //     console.log('test 3.1');
         //     return next(err);
         //   }
-        //   console.log('test 4');
         //   req.flash('success', { msg: 'Your email has been successfully validated.' });
-        //   console.log('test 5');
         //   return res.redirect('/');
         // });
       });
@@ -368,57 +349,52 @@ exports.postSignup = (req, res) => {
   req.sanitize('email').normalizeEmail({ remove_dots: false });
 
   req.getValidationResult()
-  .then(() => {
-    const user = new User({
-      email: req.body.email,
-      password: req.body.password,
-      validEmailTokenExpires: Date.now() + 3600000
-    });
-
-    console.log(`YBO 1 : ${user}`);
-
-    createRandomToken()
-    .then((newToken) => {
-      console.log(`YBO 2 : ${newToken}`);
-
-      user.validEmailToken = newToken;
-
-      User.findOne({ email: req.body.email }, (err, existingUser) => {
-        console.log(`YBO 3 : ${existingUser}`);
-        if (existingUser) {
-          req.flash('errors', { msg: 'Account with that email address already exists.' });
-          res.redirect('/');
-        } else {
-          console.log(`YBO 4 : ${existingUser}`);
-          user.save()
-          .then(() => {
-            Emails.sendMail(user.email, 'Confirm your email address', { templateName: 'validEmail', host: req.headers.host, token: user.validEmailToken })
-            .then(() => {
-              req.flash('info', { msg: `You will receive an Email at ${user.email} with instructions within the next 5 minutes (usually instant).` });
-              res.redirect('/');
-            }).catch((err) => {
-              req.flash('errors', { msg: err });
-              console.error(err);
-              res.redirect('/');
-            });
-          })
-          .catch((err) => {
-            req.flash('errors', { msg: err });
-            console.error(err);
-            res.redirect('/');
-          });
-        }
+    .then(() => {
+      const user = new User({
+        email: req.body.email,
+        password: req.body.password,
+        validEmailTokenExpires: Date.now() + 3600000
       });
+
+      createRandomToken()
+        .then((newToken) => {
+
+          user.validEmailToken = newToken;
+
+          User.findOne({ email: req.body.email }, (err, existingUser) => {
+            if (existingUser) {
+              req.flash('errors', { msg: 'Account with that email address already exists.' });
+              res.redirect('/');
+            } else {
+              user.save()
+                .then(() => {
+                  Emails.sendMail(user.email, 'Confirm your email address', { templateName: 'validEmail', host: req.headers.host, token: user.validEmailToken })
+                    .then(() => {
+                      req.flash('info', { msg: `You will receive an Email at ${user.email} with instructions within the next 5 minutes (usually instant).` });
+                      res.redirect('/');
+                    }).catch((err) => {
+                      req.flash('errors', { msg: err });
+                      console.error(err);
+                      res.redirect('/');
+                    });
+                })
+                .catch((err) => {
+                  req.flash('errors', { msg: err });
+                  console.error(err);
+                  res.redirect('/');
+                });
+            }
+          });
+        })
+        .catch((err) => {
+          req.flash('errors', { msg: err });
+          console.error(err);
+          res.redirect('/');
+        });
     })
-    .catch((err) => {
-      req.flash('errors', { msg: err });
-      console.error(err);
-      res.redirect('/');
+    .catch((errors) => {
+      console.error(errors);
+      req.flash('errors', errors);
+      return res.redirect('/');
     });
-  })
-  .catch((errors) => {
-    console.log(`YBO 0 : ${errors}`);
-    req.flash('errors', errors);
-    return res.redirect('/');
-  });
 };

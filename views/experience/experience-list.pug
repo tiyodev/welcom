@@ -1,0 +1,76 @@
+extends ../layout
+
+block content
+  .wel-bg-blue.wel-color-white.p-6
+    h1.text-center People make places, meetings make memories.
+  
+  #experience-list-container.wel-bg-white.mx-auto.pt-6.pb-6
+    .d-flex.flex-row.flex-wrap.justify-content-around
+      .p-2.m-2.experience-list-item-square.experience-list-item-square-border-blue.text-center
+        h3.p-4 Our mission is to make travellers and welcomers meet
+        p.pl-4.pr-4 
+          | We belive that meeting locals and living authentic experiences is often the
+          | best in a trip. And we want to make it easy in Paris.
+      .p-2.m-2.experience-list-item-square.experience-list-item-square-border-yellow.text-center
+        h3.p-4 Welcomers are not professionals
+        p.pl-4.pr-4  
+          | We are travellers that are home between two trips, ready to meet
+          | you, and to make you discover our real local life.
+      .p-2.m-2.experience-list-item-square.experience-list-item-square-border-pink.text-center
+        h3.p-4 Experiences are mostly pretexts to meet
+        p.pl-4.pr-4  
+          | It can be anything that is interesting to share: a walk, a visit, cooking
+          | a meal, a running session, wine tasting... It's more fun to meet around
+          | shared interests.
+
+    h2.pt-6.text-center How to find and book an experience: 
+
+    .pb-6.d-flex.flex-row.flex-wrap.justify-content-around
+      .p-2.m-2.experience-list-item-note.text-center
+        h3.p-4 1
+        p.pl-4.pr-4 
+          | <b>Browse</b> this page (all experiences are here) and read them.
+      .p-2.m-2.experience-list-item-note.text-center
+        h3.p-4 2
+        p.pl-4.pr-4  
+          | <b>Send a message</b> to the welcomer to ask for a booking when you like one.
+      .p-2.m-2.experience-list-item-note.text-center
+        h3.p-4 3
+        p.pl-4.pr-4  
+          | Don't hesitate to send messages to <b>seceral welcomers</b>, 
+          | to be sure to find one available at the dates of your trip!
+    
+    hr
+
+    .container
+      .row.justify-content-center
+        .p-2.col-md-12.col-lg-2.align-self-center.text-center
+          h3 Tip:
+        .p-2.col-md-12.col-lg-5
+          .pb-2.pt-2.row.justify-content-center
+            .col.text-center
+              img.experience-list-ico(src='/images/icon/icon-free-blue.svg' alt="Experience paying icon")
+          .pb-2.pt-2.row.justify-content-center
+            .col.text-center
+              p "W" is for "welcome" and means that the experience is free
+        .p-2.col-md-12.col-lg-5
+          .pb-2.pt-2.row.justify-content-center
+            .col.text-center
+              img.experience-list-ico(src='/images/icon/icon-paying-yellow.svg' alt="Experience free icon")
+          .pb-2.pt-2.row.justify-content-center
+            .col.text-center
+              p
+                | "P" is for "project" and means that the welcomer asks for a
+                | contribution for the experience or for one of his projects.
+
+    hr
+
+    .container.pb-5.pt-5.pl-0.pr-0
+      .d-flex.flex-row.justify-content-center.flex-wrap
+        each exp in exps
+          .p-3
+            include ../components/experience-card
+
+    .text-center.p-4
+      h4.p-4 Can't find what you are searching for?
+      a.btn.btn-wel-pink.text-uppercase(href="/contactus") Contact us

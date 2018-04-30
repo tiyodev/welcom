@@ -13,7 +13,7 @@ function appendTagInDOM(name) {
   const containers = document.getElementById('tags-container');
 
   const flexItem = document.createElement('div');
-  flexItem.classList.add('mr-2', 'tags-item', 'border', 'border-danger', 'rounded');
+  flexItem.classList.add('mb-2', 'mr-2', 'tags-item', 'border', 'border-danger', 'rounded');
 
   const tagsDeleteBtn = document.createElement('button');
   tagsDeleteBtn.setAttribute('type', 'button');
@@ -87,6 +87,8 @@ function autocomplete_tag(field, conf) {
         createTagsItem(input.value, field, conf);
         // Initialize tags input
         input.value = '';
+        // Set validation
+        setInvalidInput(input);
       }
     });
   }
@@ -100,7 +102,6 @@ function autocomplete_tag(field, conf) {
           term: request.term
         },
         success(data) {
-          console.log(data);
           response($.map(data, item => ({
             label: item.name
           })));
@@ -115,6 +116,7 @@ function autocomplete_tag(field, conf) {
     autoFocus: true,
     select(event, ui) {
       createTagsItem(ui.item.value, field, conf);
+      setInvalidInput(document.getElementById(field));
     },
     close(event, ui) {
       // Initialize tags input

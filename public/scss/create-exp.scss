@@ -1,0 +1,52 @@
+#exp-content{
+  max-width: 80%;
+  width: 1140px;
+
+  .form-separation{
+    background-color: $wel-yellow;
+    height: 2px;
+    width: 50%;
+  }
+}
+
+#tags-container{
+  .tags-item{
+    height: 45px;
+
+    button{
+      height: 44px; 
+      width: 50px;
+    }
+  }
+}
+
+#exp-carousel carousel-caption{
+  height: 0px;
+}
+
+.exp-carousel{
+  &-img-header{
+    width: 100vw;
+    height: auto;
+    max-height: 500px;
+    min-height: 300px;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: bottom;
+    object-position: bottom;
+  }
+  
+  &-cover-upload{
+    width: 110px;
+    height: 70px;
+    bottom: 285px;
+    left: calc((100% - 110px) / 2);
+    position: relative;
+    border-radius: 50%;
+    color: $wel-yellow;
+  
+    &:hover{
+      color: $wel-yellow;
+    }
+  }
+}

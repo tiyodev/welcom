@@ -1,0 +1,25 @@
+if messages.errors
+  .m-0.pb-3.alert.alert-danger.fade.show.text-center
+    button.close(type='button', data-dismiss='alert')
+      i.far.fa-times-circle
+    for error in messages.errors
+      div= error.msg
+if messages.info
+  .m-0.pb-3.alert.alert-info.fade.show.text-center
+    button.close(type='button', data-dismiss='alert')
+      i.far.fa-times-circle
+    for info in messages.info
+      div= info.msg
+if messages.success
+  .m-0.pb-3.alert.alert-success.fade.show.text-center
+    button.close(type='button', data-dismiss='alert')
+      i.far.fa-times-circle
+    for success in messages.success
+      div= success.msg
+
+script.
+  window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove(); 
+    });
+  }, 5000);

@@ -37,6 +37,7 @@ const footer = require('./routes/footer');
 const profile = require('./routes/profile');
 const tags = require('./routes/tags');
 const welcomer = require('./routes/welcomer');
+const experience = require('./routes/experience');
 
 /**
  * Create Express server.
@@ -68,22 +69,24 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   secret: process.env.SESSION_SECRET,
+  cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
   store: new MongoStore({
     url: process.env.MONGODB_URI || process.env.MONGOLAB_URI,
     autoReconnect: true
   })
 }));
-app.use(passport.initialize());
+app.use(passport.initialize({
+  userProperty: 'account'
+}));
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
   // url with no csrf
-  if (req.path === '/contact-us' ||
-      req.path.includes('/search') ||
-      req.path.includes('/login') ||
-      req.path.match(/^(\/experience\/upload\/gallerypict\/)(\w)+/) ||
-      req.path === '/profile/edit/cover-upload/add' ||
-      req.path === '/profile/edit/profile-pic-upload/add') {
+  if (req.path === '/profile/edit/cover-upload/add' ||
+      req.path === '/profile/edit/profile-pic-upload/add' ||
+      req.path === '/experience/create/cover-upload/add' ||
+      req.path === '/experience/edit/cover-upload/add'
+  ) {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -92,14 +95,15 @@ app.use((req, res, next) => {
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 app.use((req, res, next) => {
-  res.locals.user = req.user;
+  res.locals.account = req.account;
   res.locals.recaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY;
-  res.locals.apiKeyMaps = process.env.API_KEY_MAPS;
+  res.locals.googleApi = process.env.GOOGLE_API;
+  res.locals.googleApiGeocode = process.env.GOOGLE_API_GEOCODE;
   next();
 });
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page
-  if (!req.user
+  if (!req.account
       && req.path !== '/login'
       && req.path !== '/signup'
       && !req.path.match(/^\/auth/)
@@ -111,11 +115,12 @@ app.use((req, res, next) => {
 
 app.use('/', index);
 app.use('/', footer);
+app.use('/auth', auth);
 app.use('/welcomer', welcomer);
 app.use('/profile', profile);
+app.use('/experience', experience);
 app.use('/tags', tags);
 app.use('/users', users);
-app.use('/auth', auth);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

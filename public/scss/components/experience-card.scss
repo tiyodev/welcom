@@ -1,39 +1,38 @@
-@import 'color';
+#experience-card{
+    color: $wel-black;
+    text-decoration: none;
+}
 
-.experience-card-item{    
+.experience-card-item {
     width: 20rem;
-
-    .card-block{
+    &-title {
+        height: 75px;
+    }
+    .card-block {
         background-color: $wel-grey-middle-light;
-
-        .card-text{
+        .card-text {
             font-family: "Aaux ProMedium";
             font-size: 1rem;
         }
-
-        &-img-row{
-            height:100px;
-            margin-bottom:-55px;
-
-            .rounded-circle{
+        &-img-row {
+            height: 100px;
+            margin-bottom: -55px;
+            .rounded-circle {
                 border: 5px solid $wel-grey-middle-light;
                 width: 120px;
                 height: 120px;
-                margin-top:-60px;
+                margin-top: -60px;
             }
-
-            .exp-creator{
+            .exp-creator {
                 width: 180px;
-
-                &-name{
+                &-name {
                     font-family: "Aaux ProBold";
                     font-size: 1rem;
                     line-height: 1.1rem;
                     word-break: break-all;
                     margin-top: -7px;
                 }
-
-                &-with{
+                &-with {
                     font-family: "Aaux ProRegular";
                     font-size: 0.8rem;
                     vertical-align: text-top;
@@ -41,21 +40,19 @@
             }
         }
     }
-
-    &-reco{
-        &-nb{
+    &-reco {
+        &-nb {
             padding-right: 5px;
             font-size: 1.2rem;
             color: $wel-pink;
             vertical-align: super;
             display: inline-block;
         }
-        &-ico{
+        &-ico {
             color: $wel-pink;
         }
     }
-
-    &-paying-ico{
+    &-paying-ico {
         width: 2em;
     }
 }

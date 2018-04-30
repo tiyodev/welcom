@@ -14,6 +14,8 @@ html
     link(rel="stylesheet" href="/css/bootstrap-select.min.css")
     link(rel='stylesheet' href='/css/main.css')
 
+    script(src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous")
+
     block css
 
     <!-- Google Analytics -->
@@ -27,16 +29,6 @@ html
       ga('send', 'pageview');
     <!-- End Google Analytics -->
 
-  body
-    include partials/header
-
-    main
-      block content
-
-    include partials/footer
-    
-    //- script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous")
-    script(src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/fileinput.min.js")
@@ -44,5 +36,15 @@ html
     script(src="/js/input-file-theme.js")
     script(src="/js/bootstrap-select.min.js")
     script(src="/js/validationForm.js")
+
+  body
+    include partials/header
+
+    include partials/flash
+    
+    main
+      block content
+
+    include partials/footer
 
     block js

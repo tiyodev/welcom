@@ -134,12 +134,26 @@
 /*************** Whant a truly Parisian experience ? *********************/
 // See experience-card.scss
 
-#experiences button{
-    width: 175px;
-    border-radius: 25px;
-    height: 50px;
-    font-family: "Aaux ProBold";
-    border: none;
+#experiences {
+    button{
+        width: 175px;
+        border-radius: 25px;
+        height: 50px;
+        font-family: "Aaux ProBold";
+        border: none;
+    }
+    
+    .experiences-btn{
+        background-color: $wel-blue;
+        color: $wel-white !important;
+        border: 2px $wel-white solid;
+        text-decoration: none;
+        border-radius: 25px;
+        padding-top: 13px;
+        padding-bottom: 13px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
 }
 
 /*************** Learn more **********************************************/
