@@ -1001,30 +1001,30 @@ button {
   width: 1140px; }
 
 /* The message box is shown when the user clicks on the password field */
-#messages {
+#pwd-rules-container {
   display: block;
   background: #f4f4f4;
   color: #000000;
-  padding: 20px; }
-  #messages p {
-    padding-left: 35px;
-    font-size: 18px; }
-
-/* Add a green text color and a checkmark when the requirements are right */
-.valid {
-  color: green; }
-  .valid:before {
-    position: relative;
-    left: -35px;
-    content: "✔"; }
-
-/* Add a red text color and an "x" when the requirements are wrong */
-.invalid {
-  color: red; }
-  .invalid:before {
-    position: relative;
-    left: -35px;
-    content: "✖"; }
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  /* Add a green text color and a checkmark when the requirements are right */
+  /* Add a red text color and an "x" when the requirements are wrong */ }
+  #pwd-rules-container p {
+    padding-left: 35px; }
+  #pwd-rules-container .valid {
+    color: green; }
+    #pwd-rules-container .valid:before {
+      position: relative;
+      left: -35px;
+      content: "✔"; }
+  #pwd-rules-container .invalid {
+    color: red; }
+    #pwd-rules-container .invalid:before {
+      position: relative;
+      left: -35px;
+      content: "✖"; }
 
 /*************** Override font family *************************************************/
 p, a, span {

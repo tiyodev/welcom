@@ -9,7 +9,7 @@ block content
       input(type='hidden' name='_csrf' value=_csrf id="_csrf")
       .form-group
         label(for='input-new-pwd') New Password
-        input#input-new-pwd.form-control(type='password' name='password' placeholder='New password' required)
+        input#input-new-pwd.form-control(type='password' name='password' placeholder='New password' required autofocus)
         #invalid-new-pwd-msg.invalid-feedback
           span Password don't match all rules.
       .form-group
@@ -19,12 +19,12 @@ block content
           span Confirm password don't match with password.
 
       .form-group
-        #messages
+        #pwd-rules-container
           h3.text-center Password must contain the following:
-          p#letter.invalid A <b>lowercase</b> letter
-          p#capital.invalid A <b>capital (uppercase)</b> letter
-          p#number.invalid A <b>number</b>
-          p#length.invalid Minimum <b>8 characters</b>
+          p#reset-pwd-letter.invalid A <b>lowercase</b> letter
+          p#reset-pwd-capital.invalid A <b>capital (uppercase)</b> letter
+          p#reset-pwd-number.invalid A <b>number</b>
+          p#reset-pwd-length.invalid Minimum <b>8 characters</b>
 
       .pt-4.form-group.text-center
         button.btn.btn-wel-pink(type='submit')
@@ -37,12 +37,25 @@ block js
       const password = document.getElementById("input-new-pwd")
       const confirm_password = document.getElementById("input-confirm-pwd");
 
+      password.onfocus = () => {
+        validatePasswordRules();
+      }
+
       // When the user starts to type something inside the password field
-      password.onkeyup = function() {
-        const letter = document.getElementById("letter");
-        const capital = document.getElementById("capital");
-        const number = document.getElementById("number");
-        const length = document.getElementById("length");
+      password.onkeyup = () => {
+        const pwdIsValid = validatePasswordRules();
+        if(pwdIsValid){
+          password.setCustomValidity('');
+        } else{
+          password.setCustomValidity("Passwords don't match all rules.");
+        }
+      }
+
+      function validatePasswordRules(){
+        const letter = document.getElementById("reset-pwd-letter");
+        const capital = document.getElementById("reset-pwd-capital");
+        const number = document.getElementById("reset-pwd-number");
+        const length = document.getElementById("reset-pwd-length");
         let pwdIsValid = true;
 
         // Validate lowercase letters
@@ -88,11 +101,7 @@ block js
           pwdIsValid = false;
         }
 
-        if(pwdIsValid){
-          password.setCustomValidity('');
-        } else{
-          password.setCustomValidity("Passwords don't match all rules.");
-        }
+        return pwdIsValid;
       }
 
       // Test if confirm password is identical to password

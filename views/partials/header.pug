@@ -54,19 +54,32 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
             button.close(type="button" data-dismiss="modal" aria-label="Close")
               span.wel-color-yellow(aria-hidden="true") X
       #joinus-modal.modal-body
-        form#join-us-form.form-horizontal(name="signupForm" action="/signup" method='POST')
+        form#join-us-form.form-horizontal(name="signupForm" action="/signup" method='POST' novalidate)
           input(type='hidden', name='_csrf', value=_csrf)
 
           .item.text-center
             .pt-2
-              input#email.form-control.form-modal.m-auto(name="email" type="email" placeholder="Your email")
-              p#email-err.form-msg-error.m-auto
+              input#join-us-email.form-control.form-modal.m-auto(name="email" type="email" placeholder="Your email" required)
+              p#join-us-email-err.form-msg-error.m-auto
+              #invalid-join-us-email.invalid-feedback
+                span Email is not valid or there is already an account with this email.
             .pt-4
-              input#password.form-control.form-modal.m-auto(name="password" type="password" placeholder="Choose a password")
-              p#password-err.form-msg-error.m-auto
+              input#join-us-password.form-control.form-modal.m-auto(name="password" type="password" placeholder="Choose a password" required)
+              p#join-us-password-err.form-msg-error.m-auto
+              #invalid-join-us-password.invalid-feedback
+                span Password don't match all rules.
             .pt-4
-              input#password-confirm.form-control.form-modal.m-auto(name="password-confirm" type="password" placeholder="Confirm your password")
-              p#password-confirm-err.form-msg-error.m-auto
+              input#join-us-password-confirm.form-control.form-modal.m-auto(name="confirmPwd" type="password" placeholder="Confirm your password" required)
+              p#join-us-password-confirm-err.form-msg-error.m-auto
+              #invalid-join-us-password-confirm.invalid-feedback
+                span Confirm password don't match with password.
+            .pt-4
+              .form-group
+                #pwd-rules-container.d-none.text-left
+                  p#letter.pb-0.pt-0.m-0.invalid A <b>lowercase</b> letter, 
+                  p#capital.pb-0.pt-0.m-0.invalid A <b>capital (uppercase)</b> letter, 
+                  p#number.pb-0.pt-0.m-0.invalid A <b>number</b>, 
+                  p#length.pb-0.pt-0.m-0.invalid Minimum <b>8 characters</b>, 
             .pt-4.join-us-btn
               p.terms-of-use.m-auto.pb-4
                 | By clicking the "Welcom !" button, you agree our Terms of Use, which you can 
@@ -152,3 +165,119 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
                 | &nbsp;&nbsp; Your Google account
           .mt-4
             a.social-link(href='#' onclick="$('#sign-in-modal').modal('hide');$('#joinus').modal('toggle');$('#joinus').modal('handleUpdate');") Not yet a member ? Join us !
+
+script.
+  (function() {
+    const password = document.getElementById("join-us-password")
+    const confirm_password = document.getElementById("join-us-password-confirm");
+
+    password.onfocus = () => {
+      const pwdRulesContainer = document.getElementById('pwd-rules-container');
+      pwdRulesContainer.classList.remove('d-none');
+      validatePasswordRules();
+    }
+
+    password.onblur = () => {
+      const pwdRulesContainer = document.getElementById('pwd-rules-container');
+      pwdRulesContainer.classList.add('d-none');
+    }
+
+    // When the user starts to type something inside the password field
+    password.onkeyup = () => {
+      const pwdIsValid = validatePasswordRules();
+
+      if(pwdIsValid){
+        password.setCustomValidity('');
+      } else{
+        password.setCustomValidity("Passwords don't match all rules.");
+      }
+    }
+
+    function validatePasswordRules(){
+      const letter = document.getElementById("letter");
+      const capital = document.getElementById("capital");
+      const number = document.getElementById("number");
+      const length = document.getElementById("length");
+      let pwdIsValid = true;
+
+      // Validate lowercase letters
+      const lowerCaseLetters = /[a-z]/g;
+      if(password.value.match(lowerCaseLetters)) {  
+        letter.classList.remove("invalid");
+        letter.classList.add("valid");
+      } else {
+        letter.classList.remove("valid");
+        letter.classList.add("invalid");
+        pwdIsValid = false;
+      }
+      
+      // Validate capital letters
+      const upperCaseLetters = /[A-Z]/g;
+      if(password.value.match(upperCaseLetters)) {  
+        capital.classList.remove("invalid");
+        capital.classList.add("valid");
+      } else {
+        capital.classList.remove("valid");
+        capital.classList.add("invalid");
+        pwdIsValid = false;
+      }
+
+      // Validate numbers
+      const numbers = /[0-9]/g;
+      if(password.value.match(numbers)) {  
+        number.classList.remove("invalid");
+        number.classList.add("valid");
+      } else {
+        number.classList.remove("valid");
+        number.classList.add("invalid");
+        pwdIsValid = false;
+      }
+      
+      // Validate length
+      if(password.value.length >= 8) {
+        length.classList.remove("invalid");
+        length.classList.add("valid");
+      } else {
+        length.classList.remove("valid");
+        length.classList.add("invalid");
+        pwdIsValid = false;
+      }
+
+      return pwdIsValid;
+    }
+
+    // Test if confirm password is identical to password
+    function validatePassword(){
+      if(password.value !== confirm_password.value) {
+        confirm_password.setCustomValidity("Passwords Don't Match");
+      } else {
+        confirm_password.setCustomValidity('');
+      }
+    }
+
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
+
+    // Add manual validation
+    let form = $("#join-us-form")[0];
+    if(form !== undefined || form !== null){
+      form.onsubmit = function(event){    
+
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        } 
+
+        form.classList.add('was-validated');      
+      };
+    }
+
+    if(`#{fromSignUp}`){
+      $('#joinus').modal('show');
+    }
+
+    // Set valid data
+    setServerValidData(!{JSON.stringify(validData)});
+    // Set Error data
+    checkServerValidity(!{JSON.stringify(errors)}); 
+  })();

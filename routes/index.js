@@ -14,7 +14,7 @@ router.post('/forgot',  userController.checkEmailData, userController.postForgot
 router.get('/reset/:token', userController.getReset);
 router.post('/reset/:token', userController.checkResetPwdData, userController.postReset);
 router.get('/verifyEmail/:validEmailToken', userController.getVerifyEmail);
-router.post('/signup', userController.postSignup);
 router.get('/signup', userController.getSignup);
+router.post('/signup', userController.checkSignupData, userController.postSignup);
 
 module.exports = router;

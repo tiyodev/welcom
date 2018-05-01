@@ -4,8 +4,10 @@ const passport = require('passport');
 const { check, validationResult } = require('express-validator/check');
 const { sanitize, matchedData } = require('express-validator/filter');
 
-const User = require('./../models/users');
 const Emails = require('./../config/emails/email-exports');
+const User = require('./../models/users');
+const Interest = require('../models/interests');
+const Experience = require('./../models/experiences');
 
 exports.checkEmailData = [
   check('inputEmail')
@@ -24,6 +26,33 @@ exports.checkEmailData = [
 ];
 
 exports.checkResetPwdData = [
+  check('password', `Password don't match all rules.`)
+  .trim()
+  .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/),
+  check('confirmPwd', `Confirm password don't match with password.`)
+  .trim()
+  .custom((value, { req }) => {
+    if (req.body.password === value) {
+      return true;
+    }
+    return false;
+  })
+];
+
+exports.checkSignupData = [
+  check('email')
+  .isLength({ min: 1 }).withMessage('Email is required.')
+  .isEmail().withMessage('Must be a valid email.')
+  .trim()
+  .normalizeEmail()
+  .custom(value => {
+    return User.findOne({ email: value })
+      .then((existingUser) => {
+        if(existingUser){
+          throw new Error('This email already exist.');
+        }
+      })
+  }),
   check('password', `Password don't match all rules.`)
   .trim()
   .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/),
@@ -356,50 +385,45 @@ exports.postReset = (req, res, next) => {
  */
 exports.getVerifyEmail = (req, res, next) => {
   User
-    .findOne({ validEmailToken: req.params.validEmailToken })
-    .where('validEmailTokenExpires').gt(Date.now())
-    .exec((err, user) => {
+  .findOne({ validEmailToken: req.params.validEmailToken })
+  .where('validEmailTokenExpires').gt(Date.now())
+  .exec((err, user) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      req.flash('errors', { msg: 'Verify email token is invalid or has expired.' });
+      return res.redirect('/');
+    }
+    user.validEmail = true;
+    if (typeof user.newEmail !== 'undefined') {
+      user.email = user.newEmail;
+      user.newEmail = undefined;
+    }
+    user.validEmailToken = undefined;
+    user.validEmailTokenExpires = undefined;
+
+    user.save((err) => {
       if (err) {
         return next(err);
       }
-      if (!user) {
-        req.flash('errors', { msg: 'Verify email token is invalid or has expired.' });
-        return res.redirect('back');
-      }
-      user.validEmail = true;
-      if (typeof user.newEmail !== 'undefined') {
-        user.email = user.newEmail;
-        user.newEmail = undefined;
-      }
-      user.validEmailToken = undefined;
-      user.validEmailTokenExpires = undefined;
-
-      user.save((err) => {
+      req.logIn(user, (err) => {
         if (err) {
           return next(err);
         }
-
+        req.flash('success', { msg: 'Your email has been successfully validated.' });
         return res.redirect('/');
-
-        // req.logIn(user, (err) => {
-        //   if (err) {
-        //     return next(err);
-        //   }
-        //   req.flash('success', { msg: 'Your email has been successfully validated.' });
-        //   return res.redirect('/');
-        // });
       });
     });
+  });
 };
 
 /**
- * Get /signup
- * Page de signup
+ * GET /signup
+ * Signup page.
  */
 exports.getSignup = (req, res) => {
-  res.render('signup', {
-    title: 'Signup'
-  });
+  return res.redirect('/');
 };
 
 /**
@@ -407,57 +431,68 @@ exports.getSignup = (req, res) => {
  * Create a new local account.
  */
 exports.postSignup = (req, res) => {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.sanitize('email').normalizeEmail({ remove_dots: false });
+  const errors = validationResult(req);
 
-  req.getValidationResult()
-    .then(() => {
-      const user = new User({
-        email: req.body.email,
-        password: req.body.password,
-        validEmailTokenExpires: Date.now() + 3600000
-      });
-
-      createRandomToken()
-        .then((newToken) => {
-
-          user.validEmailToken = newToken;
-
-          User.findOne({ email: req.body.email }, (err, existingUser) => {
-            if (existingUser) {
-              req.flash('errors', { msg: 'Account with that email address already exists.' });
-              res.redirect('/');
-            } else {
-              user.save()
-                .then(() => {
-                  Emails.sendMail(user.email, 'Confirm your email address', { templateName: 'validEmail', host: req.headers.host, token: user.validEmailToken })
-                    .then(() => {
-                      req.flash('info', { msg: `You will receive an Email at ${user.email} with instructions within the next 5 minutes (usually instant).` });
-                      res.redirect('/');
-                    }).catch((err) => {
-                      req.flash('errors', { msg: err });
-                      console.error(err);
-                      res.redirect('/');
-                    });
-                })
-                .catch((err) => {
-                  req.flash('errors', { msg: err });
-                  console.error(err);
-                  res.redirect('/');
-                });
-            }
-          });
-        })
-        .catch((err) => {
-          req.flash('errors', { msg: err });
-          console.error(err);
-          res.redirect('/');
-        });
+  if (!errors.isEmpty()) {
+    Experience
+    .find({})
+    .limit(3)
+    .sort({ createdAt: -1 })
+    .select({
+      _id: 1, creator: 1, coverPic: 1, title: 1, isFree: 1, nbRecommendation: 1
     })
-    .catch((errors) => {
-      console.error(errors);
-      req.flash('errors', errors);
-      return res.redirect('/');
+    .populate({ path: 'interests', select: 'name _id', model: Interest })
+    .populate({ path: 'creator', select: 'profile.profilePic profile.firstName profile.nickName', model: User })
+    .exec((err, exps) => {
+      if (err) { next(err); }
+      res.render('index', {
+        title: 'Welcom\' Home',
+        exps,
+        errors: errors.array(),
+        validData: matchedData(req),
+        fromSignUp: true
+      });
     });
+  }
+
+  createRandomToken()
+  .then((newToken) => {
+    const user = new User({
+      email: req.body.email,
+      password: req.body.password,
+      validEmailTokenExpires: Date.now() + 3600000
+    });
+
+    user.validEmailToken = newToken;
+
+    User.findOne({ email: req.body.email }, (err, existingUser) => {
+      if (existingUser) {
+        req.flash('errors', { msg: 'Account with that email address already exists.' });
+        res.redirect('/');
+      } else {
+        user.save()
+          .then(() => {
+            Emails.sendMail(user.email, 'Confirm your email address', { templateName: 'validEmail', host: req.headers.host, token: user.validEmailToken })
+              .then(() => {
+                req.flash('info', { msg: `You will receive an Email at ${user.email} with instructions within the next 5 minutes (usually instant).` });
+                res.redirect('/');
+              }).catch((err) => {
+                req.flash('errors', { msg: err });
+                console.error(err);
+                res.redirect('/');
+              });
+          })
+          .catch((err) => {
+            req.flash('errors', { msg: err });
+            console.error(err);
+            res.redirect('/');
+          });
+      }
+    });
+  })
+  .catch((err) => {
+    req.flash('errors', { msg: err });
+    console.error(err);
+    res.redirect('/');
+  });
 };
