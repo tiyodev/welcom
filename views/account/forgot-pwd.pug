@@ -1,14 +1,37 @@
 extends ../layout
 
 block content
-  .col-sm-8.col-sm-offset-2
-    form(method='POST')
-      legend Forgot Password
-      input(type='hidden', name='_csrf', value=_csrf)
+  .wel-bg-blue.wel-color-white.p-6
+    h1.text-center Forgot password
+
+  #forgot-pwd-container.m-auto.p-6
+    form#forgot-pwd-container-form(action="/forgot" method="post" novalidate)
+      input(type='hidden' name='_csrf' value=_csrf id="_csrf")
       .form-group
         p Enter your email address below and we will send you password reset instructions.
-        input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, required)
-      .form-group
-        button.btn.btn-primary(type='submit')
-          i.fa.fa-key &nbsp;
+        input.form-control(type='email' name='inputEmail' placeholder='Email' autofocus required)
+        #invalid-email-msg.invalid-feedback
+          span Email is required.
+      .p-4.form-group.text-center
+        button.btn.btn-wel-pink(type='submit')
+          i.mr-2.fa.fa-key &nbsp;
           | Reset Password
+
+block js
+  script.
+    (function() {
+      // Add manual validation
+      let form = $("#forgot-pwd-container-form")[0];
+      if(form !== undefined || form !== null){
+        form.onsubmit = function(event){    
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');      
+        };
+      }
+
+      // Set Error
+      addErrorInForm(!{JSON.stringify(errors)}, 'invalid-email-msg');
+    })();

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /************** This file import all scss files and override bootstrap css ************/
 /************** This file define generic classes for welcom ***************/
 /************** This file define colors use for welcom ***************/
@@ -994,6 +995,36 @@ button {
       border: solid 2px #dc5770; }
   #experience-list-container hr {
     border-top: 2px solid #868686; }
+
+#forgot-pwd-container, #reset-pwd-container {
+  max-width: 80%;
+  width: 1140px; }
+
+/* The message box is shown when the user clicks on the password field */
+#messages {
+  display: block;
+  background: #f4f4f4;
+  color: #000000;
+  padding: 20px; }
+  #messages p {
+    padding-left: 35px;
+    font-size: 18px; }
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+  color: green; }
+  .valid:before {
+    position: relative;
+    left: -35px;
+    content: "✔"; }
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+  color: red; }
+  .invalid:before {
+    position: relative;
+    left: -35px;
+    content: "✖"; }
 
 /*************** Override font family *************************************************/
 p, a, span {

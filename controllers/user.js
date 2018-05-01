@@ -1,8 +1,41 @@
 const crypto = require('crypto');
 const passport = require('passport');
 
+const { check, validationResult } = require('express-validator/check');
+const { sanitize, matchedData } = require('express-validator/filter');
+
 const User = require('./../models/users');
 const Emails = require('./../config/emails/email-exports');
+
+exports.checkEmailData = [
+  check('inputEmail')
+  .isLength({ min: 1 }).withMessage('Email is required.')
+  .isEmail().withMessage('Must be a valid email.')
+  .trim()
+  .normalizeEmail()
+  .custom(value => {
+    return User.findOne({ email: value })
+      .then((existingUser) => {
+        if(!existingUser){
+          throw new Error('This email is not found');
+        }
+      })
+  })
+];
+
+exports.checkResetPwdData = [
+  check('password', `Password don't match all rules.`)
+  .trim()
+  .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/),
+  check('confirmPwd', `Confirm password don't match with password.`)
+  .trim()
+  .custom((value, { req }) => {
+    if (req.body.password === value) {
+      return true;
+    }
+    return false;
+  })
+];
 
 /**
  * Créé un token en hexa
@@ -55,15 +88,19 @@ function updateValidEmailToken(user) {
  */
 function setPasswordResetToken(resetEmail) {
   return new Promise((resolve, reject) => {
-    User.getUserByEmail(resetEmail)
+    if(resetEmail === undefined){
+      reject('Email undefined');
+    }
+    else{
+      User.findOne({ email: resetEmail, facebook: { $exists: false }, google: { $exists: false }, twitter: { $exists: false } })
       .then((user) => {
-        createRandomToken()
+        if(user !== null && user !== undefined){
+          createRandomToken()
           .then((token) => {
             user.passwordResetToken = token;
             user.passwordResetExpires = Date.now() + 3600000; // 1 hour
             user.save((err) => {
               if (err) {
-                console.error(err);
                 reject(err);
               }
               resolve([user.email, token]);
@@ -72,10 +109,16 @@ function setPasswordResetToken(resetEmail) {
           .catch((err) => {
             reject(err);
           });
+        }
+        else
+        {
+          reject('This user use an external api to connect to our web site. Impossible to change password.');
+        }
       })
       .catch((err) => {
         reject(err);
       });
+    }
   });
 }
 
@@ -86,7 +129,12 @@ function setPasswordResetToken(resetEmail) {
  */
 function resetPasswordByToken(token, password) {
   return new Promise((resolve, reject) => {
-    User
+    if(password === undefined || password === null || password == ''){
+      reject(`Password can't be empty`);
+    }
+    else
+    {
+      User
       .findOne({ passwordResetToken: token })
       .where('passwordResetExpires').gt(Date.now())
       .exec((err, user) => {
@@ -94,18 +142,19 @@ function resetPasswordByToken(token, password) {
           reject(err);
         }
         if (!user) {
-          reject(new Error('Password reset token is invalid or has expired.'));
+          reject('Password reset token is invalid or has expired.');
         }
         user.password = password;
         user.passwordResetToken = undefined;
         user.passwordResetExpires = undefined;
         user.save((err) => {
           if (err) {
-            reject(new Error('An error occured while reseting the password'));
+            reject('An error occured while reseting the password');
           }
           resolve(user);
         });
       });
+    }
   });
 }
 
@@ -199,17 +248,18 @@ exports.getForgot = (req, res) => {
  * Create a random token, then the send user an email with a reset link.
  */
 exports.postForgot = (req, res) => {
-  req.assert('email', 'Please enter a valid email address.').isEmail();
-  req.sanitize('email').normalizeEmail({ remove_dots: false });
+  const errors = validationResult(req);
 
-  const errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/forgot');
+  if (!errors.isEmpty()) {
+    return res.render('account/forgot-pwd', {
+      title: 'Forgot password',
+      errors: errors.array(),
+      validData: matchedData(req)
+    });
   }
 
-  setPasswordResetToken(req.body.email)
+  if(req.body.inputEmail !== undefined){
+    setPasswordResetToken(req.body.inputEmail)
     .then((mailAndToken) => {
       const email = mailAndToken[0];
       const token = mailAndToken[1];
@@ -218,10 +268,11 @@ exports.postForgot = (req, res) => {
           req.flash('info', { msg: `An e-mail has been sent to ${email} with further instructions.` });
           res.redirect('/');
         });
-    }).catch((err) => {
+    }).catch((err, data) => {
       req.flash('errors', { msg: err });
       res.redirect('/forgot');
     });
+  }
 };
 
 /**
@@ -242,7 +293,8 @@ exports.getReset = (req, res, next) => {
         return res.redirect('/forgot');
       }
       res.render('account/reset-pwd', {
-        title: 'Password Reset'
+        title: 'Password Reset',
+        token: req.params.token
       });
     });
 };
@@ -251,40 +303,51 @@ exports.getReset = (req, res, next) => {
  * POST /reset/:token
  * Process the reset password request.
  */
-exports.postReset = (req, res) => {
-  req.assert('password', 'Password must be at least 4 characters long.').len(4);
-  req.assert('confirm', 'Passwords must match.').equals(req.body.password);
+exports.postReset = (req, res, next) => {
+  const errors = validationResult(req);
 
-  const errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('back');
+  if (!errors.isEmpty()) {
+    res.render('account/reset-pwd', {
+      title: 'Password Reset',
+      token: req.params.token,
+      errors: errors.array(),
+      validData: matchedData(req)
+    });
   }
 
-  resetPasswordByToken(req.params.token, req.body.password)
-    .then((user) => {
-      req.logIn((user, (err) => {
-        console.error(err);
-      }))
-        .then(() => {
-          Emails.sendMail(user.email, 'Your password has been changed', { templateName: 'confirmationChangePassword' })
-            .then(() => {
-              req.flash('success', { msg: 'Success! Your password has been reseted.' });
-              res.redirect('/');
-            })
-            .catch((err) => {
-              console.error(err);
-            });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    })
-    .catch((err) => {
-      req.flash('errors', { msg: err });
-      res.redirect('/');
+  const resetPassword = () =>
+    User
+      .findOne({ passwordResetToken: req.params.token })
+      .where('passwordResetExpires').gt(Date.now())
+      .then((user) => {
+        if (!user) {
+          req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+          return res.redirect('back');
+        }
+        user.password = req.body.password;
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+        return user.save().then(() => new Promise((resolve, reject) => {
+          req.logIn(user, (err) => {
+            if (err) { return reject(err); }
+            resolve(user);
+          });
+        }));
+      });
+
+  const sendResetPasswordEmail = (user) => {
+    if (!user) { return; }
+
+    return Emails.sendMail(user.email, 'Your password has been changed', { templateName: 'confirmationChangePassword' })
+    .then(() => {
+      req.flash('success', { msg: 'Success! Your password has been changed.' });
     });
+  };
+
+  resetPassword()
+    .then(sendResetPasswordEmail)
+    .then(() => { if (!res.finished) res.redirect('/'); })
+    .catch(err => next(err));
 };
 
 /**

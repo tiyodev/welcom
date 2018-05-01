@@ -19,5 +19,5 @@ exports.errorHandler = (err, req, res, next) => {
   // render the error page
   res.status(err.status || 500);
 
-  res.render('/partials/error');
+  res.render('partials/error');
 };

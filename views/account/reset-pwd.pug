@@ -1,17 +1,126 @@
 extends ../layout
 
 block content
-  .col-sm-8.col-sm-offset-2
-    form(method='POST')
-      legend Reset Password
-      input(type='hidden', name='_csrf', value=_csrf)
+  .wel-bg-blue.wel-color-white.p-6
+    h1.text-center Reset Password
+
+  #reset-pwd-container.m-auto.p-6
+    form#reset-pwd-container-form(action=`/reset/${token}` method="post" novalidate)
+      input(type='hidden' name='_csrf' value=_csrf id="_csrf")
       .form-group
-        label(for='password') New Password
-        input.form-control(type='password', name='password', id='password', placeholder='New password', autofocus, required)
+        label(for='input-new-pwd') New Password
+        input#input-new-pwd.form-control(type='password' name='password' placeholder='New password' required)
+        #invalid-new-pwd-msg.invalid-feedback
+          span Password don't match all rules.
       .form-group
-        label(for='confirm') Confirm Password
-        input.form-control(type='password', name='confirm', id='confirm', placeholder='Confirm password', required)
+        label(for='input-confirm-pwd') Confirm Password
+        input#input-confirm-pwd.form-control(type='password' name='confirmPwd' placeholder='Confirm password' required)
+        #invalid-confirm-pwd-msg.invalid-feedback
+          span Confirm password don't match with password.
+
       .form-group
-        button.btn.btn-primary.btn-reset(type='submit')
-          i.fa.fa-keyboard-o
-          | &nbsp;Change Password
+        #messages
+          h3.text-center Password must contain the following:
+          p#letter.invalid A <b>lowercase</b> letter
+          p#capital.invalid A <b>capital (uppercase)</b> letter
+          p#number.invalid A <b>number</b>
+          p#length.invalid Minimum <b>8 characters</b>
+
+      .pt-4.form-group.text-center
+        button.btn.btn-wel-pink(type='submit')
+          i.mr-2.fas.fa-keyboard
+          | Change Password
+
+block js
+  script.
+    (function() {
+      const password = document.getElementById("input-new-pwd")
+      const confirm_password = document.getElementById("input-confirm-pwd");
+
+      // When the user starts to type something inside the password field
+      password.onkeyup = function() {
+        const letter = document.getElementById("letter");
+        const capital = document.getElementById("capital");
+        const number = document.getElementById("number");
+        const length = document.getElementById("length");
+        let pwdIsValid = true;
+
+        // Validate lowercase letters
+        const lowerCaseLetters = /[a-z]/g;
+        if(password.value.match(lowerCaseLetters)) {  
+          letter.classList.remove("invalid");
+          letter.classList.add("valid");
+        } else {
+          letter.classList.remove("valid");
+          letter.classList.add("invalid");
+          pwdIsValid = false;
+        }
+        
+        // Validate capital letters
+        const upperCaseLetters = /[A-Z]/g;
+        if(password.value.match(upperCaseLetters)) {  
+          capital.classList.remove("invalid");
+          capital.classList.add("valid");
+        } else {
+          capital.classList.remove("valid");
+          capital.classList.add("invalid");
+          pwdIsValid = false;
+        }
+
+        // Validate numbers
+        const numbers = /[0-9]/g;
+        if(password.value.match(numbers)) {  
+          number.classList.remove("invalid");
+          number.classList.add("valid");
+        } else {
+          number.classList.remove("valid");
+          number.classList.add("invalid");
+          pwdIsValid = false;
+        }
+        
+        // Validate length
+        if(password.value.length >= 8) {
+          length.classList.remove("invalid");
+          length.classList.add("valid");
+        } else {
+          length.classList.remove("valid");
+          length.classList.add("invalid");
+          pwdIsValid = false;
+        }
+
+        if(pwdIsValid){
+          password.setCustomValidity('');
+        } else{
+          password.setCustomValidity("Passwords don't match all rules.");
+        }
+      }
+
+      // Test if confirm password is identical to password
+      function validatePassword(){
+        if(password.value !== confirm_password.value) {
+          confirm_password.setCustomValidity("Passwords Don't Match");
+        } else {
+          confirm_password.setCustomValidity('');
+        }
+      }
+
+      password.onchange = validatePassword;
+      confirm_password.onkeyup = validatePassword;
+
+      // Add manual validation
+      let form = $("#reset-pwd-container-form")[0];
+      if(form !== undefined || form !== null){
+        form.onsubmit = function(event){    
+
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          } 
+
+          form.classList.add('was-validated');      
+        };
+      }
+
+      // Set Error data
+      checkServerValidity(!{JSON.stringify(errors)}); 
+    })();

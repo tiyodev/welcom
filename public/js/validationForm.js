@@ -19,6 +19,22 @@ function createInvalideFeedback(id, msg) {
   }
 }
 
+function addErrorInForm(errors, errorContainerId){
+  // Set only the first error message
+  if(errors && errors.length > 0){
+    let element = document.getElementsByName(errors[0].param)[0];
+    if (element) {
+      element.classList.add('is-invalid');
+      element.value = errors[0].value || '';
+
+      let invalidMsgContainer = document.getElementById(errorContainerId);
+      if(invalidMsgContainer){
+        invalidMsgContainer.firstChild.innerText = errors[0].msg;
+      }
+    }
+  }
+}
+
 function checkServerValidity(errors) {
   if (errors) {
     errors.forEach((error) => {
