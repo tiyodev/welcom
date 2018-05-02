@@ -19,5 +19,6 @@ router.get('/list', experienceController.getExperienceList);
 router.get('/:id', experienceController.getExperience);
 router.get('/:id/edit', passportConfig.isAuthenticated, experienceController.getEditExperience);
 router.post('/:id/edit', passportConfig.isAuthenticated, experienceController.checkCreateExperienceData, experienceController.postEditExperience);
+router.post('/:id/recommendation/add', passportConfig.isAuthenticated, experienceController.checkRecommendationData, experienceController.postRecommendation);
 
 module.exports = router;

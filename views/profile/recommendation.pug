@@ -3,14 +3,18 @@ extends ../layout
 block content
   #profile-carousel.carousel.slide(data-ride="carousel")
     .carousel-inner
-      - let i = 0;
-      each pic in user.profile.coverPic
-        if i++ === 0
-          .carousel-item.active
-            img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
-        else
-          .carousel-item
-            img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
+      if user.profile.coverPic.length === 0
+        .carousel-item.active
+          img.img-header-profile.d-block.w-100(src='/images/default-cover-pic.jpg' alt='Default profile cover')
+      else
+        - let i = 0;
+        each pic in user.profile.coverPic
+          if i++ === 0
+            .carousel-item.active
+              img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
+          else
+            .carousel-item
+              img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
 
     a.carousel-control-prev(href="#profile-carousel" role="button" data-slide="prev")
       span.carousel-control-prev-icon(aria-hidden="true")
@@ -39,7 +43,7 @@ block content
   #profile-content.m-auto.pb-6
     .pt-4.pb-4.text-center
       h2 #{user.profile.nickName}
-      h4.green-txt #{user.profile.nbRecommendation} positive recommendations
+      h4.green-txt #{(user.profile.recommendations !== undefined && user.profile.recommendations.length > 0) ? user.profile.recommendations.length : "0"} positive recommendations
       p.pt-2 
         | #{data.shortPresentationSentence} 
         br
@@ -59,7 +63,7 @@ block content
       each recommendation in user.profile.recommendations
         include ../components/recommendation.pug
 
-    if data.isConnectedUser
+    if user._id.equals(locals.account._id)
       hr.profile-separation
 
       p.mx-auto.w-75.pt-4.text-center 
@@ -115,20 +119,6 @@ block content
                   | Recommendations help to <b> build trust </b> among us!
               
               hr.profile-separation
-              
-              h5.font-weight-bold Would you recommend #{user.profile.nickName}?
-
-              .form-check.form-check-inline
-                input#recommend-yes.form-check-input(type="radio" name="recommendationType" value="yes" data-invalid-container="recommend-type-error" required)
-                label.form-check-label(for="recommend-yes") Yes I would
-              .form-check.form-check-inline
-                input#recommend-dont-know.form-check-input(type="radio" name="recommendationType" value="dontKnow" data-invalid-container="recommend-type-error" required)
-                label.form-check-label(for="recommend-dont-know") I don't really know
-              .form-check.form-check-inline
-                input#recommend-no.form-check-input(type="radio" name="recommendationType" value="no" data-invalid-container="recommend-type-error" required)
-                label.form-check-label(for="recommend-no") No I wouldn't
-              #recommend-type-error.invalid-feedback
-                span Please, select a value.
 
               h5.pt-4.font-weight-bold What would you like the other community members to know about #{user.profile.nickName}?
 
@@ -136,7 +126,7 @@ block content
                 .form-group.col-md-12
                   textarea#recommendation-desc.form-control(name="recommendationDesc" cols="30" rows="5" placeholder="Remember, stay positive please, the recommendations are public" required)
                   .invalid-feedback
-                    span Please, write a recommendations (30 to 200 signs).
+                    span Please, write a recommendations (30 to 300 signs).
 
             .modal-footer
               button.btn.btn-wel-pink(type="submit") Post the recommendation
@@ -162,7 +152,7 @@ block js
         || recommendationDesc.value === null
         || recommendationDesc.value === ''
         || recommendationDesc.value.length < 30 
-        || recommendationDesc.value.length > 200){
+        || recommendationDesc.value.length > 300){
           return false;
         }
         return true;

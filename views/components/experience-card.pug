@@ -22,10 +22,10 @@ a#experience-card(href=`/experience/${exp._id}`)
             else
               img.experience-card-item-paying-ico(src='/images/icon/icon-paying-yellow.svg' alt="Experience free icon")
           .experience-card-item-reco
-            if exp.nbRecommendation === undefined || exp.nbRecommendation === 0
+            if exp.recommendations === undefined || exp.recommendations.length === 0
               span New !
             else
-              span.experience-card-item-reco-nb #{exp.nbRecommendation} 
+              span.experience-card-item-reco-nb #{exp.recommendations.length} 
               span.experience-card-item-reco-ico.far.fa-smile.fa-2x
         if (isExpEditable || isExpViewable) && exp.creator._id.equals(locals.account._id)
           hr.mt-3.mb-3.p-0

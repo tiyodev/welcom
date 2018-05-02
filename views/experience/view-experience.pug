@@ -71,34 +71,89 @@ block content
         hr.exp-view-separation.mt-6.mb-6
 
         #exp-view-content-recommendations
-          h4.text-center.font-weight-bold What the travellers think about this experience:
-          if exp.recommendations
-            each recommendation in recommendations
-              include ../components/recommendation.pug
 
-          if exp.nbRecommendation !== undefined && exp.nbRecommendation !== null && exp.nbRecommendation > 0
-            h4.text-center Would you like to get more recommendations on your experience?
-          else
-            h4.text-center 
-              | Your experience has no recommendations yet.
+          if exp.recommendations && exp.recommendations.length > 0
+            h4.text-center.font-weight-bold What the travellers think about this experience:
+
+            each recommendation in exp.recommendations
+              include ../components/recommendation-exp.pug
+
+          if locals.account && exp.creator._id.equals(locals.account._id)
+            h3.pt-4.text-center Do you like to get more recommendations on your experience ?
+
+            p.mx-auto.w-75.pt-4.text-center 
+              | If you want more recommendations, you can ask your friends to register and give you one.
               br
-              | Would you like to get one ?
-              
-          p.mx-auto.w-75.pt-4.text-center 
-            | If you want more recommendations, you can ask your friends to register and give you one.
-            br
-            | Members don't need to book an experiences together to write each others recommendations.
-            br
-            | You too, if you know someone and want the community to trust them and their experiences
-            | like they deserve, juste give a recommendation. 
-            br
-            | It's the same for your friends or the members that know you: they can give a 
-            | recommendation to your experience to build trust!
+              | Members don't need to book an experiences together to write each others recommendations.
+              br
+              | If you know someone and want the community to trust them like they deserve, juste give a recommendation.
+              br
+              | It's the same for your friends or the members that know you: they can give you a recommendation to build trust!
+          else
+            h3.pt-4.text-center Do you feel like writing a recommendation ?
+
+            p.mx-auto.w-75.pt-4.text-center
+              | You don't need to live an experience to so. If you know the welcomer, or if you would like to 
+              | encourage him/her, you can write a recommendation to let other members know what you think.
+              br
+              | We want to let the members express themselves with kindness. 
+              br
+              | Recommendations build trust among the community!
+
+            if locals.account
+              .pt-4.pb-4.text-center
+                button.btn-wel-blue.pr-6.pl-6.btn(data-target="#write-recommendations-modal" data-toggle="modal" type="button") Write a recommendation
+            else
+              .exp-view-border-container.p-4
+                h3.text-center Please join or log in
+                p.text-center To write a recommendation, you have to be connected.
+                .row.justify-content-center.mx-auto
+                  .col-3
+                    button.gradient-rounded-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(data-target="#joinus" data-toggle="modal" type="button") Join us
+                  .col-3
+                    a.underline-yellow.text-uppercase.nav-link.text-gradient(data-target="#sign-in-modal" data-toggle="modal" href="#") Sign in
+
+          <!-- Write a recommendation -->
+          #write-recommendations-modal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="writeRecoModal")
+            .modal-dialog(role="document")
+              .modal-content
+                form#write-recommendations-modal-form.form-horizontal(name="writeRecommendation" action=`/experience/${exp._id}/recommendation/add` method='POST' novalidate)
+                  input(type='hidden', name='_csrf', value=_csrf)
+                  .wel-bg-blue.wel-color-white
+                    .row.modal-header.border-0
+                      .col-1
+                      .col-10.text-center
+                        h3.modal-title.m-auto  Write a recommendation about #{exp.title}
+                      .col-1
+                        button.close(type="button" data-dismiss="modal" aria-label="Close")
+                          span.wel-color-yellow(aria-hidden="true") X
+                  .modal-body
+                    .item.text-center
+                      p 
+                        | As a member of the community, you can write a recommendation about any other member
+                        | or even experience. The only rule is to be <b> positive </b> and <b> kind </b>, 
+                        | as the recommendations are <b> displayed publicity </b>.
+                        br
+                        | Recommendations help to <b> build trust </b> among us!
+                    
+                    hr.exp-view-separation
+
+                    h5.pt-4.font-weight-bold What would you like the other community members to know about this experience?
+
+                    .form-row
+                      .form-group.col-md-12
+                        textarea#recommendation-desc.form-control(name="recommendationDesc" cols="30" rows="5" placeholder="Remember, stay positive please, the recommendations are public" required)
+                        .invalid-feedback
+                          span Please, write a recommendations (30 to 300 signs).
+
+                  .modal-footer
+                    button.btn.btn-wel-pink(type="submit") Post the recommendation
+                    button.btn.btn-secondary(type="button" data-dismiss="modal") Close
 
       #exp-view-content-component-container.col-md-4.col-sm-8
         #exp-view-content-recommendation-component
-          if exp.nbRecommendation !== undefined && exp.nbRecommendation !== null && exp.nbRecommendation > 0
-            p.mt-4.m-0.p-4.exp-view-border-container.text-center X #{exp.nbRecommendation} positive recommendations
+          if exp.recommendations !== undefined && exp.recommendations !== null && exp.recommendations.length > 0
+            p.mt-4.m-0.p-4.exp-view-border-container.text-center X #{exp.recommendations.length} positive recommendations
           else
             p.mt-4.m-0.p-4.exp-view-border-container.text-center This experience is new
         #exp-view-content-booking-free-component
@@ -180,4 +235,51 @@ block js
         });
       }
     }
+    (function() {
+      const recommendationDesc = document.getElementById('recommendation-desc');
+
+        recommendationDesc.onkeyup = () => {
+          const isValid = validateRecommendationDesc();
+
+          if(isValid){
+            recommendationDesc.setCustomValidity('');
+          } else{
+            recommendationDesc.setCustomValidity("Please, write a recommendations (30 to 200 signs).");
+          }
+        }
+
+        function validateRecommendationDesc(){
+          if(recommendationDesc.value === undefined 
+          || recommendationDesc.value === null
+          || recommendationDesc.value === ''
+          || recommendationDesc.value.length < 30 
+          || recommendationDesc.value.length > 300){
+            return false;
+          }
+          return true;
+        };
+
+        // Add manual validation
+        let form = $("#write-recommendations-modal-form")[0];
+        if(form !== undefined || form !== null){
+          form.onsubmit = function(event){    
+
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+            } 
+
+            form.classList.add('was-validated');      
+          };
+        }
+
+        if(`#{isFromAddRecommendation}`){
+          $('#write-recommendations-modal').modal('show');
+        }
+
+        // Set valid data
+        setServerValidData(!{JSON.stringify(validData)});
+        // Set Error data
+        checkServerValidity(!{JSON.stringify(errors)}); 
+      })();
   script(type="text/javascript" src=`https://maps.googleapis.com/maps/api/js?key=${locals.googleApi}&callback=initMap` async defer)

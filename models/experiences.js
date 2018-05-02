@@ -34,6 +34,7 @@ const experienceSchema = new Schema({
   creator: { type: Schema.ObjectId, ref: 'user' },
   isCompleted: { type: Boolean, default: false },
   nbRecommendation: { type: Number, default: 0 },
+  recommendations: [{ type: Schema.ObjectId, ref: 'recommendations' }]
 }, { timestamps: true });
 
 const Experience = mongoose.model('Experience', experienceSchema);

@@ -7,16 +7,16 @@
       h4 #{recommendation.writer.profile.nickName || recommendation.writer.profile.firstName}#{recommendation.writer.profile.city !== undefined ? `, from ${recommendation.writer.profile.city}` : ''}
       
       if recommendation.isForExperience
-        h4.pt-3.green-txt Recommends #{recommendation.titleExperience}
+        h4.pt-3.green-txt Recommends #{exp.title}
       else if recommendation.isForProfile
-        h4.pt-3.green-txt Recommends #{user.profile.nickName}
+        h4.pt-3.green-txt Recommends #{exp.creator.profile.nickName}
 
       p.pt-3 #{recommendation.description}
 
-  if user._id.equals(locals.account._id) && (recommendation.response === undefined || recommendation.response.description === undefined || recommendation.response.description === '')
-    form#write-recommendations-response-form(name="writeRecommendationResponse" action=`/recommendation/${recommendation._id}/response/add` method='POST' novalidate)
+  if locals.account && exp.creator._id.equals(locals.account._id) && (recommendation.response === undefined || recommendation.response.description === undefined || recommendation.response.description === '')
+    form#write-recommendations-response-form(name="writeRecommendationResponse" action=`/recommendation/${recommendation._id}/response-exp/add` method='POST' novalidate)
       input(type='hidden', name='_csrf', value=_csrf)
-      input(type='hidden', name='userId', value=user._id)
+      input(type='hidden', name='expId', value=exp._id)
       .form-row.align-items-center
         .col-10
           textarea#recommendation-response-desc.form-control(name="recommendationResponseDesc" cols="30" rows="3" placeholder="Write an answer" required)
@@ -27,9 +27,9 @@
 
   if recommendation.response !== undefined && recommendation.response.description !== undefined && recommendation.response.description !== ''
     .recommendation-answer.d-flex.flex-row.align-items-center
-      img.recommendation-answer-profile-pic.rounded-circle(src=(user.profile.profilePic.picture !== undefined ? user.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
+      img.recommendation-answer-profile-pic.rounded-circle(src=(exp.creator.profile.profilePic.picture !== undefined ? exp.creator.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
       .m-4
-        h4 #{user.profile.nickName}'s answer :
+        h4 #{exp.creator.profile.nickName}'s answer :
         
         p.pt-2 #{recommendation.response.description}
 
@@ -40,7 +40,7 @@ block js
     (function() {
       const recommendationResponseDesc = document.getElementById('recommendation-response-desc');
 
-      if (recommendationResponseDesc){
+      if (recommendationResponseDesc) {
         recommendationResponseDesc.onkeyup = () => {
           const isValid = validateRecommendationResponseDesc();
 
@@ -49,7 +49,7 @@ block js
           } else{
             recommendationResponseDesc.setCustomValidity("Please, write a answer (30 to 300 signs).");
           }
-        }
+        }      
       }
 
       function validateRecommendationResponseDesc(){

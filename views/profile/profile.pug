@@ -43,7 +43,7 @@ block content
   #profile-content.m-auto
     .pt-4.pb-4.text-center
       h2 #{user.profile.nickName}
-      h4.green-txt X #{user.profile.nbRecommendation} positive recommendations
+      h4.green-txt X #{(user.profile.recommendations !== undefined && user.profile.recommendations.length > 0) ? user.profile.recommendations.length : "0"} positive recommendations
       p.pt-2 
         | #{shortPresentationSentence} 
         br 

@@ -3,14 +3,18 @@ extends ../layout
 block content
   #profile-carousel.carousel.slide(data-ride="carousel")
     .carousel-inner
-      - let i = 0;
-      each pic in user.profile.coverPic
-        if i++ === 0
-          .carousel-item.active
-            img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
-        else
-          .carousel-item
-            img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
+      if user.profile.coverPic.length === 0
+        .carousel-item.active
+          img.img-header-profile.d-block.w-100(src='/images/default-cover-pic.jpg' alt='Default profile cover')
+      else
+        - let i = 0;
+        each pic in user.profile.coverPic
+          if i++ === 0
+            .carousel-item.active
+              img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
+          else
+            .carousel-item
+              img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
 
     a.carousel-control-prev(href="#profile-carousel" role="button" data-slide="prev")
       span.carousel-control-prev-icon(aria-hidden="true")
@@ -39,7 +43,7 @@ block content
   #profile-content.m-auto.pb-6
     .pt-4.pb-4.text-center
       h2 #{user.profile.nickName}
-      h4.green-txt #{user.profile.nbRecommendation} positive recommendations
+      h4.green-txt #{(user.profile.recommendations !== undefined && user.profile.recommendations.length > 0) ? user.profile.recommendations.length : "0"} positive recommendations
       p.pt-2 
         | #{shortPresentationSentence} 
         br

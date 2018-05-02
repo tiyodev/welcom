@@ -77,8 +77,7 @@ exports.checkProfileData = [
 ];
 
 exports.checkRecommendationData = [
-  check('recommendationDesc', 'Please, write a recommendations (30 to 200 signs).').trim().isLength({ min: 30, max: 200 }),
-  check('recommendationType', 'Please select a value.').trim().isIn(['yes', 'dontKnow', 'no'])
+  check('recommendationDesc', 'Please, write a recommendations (30 to 200 signs).').trim().isLength({ min: 30, max: 300 })
 ];
 
 /**
@@ -423,8 +422,7 @@ const getUserById = (userId) => {
       resolve(user);
     })
     .populate({ 
-      path: 'profile.recommendations', 
-      select: 'isForProfile isFroExperience type description response.description response.date',
+      path: 'profile.recommendations',
       model: Recommendations, 
       populate: { 
         path: 'writer', 
@@ -441,7 +439,6 @@ const saveRecommendation = ({user, data, req}) => {
   newRecommendation._id = mongoose.Types.ObjectId();
   newRecommendation.isForProfile = true;
   newRecommendation.isForExperience = false;
-  newRecommendation.type = req.body.recommendationType;
   newRecommendation.description = req.body.recommendationDesc;
   newRecommendation.writer = req.account._id;
 
@@ -609,16 +606,26 @@ exports.getExperience = (req, res, next) => {
 
         const isConnectedUser = user._id.equals(req.account._id);
 
-        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
-        const data = {
-          nbWelcomerRecommendations: 2,
-          experiencesDesc: `I'm so proud to be a welcomer ! So much to do in my city, 
-            but I prefer is to do that and that and this with beers and flowers.`
-        };
-        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
-
-        Experience.find({ creator: user._id }, '_id creator coverPic title isFree nbRecommendation', (err, exps) => {
+        Experience.find({ creator: user._id }, '_id creator coverPic title isFree recommendations', (err, exps) => {
           if (err) { next(err); }
+
+          /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
+          let nbWelcomerRecommendations = 0;
+          let expsArray = [...exps];
+          let i = 0;
+
+          for(i; i < expsArray.length; i++){
+            if(expsArray[i].recommendations){
+              nbWelcomerRecommendations = nbWelcomerRecommendations + expsArray[i].recommendations.length;
+            }
+          }
+
+          const data = {
+            nbWelcomerRecommendations,
+            experiencesDesc: `I'm so proud to be a welcomer ! So much to do in my city, 
+              but I prefer is to do that and that and this with beers and flowers.`
+          };
+          /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
 
           res.render('profile/experience', {
             title: 'Experiences',
@@ -632,8 +639,8 @@ exports.getExperience = (req, res, next) => {
             isExpViewable: true
           });
         })
-          .populate({ path: 'interests', select: 'name _id', model: Interest })
-          .populate({ path: 'creator', select: 'profile.profilePic profile.firstName profile.nickName', model: User });
+        .populate({ path: 'interests', select: 'name _id', model: Interest })
+        .populate({ path: 'creator', select: 'profile.profilePic profile.firstName profile.nickName', model: User });
       }).populate({ path: 'profile.interests', select: 'name _id', model: Interest });
     } else { next(new Error('Wrong ID!')); }
   } else {

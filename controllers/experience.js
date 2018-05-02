@@ -2,6 +2,7 @@ const Experience = require('./../models/experiences');
 const Tag = require('./../models/interests');
 const User = require('./../models/users');
 const Interest = require('../models/interests');
+const Recommendations = require('./../models/recommendations');
 
 const { check, validationResult } = require('express-validator/check');
 const { sanitize, matchedData } = require('express-validator/filter');
@@ -128,6 +129,10 @@ exports.checkCreateExperienceData = [
     }
     return false;
   }),
+];
+
+exports.checkRecommendationData = [
+  check('recommendationDesc', 'Please, write a recommendations (30 to 200 signs).').trim().isLength({ min: 30, max: 300 })
 ];
 
 /**
@@ -471,6 +476,43 @@ exports.postEditExperience = (req, res, next) => {
   });
 };
 
+const getGeneralExperienceInformation = (exp) => {
+  return new Promise((resolve, reject) => {
+    const age = calcAge(exp.creator.profile.birthdate);
+    const shortPresentationSentence = `${exp.creator.profile.adjective} ${age} years old traveller from ${exp.creator.profile.city}`;
+    const genderAdv = exp.creator.profile.gender === 'man' ? 'He' : 'She';
+    let i = 0;
+    let spokenLanguages = '';
+    if (exp.creator.profile.spokenLanguages &&
+      Array.isArray(exp.creator.profile.spokenLanguages)) {
+      exp.creator.profile.spokenLanguages.forEach((elem) => {
+        if (i++ > 0) spokenLanguages += ' and ';
+        spokenLanguages += elem.language;
+      });
+    }
+    i = 0;
+    let learningLanguages = '';
+    if (exp.creator.profile.learningLanguages &&
+      Array.isArray(exp.creator.profile.learningLanguages)) {
+      exp.creator.profile.learningLanguages.forEach((elem) => {
+        if (i++ > 0) learningLanguages += ' and ';
+        learningLanguages += elem.language;
+      });
+    }
+
+    let shortLearnSentence = `${genderAdv} speaks ${spokenLanguages}`;
+
+    if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
+
+    const data = {
+      shortPresentationSentence, 
+      shortLearnSentence
+    };
+
+    resolve({exp, data});
+  });
+}
+
 /**
  * GET /
  * Get experience in read only
@@ -483,80 +525,116 @@ exports.getExperience = (req, res, next) => {
 
         if (exp === undefined || exp === null) next(new Error('Experience ID not found!'));
 
-        const age = calcAge(exp.creator.profile.birthdate);
-        const shortPresentationSentence = `${exp.creator.profile.adjective} ${age} years old traveller from ${exp.creator.profile.city}`;
-        const genderAdv = exp.creator.profile.gender === 'man' ? 'He' : 'She';
-        let i = 0;
-        let spokenLanguages = '';
-        if (exp.creator.profile.spokenLanguages &&
-          Array.isArray(exp.creator.profile.spokenLanguages)) {
-          exp.creator.profile.spokenLanguages.forEach((elem) => {
-            if (i++ > 0) spokenLanguages += ' and ';
-            spokenLanguages += elem.language;
+        getGeneralExperienceInformation(exp)
+        .then(({exp, data}) => {
+          res.render('experience/view-experience', {
+            title: 'View experience', 
+            exp, 
+            shortPresentationSentence: data.shortPresentationSentence, 
+            shortLearnSentence: data.shortLearnSentence
           });
-        }
-        i = 0;
-        let learningLanguages = '';
-        if (exp.creator.profile.learningLanguages &&
-          Array.isArray(exp.creator.profile.learningLanguages)) {
-          exp.creator.profile.learningLanguages.forEach((elem) => {
-            if (i++ > 0) learningLanguages += ' and ';
-            learningLanguages += elem.language;
-          });
-        }
-
-        let shortLearnSentence = `${genderAdv} speaks ${spokenLanguages}`;
-
-        if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
-
-        let recommendations = [];
-
-        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
-        recommendations = [{
-          profilePic: '/images/sampleProfilePic1.png',
-          displayName: 'Sam Gamji',
-          city: 'Detroit',
-          country: 'USA',
-          titleExperience: 'My First experience',
-          receiverDisplayName: '',
-          comment: `User is really cool person, and smells good! An amazing time
-        together for fucks sakes!`,
-        },
-        {
-          profilePic: '/images/sampleProfilePic2.png',
-          displayName: 'Xiu Lui',
-          city: 'Taipei',
-          country: 'Taiwan',
-          titleExperience: '',
-          receiverDisplayName: 'Thomasson',
-          comment: `User is really cool person, and smells good! An amazing time
-        together for fucks sakes! zadazd azd azd azdaz treg sdg sdg rtheth rtze r
-        qfdf xcvdfvd gzerg zt e rfd xdgf dgerre zr se sfsdgdfg erg ertg zr e fsdf
-         sdf tztzert zf zadazd azd azd azdaz treg sdg sdg rtheth rtze r qfdf
-        xcvdfvd gzerg zt e rfd xdgf dgerre zr se sfsdgdfg erg ertg zr e fsdf sdf
-        tztzert zf`,
-          anwser: {
-            profilePic: '/images/default-profile-pic.jpg',
-            displayName: 'Thomasson',
-            comment: `A pleasure amiga! We were realy lucky with the weather.
-        fsdf sdf ez gsf dsfsd fqfqae fzeg sdfsdf srf erhdgfsdrfze hersef sf
-        seqf e z gsdgsdf s ez ztzet sdfsdfg rgreteze z fdfs `
-          }
-        }];
-        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
-
-        res.render('experience/view-experience', {
-          title: 'View experience', exp, shortPresentationSentence, shortLearnSentence, recommendations
-        });
+        })
+        .catch(err => next(err))
       })
-        .populate({ path: 'interests', select: 'name _id', model: Tag })
-        .populate({ path: 'creator', select: '_id profile.birthdate profile.adjective profile.city profile.gender profile.spokenLanguages profile.learningLanguages profile.nickName profile.firstName', model: User });
+      .populate({ 
+        path: 'interests', 
+        select: 'name _id', 
+        model: Tag })
+      .populate({ 
+        path: 'creator', 
+        select: '_id profile.birthdate profile.adjective profile.city profile.gender profile.spokenLanguages profile.learningLanguages profile.nickName profile.firstName profile.profilePic', 
+        model: User })
+      .populate({ 
+        path: 'recommendations',
+        model: Recommendations, 
+        populate: { 
+          path: 'writer', 
+          select: '_id profile.nickName profile.firstName profile.city profile.profilePic', 
+          model: User
+        }
+      });
     } else { next(new Error('Wrong ID!')); }
   } else {
     next(new Error('Id not found'));
   }
 };
 
+/**
+ * POST /
+ * Experience Page / Recommendations
+ * Add a recommendation
+ */
+exports.postRecommendation = (req, res, next) => {
+  if (req.params.id) {
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      Experience.findById(req.params.id, (err, exp) => {
+        if (err) next(err);
+
+        if (exp === undefined || exp === null) next(new Error('Experience ID not found!'));
+
+        getGeneralExperienceInformation(exp)
+        .then(({exp, data}) => {
+          const errors = validationResult(req);
+
+          if (!errors.isEmpty()) {
+            res.render('experience/view-experience', {
+              title: 'View experience', 
+              exp, 
+              shortPresentationSentence: data.shortPresentationSentence, 
+              shortLearnSentence: data.shortLearnSentence,
+              errors: errors.array(),
+              validData: matchedData(req),
+              isFromAddRecommendation: true
+            });
+          }
+
+          // Add recommendations
+          const newRecommendation = new Recommendations();
+          newRecommendation._id = mongoose.Types.ObjectId();
+          newRecommendation.isForProfile = false;
+          newRecommendation.isForExperience = true;
+          newRecommendation.description = req.body.recommendationDesc;
+          newRecommendation.writer = req.account._id;
+
+          return newRecommendation
+          .save()
+          .then(() => new Promise((resolve, reject) => {
+            if(exp.recommendations === undefined || exp.recommendations === null){
+              exp.recommendations = [];
+            }
+
+            exp.recommendations.push(newRecommendation._id);
+
+            exp
+            .save()
+            .then( res.redirect(`/experience/${exp._id}`))
+            .catch( err => reject(err));
+          }));
+        })
+        .catch(err => next(err))
+      })
+      .populate({ 
+        path: 'interests', 
+        select: 'name _id', 
+        model: Tag })
+      .populate({ 
+        path: 'creator', 
+        select: '_id profile.birthdate profile.adjective profile.city profile.gender profile.spokenLanguages profile.learningLanguages profile.nickName profile.firstName', 
+        model: User })
+      .populate({ 
+        path: 'recommendations',
+        model: Recommendations, 
+        populate: { 
+          path: 'writer', 
+          select: '_id profile.nickName profile.firstName profile.city profile.profilePic', 
+          model: User
+        }
+      });
+    } else { next(new Error('Wrong ID!')); }
+  } else {
+    next(new Error('Id not found'));
+  }
+};
 
 /**
  * GET /
