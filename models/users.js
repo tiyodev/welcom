@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt-nodejs');
 // const crypto = require('crypto');
 const mongoose = require('mongoose');
 const interest = require('../models/interests');
+const recommendations = require('../models/recommendations');
 // const experience = require('../models/experiences');
 
 const Schema = mongoose.Schema;
@@ -66,7 +67,8 @@ const userSchema = new Schema({
     twitterLink: String,
     instagramLink: String,
     otherLink: String,
-    nbRecommendation: { type: Number, min: 0, default: 0 }
+    nbRecommendation: { type: Number, min: 0, default: 0 },
+    recommendations: [{ type: Schema.ObjectId, ref: 'recommendations' }],
   }
 }, { timestamps: true });
 

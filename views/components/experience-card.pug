@@ -27,7 +27,7 @@ a#experience-card(href=`/experience/${exp._id}`)
             else
               span.experience-card-item-reco-nb #{exp.nbRecommendation} 
               span.experience-card-item-reco-ico.far.fa-smile.fa-2x
-        if isExpEditable || isExpViewable
+        if (isExpEditable || isExpViewable) && exp.creator._id.equals(locals.account._id)
           hr.mt-3.mb-3.p-0
           .row.pr-2.pl-2.pb-2.no-gutters.justify-content-center.font-weight-bold
             if isExpEditable

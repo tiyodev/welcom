@@ -49,7 +49,8 @@ block content
       a.nav-item.nav-link(href=`/profile/${user._id}`) Profile
       a.nav-item.nav-link(href=`/profile/${user._id}/recommendation`) Recommendations
       a.nav-item.nav-link.active(href=`/profile/${user._id}/experience`) Experiences
-      a.nav-item.nav-link(href=`/profile/${user._id}/dashboard`) Dashboard
+      if locals.account._id.equals(user._id)
+        a.nav-item.nav-link(href=`/profile/${user._id}/dashboard`) Dashboard
 
     .pt-5.pb-4.text-center
       span #{data.displayName} has 

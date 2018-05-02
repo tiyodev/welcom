@@ -1,11 +1,15 @@
+// import { Promise } from 'mongoose';
+
 const languages = require('../data/language');
 const adjectives = require('../data/adjective');
+const mongoose = require('mongoose');
+const myFs = require('../config/myFs');
+
 const User = require('./../models/users');
 const Interest = require('../models/interests');
 const Experience = require('./../models/experiences');
 const Tag = require('./../models/interests');
-const mongoose = require('mongoose');
-const myFs = require('../config/myFs');
+const Recommendations = require('./../models/recommendations');
 
 const { check, validationResult } = require('express-validator/check');
 const { sanitize, matchedData } = require('express-validator/filter');
@@ -70,6 +74,11 @@ exports.checkProfileData = [
     require_valid_protocol: true,
     allow_underscores: false
   })
+];
+
+exports.checkRecommendationData = [
+  check('recommendationDesc', 'Please, write a recommendations (30 to 200 signs).').trim().isLength({ min: 30, max: 200 }),
+  check('recommendationType', 'Please select a value.').trim().isIn(['yes', 'dontKnow', 'no'])
 ];
 
 /**
@@ -400,6 +409,115 @@ exports.postDeleteProfilePic = (req, res, next) => {
 };
 
 
+
+const getUserById = (userId) => {
+  return new Promise((resolve, reject) => {
+    User.findById(userId, (err, user) => {
+      if (err) {
+        reject(err);
+      }
+      if (!user) { reject(new Error('Wrong ID!')); }
+
+      // console.log('ybo : ' + JSON.stringify(user));
+
+      resolve(user);
+    })
+    .populate({ 
+      path: 'profile.recommendations', 
+      select: 'isForProfile isFroExperience type description response.description response.date',
+      model: Recommendations, 
+      populate: { 
+        path: 'writer', 
+        select: '_id profile.nickName profile.firstName profile.city profile.profilePic', 
+        model: User
+      } 
+    });
+  });
+}
+
+const saveRecommendation = ({user, data, req}) => {
+  // Add recommendations
+  const newRecommendation = new Recommendations();
+  newRecommendation._id = mongoose.Types.ObjectId();
+  newRecommendation.isForProfile = true;
+  newRecommendation.isForExperience = false;
+  newRecommendation.type = req.body.recommendationType;
+  newRecommendation.description = req.body.recommendationDesc;
+  newRecommendation.writer = req.account._id;
+
+  return newRecommendation.save().then(() => new Promise((resolve, reject) => {
+    if(user.profile.recommendations === undefined || user.profile.recommendations === null){
+      user.profile.recommendations = [];
+    }
+
+    user.profile.recommendations.push(newRecommendation._id);
+
+    user.save().then( resolve({user, data}) ).catch( err => reject(err));
+  }));
+}
+
+const getGeneralProfileInformation = ({user, accountId}) => {
+  return new Promise((resolve, reject) => {
+    const age = calcAge(user.profile.birthdate);
+    const shortPresentationSentence = `${user.profile.adjective} ${age} years old traveller from ${user.profile.city}`;
+    const genderAdv = user.profile.gender === 'man' ? 'He' : 'She';
+    let i = 0;
+    let spokenLanguages = '';
+    if (user.profile.spokenLanguages && Array.isArray(user.profile.spokenLanguages)) {
+      user.profile.spokenLanguages.forEach((elem) => {
+        if (i++ > 0) spokenLanguages += ' and ';
+        spokenLanguages += elem.language;
+      });
+    }
+    i = 0;
+    let learningLanguages = '';
+    if (user.profile.learningLanguages && Array.isArray(user.profile.learningLanguages)) {
+      user.profile.learningLanguages.forEach((elem) => {
+        if (i++ > 0) learningLanguages += ' and ';
+        learningLanguages += elem.language;
+      });
+    }
+
+    let shortLearnSentence = `${genderAdv} speaks ${spokenLanguages}`;
+
+    if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
+
+    const isConnectedUser = user._id.equals(accountId);
+
+    /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
+    const recommendationDescription = 'Really happy that the travellers I meet from all over the world like my experiences that much! It\'s perfect.';
+    /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
+
+    const data = {
+      shortPresentationSentence, 
+      shortLearnSentence, 
+      isConnectedUser, 
+      recommendationDescription
+    };
+    resolve({user, data});
+  });
+}
+
+const checkAddRecommendationData = ({user, data, req, res}) => {
+  return new Promise((resolve, reject) => {
+    /** Test form errors */
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+      return res.render('profile/recommendation', {
+        title: 'Recommendations',
+        user,
+        data,
+        errors: errors.array(),
+        validData: matchedData(req),
+        isFromAddRecommendation: true
+      });
+    }
+
+    resolve({user, data});
+  });
+}
+
 /**
  * GET /
  * Profile Page / Recommendations
@@ -407,89 +525,48 @@ exports.postDeleteProfilePic = (req, res, next) => {
 exports.getRecommendation = (req, res, next) => {
   if (req.params.id) {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      User.findById(req.params.id, (err, user) => {
-        if (err) {
-          next(err);
-        }
-        if (!user) { next(new Error('Wrong ID!')); }
-
-        if (!user.profile.nbRecommendation) { user.profile.nbRecommendation = 0; }
-
-        const age = calcAge(user.profile.birthdate);
-        const shortPresentationSentence = `${user.profile.adjective} ${age} years old traveller from ${user.profile.city}`;
-        const genderAdv = user.profile.gender === 'man' ? 'He' : 'She';
-        let i = 0;
-        let spokenLanguages = '';
-        if (user.profile.spokenLanguages && Array.isArray(user.profile.spokenLanguages)) {
-          user.profile.spokenLanguages.forEach((elem) => {
-            if (i++ > 0) spokenLanguages += ' and ';
-            spokenLanguages += elem.language;
-          });
-        }
-        i = 0;
-        let learningLanguages = '';
-        if (user.profile.learningLanguages && Array.isArray(user.profile.learningLanguages)) {
-          user.profile.learningLanguages.forEach((elem) => {
-            if (i++ > 0) learningLanguages += ' and ';
-            learningLanguages += elem.language;
-          });
-        }
-
-        let shortLearnSentence = `${genderAdv} speaks ${spokenLanguages}`;
-
-        if (learningLanguages) { shortLearnSentence += `, and learns ${learningLanguages}`; }
-
-        const isConnectedUser = user._id.equals(req.account._id);
-
-        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
-        const data = {
-          recommendationDescription: 'Really happy that the travellers I meet from all over the world like my experiences that much! It\'s perfect.',
-        };
-
-        const recommendations = [];
-
-        // [{
-        //   profilePic: '/images/sampleProfilePic1.png',
-        //   displayName: 'Sam Gamji',
-        //   city: 'Detroit',
-        //   country: 'USA',
-        //   titleExperience: 'My First experience',
-        //   receiverDisplayName: '',
-        //   comment: 'User is really cool person, and smells good! An amazing time
-        // together for fucks sakes!',
-        //  },
-        //  {
-        //   profilePic: '/images/sampleProfilePic2.png',
-        //   displayName: 'Xiu Lui',
-        //   city: 'Taipei',
-        //   country: 'Taiwan',
-        //   titleExperience: '',
-        //   receiverDisplayName: 'Thomasson',
-        //   comment: 'User is really cool person, and smells good! An amazing time
-        // together for fucks sakes! zadazd azd azd azdaz treg sdg sdg rtheth rtze r
-        // qfdf xcvdfvd gzerg zt e rfd xdgf dgerre zr se sfsdgdfg erg ertg zr e fsdf
-        //  sdf tztzert zf zadazd azd azd azdaz treg sdg sdg rtheth rtze r qfdf
-        // xcvdfvd gzerg zt e rfd xdgf dgerre zr se sfsdgdfg erg ertg zr e fsdf sdf
-        // tztzert zf',
-        //   anwser: {
-        //     profilePic: '/images/default-profile-pic.jpg',
-        //     displayName: 'Thomasson',
-        //     comment: 'A pleasure amiga! We were realy lucky with the weather.
-        // fsdf sdf ez gsf dsfsd fqfqae fzeg sdfsdf srf erhdgfsdrfze hersef sf
-        // seqf e z gsdgsdf s ez ztzet sdfsdfg rgreteze z fdfs '
-        //   }
-        //  }];
-        /** ***************** TEMP DATA => JUST FOR FRONT ************************** */
-
+      
+      getUserById(req.params.id)
+      .then((user) => getGeneralProfileInformation({user: user, accountId: req.account._id}))
+      .then(({user, data}) => {
         res.render('profile/recommendation', {
-          title: 'Recommendations', data, recommendations, user, shortPresentationSentence, shortLearnSentence, isConnectedUser
+          title: 'Recommendations', 
+          user, 
+          data
         });
-      });
+      })
+      .catch(err => next(err));
+
     } else { next(new Error('Wrong ID!')); }
   } else {
     next(new Error('Id not found'));
   }
 };
+
+/**
+ * POST /
+ * Profile Page / Recommendations
+ * Add a recommendation
+ */
+exports.postRecommendation = (req, res, next) => {
+  if (req.params.id) {
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+
+        getUserById(req.params.id)
+        .then((user) => getGeneralProfileInformation({user: user, accountId: req.account._id}))
+        .then(({user, data}) => checkAddRecommendationData({user: user, data: data, req: req, res: res}))
+        .then(({user, data}) => saveRecommendation({user, data, req}))
+        .then(({user, data}) => {
+          res.redirect(`/profile/${user._id}/recommendation`);
+        })
+        .catch(err => next(err));
+
+    } else { next(new Error('Wrong ID!')); }
+  } else {
+    next(new Error('Id not found'));
+  }
+};
+
 
 /**
  * GET /

@@ -41,21 +41,23 @@ block content
       h2 #{user.profile.nickName}
       h4.green-txt #{user.profile.nbRecommendation} positive recommendations
       p.pt-2 
-        | #{shortPresentationSentence} 
+        | #{data.shortPresentationSentence} 
         br
-        | #{shortLearnSentence}
+        | #{data.shortLearnSentence}
 
     nav.nav.nav-pills.nav-fill.nav-primary.font-weight-bold
       a.nav-item.nav-link(href=`/profile/${user._id}`) Profile
       a.nav-item.nav-link.active(href=`/profile/${user._id}/recommendation`) Recommendations
       a.nav-item.nav-link(href=`/profile/${user._id}/experience`) Experiences
-      a.nav-item.nav-link(href=`/profile/${user._id}/dashboard`) Dashboard
+      if locals.account._id.equals(user._id)
+        a.nav-item.nav-link(href=`/profile/${user._id}/dashboard`) Dashboard
 
     .pt-5.text-center
       p #{data.recommendationDescription}
 
-    each recommendation in recommendations
-      include ../components/recommendation.pug
+    if user.profile.recommendations
+      each recommendation in user.profile.recommendations
+        include ../components/recommendation.pug
 
     if data.isConnectedUser
       hr.profile-separation
@@ -80,7 +82,7 @@ block content
         | Recommendations build trust among the community!
 
       .pt-4.pb-4.text-center
-        button.btn-wel-blue.pr-6.pl-6.btn(type="button") Write a recommendation
+        button.btn-wel-blue.pr-6.pl-6.btn(data-target="#write-recommendations-modal" data-toggle="modal" type="button") Write a recommendation
 
       hr.profile-separation
 
@@ -89,3 +91,103 @@ block content
       .pt-4.text-center
         button.pr-6.pl-6.btn.btn-outline-dark(type="button") Contact me
     
+    <!-- Write a recommendation -->
+    #write-recommendations-modal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="writeRecoModal")
+      .modal-dialog(role="document")
+        .modal-content
+          form#write-recommendations-modal-form.form-horizontal(name="writeRecommendation" action=`/profile/${user._id}/recommendation/add` method='POST' novalidate)
+            input(type='hidden', name='_csrf', value=_csrf)
+            .wel-bg-blue.wel-color-white
+              .row.modal-header.border-0
+                .col-1
+                .col-10.text-center
+                  h3.modal-title.m-auto  Write a recommendation about #{user.profile.nickName}
+                .col-1
+                  button.close(type="button" data-dismiss="modal" aria-label="Close")
+                    span.wel-color-yellow(aria-hidden="true") X
+            .modal-body
+              .item.text-center
+                p 
+                  | As a member of the community, you can write a recommendation about any other member
+                  | or even experience. The only rule is to be <b> positive </b> and <b> kind </b>, 
+                  | as the recommendations are <b> displayed publicity </b>.
+                  br
+                  | Recommendations help to <b> build trust </b> among us!
+              
+              hr.profile-separation
+              
+              h5.font-weight-bold Would you recommend #{user.profile.nickName}?
+
+              .form-check.form-check-inline
+                input#recommend-yes.form-check-input(type="radio" name="recommendationType" value="yes" data-invalid-container="recommend-type-error" required)
+                label.form-check-label(for="recommend-yes") Yes I would
+              .form-check.form-check-inline
+                input#recommend-dont-know.form-check-input(type="radio" name="recommendationType" value="dontKnow" data-invalid-container="recommend-type-error" required)
+                label.form-check-label(for="recommend-dont-know") I don't really know
+              .form-check.form-check-inline
+                input#recommend-no.form-check-input(type="radio" name="recommendationType" value="no" data-invalid-container="recommend-type-error" required)
+                label.form-check-label(for="recommend-no") No I wouldn't
+              #recommend-type-error.invalid-feedback
+                span Please, select a value.
+
+              h5.pt-4.font-weight-bold What would you like the other community members to know about #{user.profile.nickName}?
+
+              .form-row
+                .form-group.col-md-12
+                  textarea#recommendation-desc.form-control(name="recommendationDesc" cols="30" rows="5" placeholder="Remember, stay positive please, the recommendations are public" required)
+                  .invalid-feedback
+                    span Please, write a recommendations (30 to 200 signs).
+
+            .modal-footer
+              button.btn.btn-wel-pink(type="submit") Post the recommendation
+              button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+
+block js
+  script.
+    (function() {
+      const recommendationDesc = document.getElementById('recommendation-desc');
+
+      recommendationDesc.onkeyup = () => {
+        const isValid = validateRecommendationDesc();
+
+        if(isValid){
+          recommendationDesc.setCustomValidity('');
+        } else{
+          recommendationDesc.setCustomValidity("Passwords don't match all rules.");
+        }
+      }
+
+      function validateRecommendationDesc(){
+        if(recommendationDesc.value === undefined 
+        || recommendationDesc.value === null
+        || recommendationDesc.value === ''
+        || recommendationDesc.value.length < 30 
+        || recommendationDesc.value.length > 200){
+          return false;
+        }
+        return true;
+      };
+
+      // Add manual validation
+      let form = $("#write-recommendations-modal-form")[0];
+      if(form !== undefined || form !== null){
+        form.onsubmit = function(event){    
+
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          } 
+
+          form.classList.add('was-validated');      
+        };
+      }
+
+      if(`#{isFromAddRecommendation}`){
+        $('#write-recommendations-modal').modal('show');
+      }
+
+      // Set valid data
+      setServerValidData(!{JSON.stringify(validData)});
+      // Set Error data
+      checkServerValidity(!{JSON.stringify(errors)}); 
+    })();

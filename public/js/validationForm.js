@@ -66,7 +66,12 @@ function checkServerValidity(errors) {
           document.getElementById(invalidContainerAttr).style.display = 'none';
         }
 
-        if (input) {
+        if(input.type === "radio"){
+          [...document.getElementsByName(error.param)].forEach((elem, index, array) => {
+            elem.classList.add('is-invalid');
+            elem.value = error.value;
+          });
+        } else if (input) {
           input.classList.add('is-invalid');
           input.value = error.value;
         }

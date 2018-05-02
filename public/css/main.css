@@ -809,12 +809,14 @@ button {
   height: 1px !important; }
 
 .recommendation-profile-pic {
-  height: 150px; }
+  height: 150px;
+  width: 150px; }
 
 .recommendation-answer {
   margin-left: 200px; }
   .recommendation-answer-profile-pic {
-    height: 125px; }
+    height: 125px;
+    width: 125px; }
 
 #experience-card {
   color: #000000;

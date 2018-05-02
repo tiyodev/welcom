@@ -2,23 +2,81 @@
   hr.mt-4.mb-4
 
   .pl-6.d-flex.flex-row.align-items-center
-    img.recommendation-profile-pic.rounded-circle(src=recommendation.profilePic alt="Profile picture")
+    img.recommendation-profile-pic.rounded-circle(src=(recommendation.writer.profile.profilePic.picture !== undefined ? recommendation.writer.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
     .m-4
-      h4 #{recommendation.displayName}, from #{recommendation.city}, #{recommendation.country}
+      h4 #{recommendation.writer.profile.nickName || recommendation.writer.profile.firstName}#{recommendation.writer.profile.city !== undefined ? `, from ${recommendation.writer.profile.city}` : ''}
       
-      if recommendation.titleExperience
+      if recommendation.isForExperience
         h4.pt-3.green-txt Recommends #{recommendation.titleExperience}
-      else
-        h4.pt-3.green-txt Recommends #{recommendation.receiverDisplayName}
+      else if recommendation.isForProfile
+        h4.pt-3.green-txt Recommends #{user.profile.nickName}
 
-      p.pt-3 #{recommendation.comment}
+      p.pt-3 #{recommendation.description}
 
-  if recommendation.anwser !== undefined
+  if user._id.equals(locals.account._id) && (recommendation.response === undefined || recommendation.response.description === undefined || recommendation.response.description === '')
+    form#write-recommendations-response-form(name="writeRecommendationResponse" action=`/recommendation/${recommendation._id}/response/add` method='POST' novalidate)
+      input(type='hidden', name='_csrf', value=_csrf)
+      input(type='hidden', name='userId', value=user._id)
+      .form-row.align-items-center
+        .col-10
+          textarea#recommendation-response-desc.form-control(name="recommendationResponseDesc" cols="30" rows="3" placeholder="Write an answer" required)
+          .invalid-feedback
+            span Please, write a answer (30 to 200 signs).
+        .col-2
+          button.btn.btn-wel-pink(type="submit") Post
+
+  if recommendation.response !== undefined && recommendation.response.description !== undefined && recommendation.response.description !== ''
     .recommendation-answer.d-flex.flex-row.align-items-center
-      img.recommendation-answer-profile-pic.rounded-circle(src=recommendation.anwser.profilePic alt="Profile picture")
+      img.recommendation-answer-profile-pic.rounded-circle(src=(user.profile.profilePic.picture !== undefined ? user.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
       .m-4
-        h4 #{recommendation.anwser.displayName}'s answer :
+        h4 #{user.profile.nickName}'s answer :
         
-        p.pt-2 #{recommendation.anwser.comment}
+        p.pt-2 #{recommendation.response.description}
 
   hr.mt-4.mb-4
+
+block js
+  script.
+    (function() {
+      const recommendationResponseDesc = document.getElementById('recommendation-response-desc');
+
+      recommendationResponseDesc.onkeyup = () => {
+        const isValid = validateRecommendationResponseDesc();
+
+        if(isValid){
+          recommendationResponseDesc.setCustomValidity('');
+        } else{
+          recommendationResponseDesc.setCustomValidity("Please, write a answer (30 to 200 signs).");
+        }
+      }
+
+      function validateRecommendationResponseDesc(){
+        if(recommendationResponseDesc.value === undefined 
+        || recommendationResponseDesc.value === null
+        || recommendationResponseDesc.value === ''
+        || recommendationResponseDesc.value.length < 30 
+        || recommendationResponseDesc.value.length > 200){
+          return false;
+        }
+        return true;
+      };
+
+      // Add manual validation
+      let form = $("#write-recommendations-response-form")[0];
+      if(form !== undefined || form !== null){
+        form.onsubmit = function(event){    
+
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          } 
+
+          form.classList.add('was-validated');      
+        };
+      }
+
+      // Set valid data
+      setServerValidData(!{JSON.stringify(validData)});
+      // Set Error data
+      checkServerValidity(!{JSON.stringify(errors)}); 
+    })();

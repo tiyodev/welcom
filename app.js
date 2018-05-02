@@ -38,6 +38,7 @@ const profile = require('./routes/profile');
 const tags = require('./routes/tags');
 const welcomer = require('./routes/welcomer');
 const experience = require('./routes/experience');
+const recommendation = require('./routes/recommendation');
 
 /**
  * Create Express server.
@@ -121,6 +122,7 @@ app.use('/profile', profile);
 app.use('/experience', experience);
 app.use('/tags', tags);
 app.use('/users', users);
+app.use('/recommendation', recommendation);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

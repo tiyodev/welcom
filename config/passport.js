@@ -16,12 +16,10 @@ const Interest = require('../models/interests');
 
 
 passport.serializeUser((user, done) => {
-  console.log('serializeUser');
   done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-  console.log('deserializeUser');
   User.findOne({ _id: id, isActive: true }, (err, user) => {
     done(err, user);
   }).populate({ path: 'profile.interests', select: 'name _id', model: Interest });
@@ -31,7 +29,6 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-  console.log('LocalStrategy');
   User.findOne({ email: email.toLowerCase() }, (err, user) => {
     if(err) { return done(err); }
     if (!user) {

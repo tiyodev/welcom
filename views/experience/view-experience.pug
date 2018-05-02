@@ -72,8 +72,9 @@ block content
 
         #exp-view-content-recommendations
           h4.text-center.font-weight-bold What the travellers think about this experience:
-          each recommendation in recommendations
-            include ../components/recommendation.pug
+          if exp.recommendations
+            each recommendation in recommendations
+              include ../components/recommendation.pug
 
           if exp.nbRecommendation !== undefined && exp.nbRecommendation !== null && exp.nbRecommendation > 0
             h4.text-center Would you like to get more recommendations on your experience?
