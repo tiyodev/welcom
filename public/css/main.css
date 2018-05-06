@@ -27,7 +27,7 @@
   background-color: #868686; }
 
 .wel-color-white {
-  color: #ffffff !important; }
+  color: #ffffff; }
 
 .wel-color-blue-night {
   color: #0a1235; }
@@ -35,13 +35,34 @@
 .wel-color-yellow {
   color: #ffd14e; }
 
+.wel-color-grey {
+  color: #7c8695; }
+
+.wel-color-grey-dark {
+  color: #565a5c; }
+
+.wel-border-bottom-grey {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.0625); }
+
+.wel-border-top-grey {
+  border-top: 1px solid rgba(0, 0, 0, 0.0625) !important; }
+
+.fw-500 {
+  font-weight: 500; }
+
+.fsz-xs {
+  font-size: .75rem; }
+
+.fsz-sm {
+  font-size: .87rem; }
+
 button {
   cursor: pointer; }
 
 .gradient-rounded-btn {
   font-size: 13,76pt;
   background: linear-gradient(to right, #dc5770, #0a1235);
-  color: white;
+  color: white !important;
   border: none;
   border-radius: 20px;
   height: 40px;
@@ -756,6 +777,70 @@ button {
   border: none;
   width: 60%; }
 
+.wel-counter-dropdown-icon {
+  color: #868686;
+  display: block;
+  line-height: 65px;
+  min-height: 65px;
+  padding: 0 15px; }
+
+.wel-counter-dropdown-counter {
+  background-color: #ffd14e;
+  border-radius: 50px;
+  color: #000000;
+  font-size: 10px;
+  line-height: 1;
+  padding: 5px 7.5px;
+  position: absolute;
+  left: 50px;
+  top: 15px;
+  font-weight: bold; }
+
+.wel-counter-dropdown a {
+  text-decoration: none; }
+
+.wel-counter-dropdown-content {
+  min-width: 350px;
+  padding: 0;
+  left: auto;
+  right: 0; }
+  .wel-counter-dropdown-content-title {
+    color: #000000;
+    font-weight: 600;
+    font-size: .87rem; }
+  .wel-counter-dropdown-content-angle-ico {
+    top: 6px;
+    position: relative; }
+  .wel-counter-dropdown-content-item {
+    overflow: hidden;
+    overflow-anchor: none;
+    -ms-overflow-style: none;
+    touch-action: auto;
+    font-size: .87rem;
+    list-style: none;
+    position: relative;
+    overflow-y: auto; }
+    .wel-counter-dropdown-content-item a:hover {
+      background-color: #f4f4f4; }
+    .wel-counter-dropdown-content-item-peers {
+      text-decoration: none;
+      box-sizing: border-box;
+      height: auto;
+      max-width: 100%;
+      margin: 0;
+      padding: 0; }
+    .wel-counter-dropdown-content-item-peer {
+      display: block;
+      height: auto;
+      flex: 0 0 auto; }
+      .wel-counter-dropdown-content-item-peer img {
+        max-width: none;
+        width: 3rem;
+        height: 50px;
+        width: 50px; }
+      .wel-counter-dropdown-content-item-peer-greed {
+        flex: 1 1 auto; }
+
 /************** This file define colors use for welcom ***************/
 #footer-content {
   background-color: #0a1235; }
@@ -1027,6 +1112,54 @@ button {
       position: relative;
       left: -35px;
       content: "✖"; }
+
+.messaging-border-right {
+  border-right: solid 2px #ebebeb; }
+
+.messaging-card-img-200 {
+  height: 150px;
+  width: 150px; }
+
+.messaging-card-img {
+  height: 100px;
+  width: 100px; }
+
+.messaging-card-container {
+  margin-top: -3px;
+  border: solid 3px #ebebeb; }
+  .messaging-card-container a {
+    text-decoration: none;
+    color: #000000; }
+
+.messaging-card-text {
+  border: solid 3px #ebebeb; }
+  .messaging-card-text-new {
+    border: solid 3px #ffd14e; }
+
+.messaging-message-container {
+  border-top: solid 2px #ebebeb; }
+
+.messaging-message-card-img {
+  height: 75px;
+  width: 75px; }
+
+.messaging-send-btn {
+  height: 125px;
+  width: 100px; }
+
+.messaging-send-input {
+  min-height: 125px;
+  height: 125px;
+  max-height: 125px; }
+
+.messaging-back-link {
+  color: #000000; }
+
+.pink-text {
+  color: #dc5770; }
+
+.grey-text {
+  color: #868686; }
 
 /*************** Override font family *************************************************/
 p, a, span {

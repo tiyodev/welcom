@@ -212,7 +212,35 @@ block content
             .mt-4.p-4.exp-view-border-container.text-center
               h4 Do you have a question ?
               .pt-4.text-center
-                a.pr-6.pl-6.btn.btn-wel-pink.font-weight-bold(href="") Send a message
+                button.pr-6.pl-6.btn.btn-wel-pink(data-target="#send-msg-modal" data-toggle="modal" type="button") Send a message
+
+            <!-- Write a recommendation -->
+            #send-msg-modal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="sendMessage")
+              .modal-dialog(role="document")
+                .modal-content
+                  form#send-msg-modal-form.form-horizontal(name="sendMessage" action=`/messaging/${exp.creator._id}/message/send` method='POST' novalidate)
+                    input(type='hidden', name='_csrf', value=_csrf)
+                    .wel-bg-blue.wel-color-white
+                      .row.modal-header.border-0
+                        .col-1
+                        .col-10.text-center
+                          h3.modal-title.m-auto  Send a message to #{exp.creator.profile.nickName}
+                        .col-1
+                          button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span.wel-color-yellow(aria-hidden="true") X
+                    .modal-body
+                      .form-row
+                        .form-group.col-md-12
+                          label(for="messageInput") Please write here.
+                          textarea#send-msg-modal-input.form-control(name="messageInput" cols="30" rows="5" required)
+                          small After sending, you can find this conversation in your messages.
+                          .invalid-feedback
+                            span Please, write a message (2 to 500 signs).
+
+                    .modal-footer
+                      button.btn.btn-wel-pink(type="submit") Send
+                      button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+
         if locals.account && locals.account._id.equals(exp.creator._id)
           #exp-view-content-edit-exp-component
             .mt-4.p-4.text-center

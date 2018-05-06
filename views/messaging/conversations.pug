@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+  .wel-bg-blue.wel-color-white.p-6
+    h1.text-center Conversations
+  
+  .pb-6.pt-6.wel-bg-grey-light
+    .container.wel-bg-white.p-6
+      .row.pb-4.justify-content-center
+        h3.text-center Messages
+      .row
+        .col-6.messaging-border-right
+          p
+            | The purpose of Welcom' is to make <b>the members meet and
+            | share.</b> For that, we paid a lot of attention to the messaging system.
+            br
+            | It is organized by <b>conversations</b>: each conversation is unique with only 
+            | one other member (loke on Messenger or Whatsapp).
+            br
+            | To <b>start a new conversation</b>, use the "<b>contact</b>" buttons on profiles or experiences.
+        .col-6
+          p
+            | Of course, you can <b>exchange your contact details</b> (such as phone number or email)
+            | when you <b>trust</b> the person you are talking to; we do not censor anything
+            | (we are not AirBnb).
+            br
+            br
+            | If you want more messaging features in future versions (like sending photos or GIFs, 
+            | archiving a conversation ...) Just tell us!
+    .container.wel-bg-white.p-6.mt-6
+      .row.pb-4.justify-content-center
+        h3.text-center Your conversations
+      .row
+        .col-12
+          each conv in conversations
+            include ../components/conversation-card

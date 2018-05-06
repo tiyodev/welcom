@@ -22,10 +22,55 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
             a.nav-link.btn.gradient-rounded-btn.text-uppercase.wel-color-white(href="/experience/list" role="button") Experiences
           li.nav-item.m-auto.pl-2.pr-2
             a.underline-yellow.text-uppercase.nav-link(href="/readblog") Read our blog
-          li.nav-item.m-auto.pl-2.pr-2
-            a#message-icon.nav-link(href="#")
-              .far.fa-envelope-open.fa-2x
-              span.badge.badge-pill 5
+
+          li.nav-item.m-auto.pl-3.pr-5.pt-2.position-relative.notifications.wel-counter-dropdown
+            - let nbNewMsg = 0;
+            - locals.headerConversations.forEach((item) => {
+            -   if(item.firstParticipant.equals(locals.account._id)){
+            -     if(item.secondParticipantHasNewMessage) nbNewMsg++;
+            -   } else if(item.secondParticipant.equals(locals.account._id)){
+            -     if(item.firstParticipantHasNewMessage) nbNewMsg++;
+            -   }
+            -  })
+            if nbNewMsg > 0
+              span.wel-counter-dropdown-counter #{nbNewMsg}
+            a.wel-counter-dropdown-icon(href="" data-toggle="dropdown" aria-expanded="true")
+              i.fa-2x.far.fa-envelope
+            ul.wel-counter-dropdown-content.dropdown-menu
+              li.p-3.wel-border-bottom-grey.text-center
+                i.mr-3.far.fa-envelope
+                span.wel-counter-dropdown-content-title Messages
+              li
+                ul.wel-counter-dropdown-content-menu.wel-counter-dropdown-content-item.p-0.m-0
+                  if locals.headerConversations !== undefined && locals.headerConversations != null && locals.headerConversations.length > 0
+                    each conv in locals.headerConversations
+                      - const displayParticipant = conv.firstParticipant._id.equals(locals.account._id) ? conv.secondParticipant : conv.firstParticipant;
+                      - const msgSort = conv.messages.sort( (a,b) => b.date - a.date);
+                      - const lastMsgText = msgSort[0].text.length > 50 ? `${msgSort[0].text.substring(0,50)}...` : msgSort[0].text;
+                      li
+                        a.p-3.d-flex.d-flex-row.justify-content-center.align-items-start.flex-nowrap.wel-border-bottom-grey.wel-header-dropdown-item-peers(href=`/messaging/conversations/${conv._id}`) 
+                          .wel-counter-dropdown-content-item-peer.mr-3
+                            img.rounded-circle(src=(displayParticipant.profile.profilePic.picture !== undefined ? displayParticipant.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
+                          .wel-counter-dropdown-content-item-peer.wel-counter-dropdown-content-item-peer-greed
+                            div
+                              .wel-counter-dropdown-content-item-peers.mb-1.justify-content-between.flex-nowrap.d-flex.d-flex-row
+                                .wel-counter-dropdown-content-item-peer.wel-color-grey-dark
+                                  p.fw-500.mb-0 #{displayParticipant.profile.nickName} 
+                                .wel-counter-dropdown-content-item-peer.wel-color-grey-dark
+                                  small.relative-date.fsz-xs(data-date=msgSort[0].date)
+                              .wel-color-grey.fsz-sm
+                                if !msgSort[0].sender.equals(locals.account._id) && !msgSort[0].isRead
+                                  span.font-weight-bold #{lastMsgText}
+                                else
+                                  span #{lastMsgText}
+                                  
+              li.pr-4.pl-4.pb-3.pt-2.text-center.wel-border-top-grey
+                a(href="/messaging/conversations")
+                  .pl-3.d-flex.d-flex-row.align-items-center.justify-content-center(href="") 
+                    span View all conversations 
+                      span.ml-2.wel-counter-dropdown-content-angle-ico
+                        i.fa-2x.fas.fa-angle-right
+
           li.nav-item.m-auto.dropdown
             a#navbarDropdown.nav-link(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
               img#header-profile-picture.rounded-circle(src=(locals.account.profile.profilePic.picture !== undefined ? locals.account.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
@@ -168,6 +213,11 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
 
 script.
   (function() {
+    let relativeDateArray = document.getElementsByClassName('relative-date');
+    for(item of relativeDateArray){
+      item.innerText = relativeDate(new Date(item.attributes["data-date"].value));
+    }
+
     const password = document.getElementById("join-us-password")
     const confirm_password = document.getElementById("join-us-password-confirm");
 

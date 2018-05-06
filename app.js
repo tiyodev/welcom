@@ -17,6 +17,8 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const errorHandler = require('./config/error-handler');
 
+const messagingController = require('./controllers/messaging');
+
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
@@ -39,6 +41,7 @@ const tags = require('./routes/tags');
 const welcomer = require('./routes/welcomer');
 const experience = require('./routes/experience');
 const recommendation = require('./routes/recommendation');
+const messaging = require('./routes/messaging');
 
 /**
  * Create Express server.
@@ -100,7 +103,17 @@ app.use((req, res, next) => {
   res.locals.recaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY;
   res.locals.googleApi = process.env.GOOGLE_API;
   res.locals.googleApiGeocode = process.env.GOOGLE_API_GEOCODE;
-  next();
+
+  if(req.account){
+    // Get last 3 messages
+    messagingController.getLastUpdateConversationsByUserIdAndNbLast(req.account._id, 3)
+    .then((conversations) => {
+      res.locals.headerConversations = conversations;
+      next();
+    })
+  } else{
+    next();
+  }
 });
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page
@@ -123,6 +136,7 @@ app.use('/experience', experience);
 app.use('/tags', tags);
 app.use('/users', users);
 app.use('/recommendation', recommendation);
+app.use('/messaging', messaging);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

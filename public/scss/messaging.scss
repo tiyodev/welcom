@@ -1,0 +1,71 @@
+.messaging{
+  &-border-right{
+    border-right: solid 2px $wel-grey-middle-light;
+  }
+
+  &-card{
+    &-img-200{
+      height: 150px;
+      width: 150px;
+    }
+
+    &-img{
+      height: 100px;
+      width: 100px;
+    }
+
+    &-container{
+      margin-top: -3px;
+      border: solid 3px $wel-grey-middle-light;
+
+      a{
+        text-decoration: none;
+        color: $wel-black;
+      }
+    }
+
+    &-text{
+      border: solid 3px $wel-grey-middle-light;
+
+      &-new{
+        border: solid 3px $wel-yellow;
+      }
+    }
+  }
+
+  &-message {
+    &-container{
+      border-top: solid 2px $wel-grey-middle-light;
+    }
+
+    &-card-img{
+      height: 75px;
+      width: 75px;
+    }
+  }
+
+  &-send {
+    &-btn{
+      height: 125px;
+      width: 100px;
+    }
+
+    &-input{
+      min-height: 125px;
+      height: 125px;
+      max-height: 125px;
+    }
+  }
+
+  &-back-link{
+    color: $wel-black;
+  }
+}
+
+.pink-text{
+  color: $wel-pink;
+}
+
+.grey-text{
+  color: $wel-grey;
+}

@@ -34,7 +34,7 @@
 }
 
 .wel-color-white{
-  color: $wel-white !important;
+  color: $wel-white;
 }
 
 .wel-color-blue-night{
@@ -45,6 +45,34 @@
   color: $wel-yellow;
 }
 
+.wel-color-grey{
+  color: $wel-text-grey;
+}
+
+.wel-color-grey-dark{
+  color: $wel-text-grey-dark;
+}
+
+.wel-border-bottom-grey{
+  border-bottom: 1px solid rgba(0,0,0,.0625);
+}
+
+.wel-border-top-grey{
+  border-top: 1px solid rgba(0,0,0,.0625) !important;
+}
+
+.fw-500{
+  font-weight: 500;
+}
+
+.fsz-xs{
+  font-size: .75rem;
+}
+
+.fsz-sm{
+  font-size: .87rem;
+}
+
 button{
   cursor: pointer;
 }
@@ -53,7 +81,7 @@ button{
   font-size: 13,76pt;
 
   background: linear-gradient(to right, $wel-pink, $wel-blue);
-  color: white;
+  color: white !important;
 
   border: none;
   border-radius:20px;

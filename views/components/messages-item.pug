@@ -1,0 +1,32 @@
+.container.messaging-message-container
+  if msg.sender._id.equals(locals.account._id)
+    .d-flex.flex-row.align-items-center
+      .p-2
+        .d-flex.flex-column
+          .p-0.text-center
+            img.messaging-message-card-img.rounded-circle(src=(msg.sender.profile.profilePic.picture !== undefined ? msg.sender.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
+          .p-0.text-center
+            small.font-weight-bold.grey-text.relative-date(data-date=msg.date)
+      .p-2
+        p.markup #{msg.text}
+  else
+    .d-flex.flex-row.align-items-center.flex-row-reverse
+      .p-2
+        .d-flex.flex-column
+          .p-0.text-center
+            img.messaging-message-card-img.rounded-circle(src=(msg.sender.profile.profilePic.picture !== undefined ? msg.sender.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
+          .p-0.text-center
+            small.font-weight-bold.grey-text.relative-date(data-date=msg.date)
+      .p-2
+        if msg.isRead
+          p.markup #{msg.text}
+        else
+          p.markup.font-weight-bold #{msg.text}
+
+script.
+  (function() {
+    let relativeDateArray = document.getElementsByClassName('relative-date');
+    for(item of relativeDateArray){
+      item.innerText = relativeDate(new Date(item.attributes["data-date"].value));
+    }
+  })();

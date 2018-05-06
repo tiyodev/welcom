@@ -164,3 +164,92 @@
         }
     }
 }
+
+.wel-counter-dropdown{
+    &-icon{
+        color: $wel-grey;
+        display: block;
+        line-height: 65px;
+        min-height: 65px;
+        padding: 0 15px;
+    }
+
+    &-counter{
+        background-color: $wel-yellow;
+        border-radius: 50px;
+        color: $wel-black;
+        font-size: 10px;
+        line-height: 1;
+        padding: 5px 7.5px;
+        position: absolute;
+        left: 50px;
+        top: 15px;
+        font-weight: bold;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    &-content{
+        min-width: 350px;
+        padding: 0;
+        left: auto;
+        right: 0;
+
+        &-title{
+            color: $wel-black;
+            font-weight: 600;
+            font-size: .87rem;
+        }
+
+        &-angle-ico{
+            top: 6px;
+            position: relative;
+        }
+
+        &-item{
+            overflow: hidden;
+            overflow-anchor: none;
+            -ms-overflow-style: none;
+            touch-action: auto;
+            font-size: .87rem;
+            list-style: none;
+            position: relative;
+            overflow-y: auto;
+
+            a:hover{
+                background-color: $wel-grey-light;
+            }
+
+            &-peers{
+                text-decoration: none;
+
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+
+                height: auto;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            &-peer{
+                display: block;
+                height: auto;
+                flex: 0 0 auto;
+
+                img{
+                    max-width: none;
+                    width: 3rem;
+                    height: 50px;
+                    width: 50px;
+                }
+
+                &-greed{
+                    flex: 1 1 auto;
+                }
+            }
+        }
+    }
+}

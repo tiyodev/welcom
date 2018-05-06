@@ -1,6 +1,7 @@
 const User = require('./../models/users');
 const Interest = require('../models/interests');
 const Experience = require('./../models/experiences');
+const Messaging = require('./../models/messagings');
 
 /**
  * GET /
@@ -19,6 +20,6 @@ exports.getIndex = (req, res, next) => {
     .exec((err, exps) => {
       if (err) { next(err); }
 
-      res.render('index', { title: 'Welcom\' Home', exps });
+      res.render('index', { title: 'Welcom\' Home', exps});
     });
 };

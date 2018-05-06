@@ -1,0 +1,55 @@
+extends ../layout
+
+block content
+  - const displayParticipant = conversation.firstParticipant._id.equals(locals.account._id) ? conversation.secondParticipant : conversation.firstParticipant;
+
+  .wel-bg-blue.wel-color-white.p-6
+    h1.text-center Messages
+  
+  .pb-6.pt-6.wel-bg-grey-light
+    .p-6.container.wel-bg-white
+      .row.justify-content-around.align-items-center
+        .col-6.text-center
+          h4.font-weight-bold Your conversation with:
+        .col-6.text-center
+          a(href=`/messaging/conversations`)
+            h4
+              u.messaging-back-link.font-weight-bold <- Back to messages
+      .row
+        .col
+          hr
+      .row.justify-content-around.align-items-center
+        .col-3
+          img.messaging-card-img-200.rounded-circle(src=(displayParticipant.profile.profilePic.picture !== undefined ? displayParticipant.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
+        .col-7
+          .d-flex.flex-column.pl-2
+            .p-0
+              p.m-0 #{displayParticipant.profile.nickName}
+            .p-0
+              p.m-0 From #{displayParticipant.profile.city}.
+            .p-0
+              p.m-0 #{shortPresentationSentence}
+            .p-0
+              p #{shortLearnSentence}
+            .p-0
+              span.m-0.pink-text X #{(displayParticipant.profile.recommendations !== undefined && displayParticipant.profile.recommendations.length > 0) ? displayParticipant.profile.recommendations.length : "0"} positive recommendations |
+              span 
+                a(href=`/profile/${displayParticipant._id}/recommendation`) 
+                  u.messaging-back-link.font-weight-bold Give a recommendation 
+        .col-2.text-center
+          p Conversation started on #{conversation.createdAt.toLocaleDateString('en-EN', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}
+
+    .container.wel-bg-white.p-6.mt-6
+      form.form-horizontal(name="sendMessage" action=`/messaging/${displayParticipant._id}/message/send` method='POST' novalidate)
+        input(type='hidden', name='_csrf', value=_csrf)
+        .row.align-items-center.justify-content-center
+          .form-group.col-10.pr-0
+            textarea.messaging-send-input.form-control(name="messageInput" cols="30" rows="4" placeholder="Write a message" required)
+            .invalid-feedback
+              span Please, write a message (2 to 500 signs).
+          .form-group.col-1.pl-0
+            button.btn.btn-wel-pink.messaging-send-btn(type="submit") Send
+      .row
+        .col.pt-2.pb-2.pl-0.pr-0
+          each msg in conversation.messages.sort( (a,b) => b.date - a.date)
+            include ../components/messages-item
