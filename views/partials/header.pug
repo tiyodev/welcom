@@ -23,7 +23,7 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
           li.nav-item.m-auto.pl-2.pr-2
             a.underline-yellow.text-uppercase.nav-link(href="/readblog") Read our blog
 
-          li.nav-item.m-auto.pl-3.pr-5.pt-2.position-relative.notifications.wel-counter-dropdown
+          li.nav-item.m-auto.pl-2.pr-2.pt-2.position-relative.notifications.wel-counter-dropdown
             - let nbNewMsg = 0;
             - locals.headerConversations.forEach((item) => {
             -   if(item.firstParticipant.equals(locals.account._id)){
@@ -33,7 +33,7 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
             -   }
             -  })
             if nbNewMsg > 0
-              span.wel-counter-dropdown-counter #{nbNewMsg}
+              span.wel-counter-dropdown-counter.wel-counter-dropdown-counter-msg #{nbNewMsg}
             a.wel-counter-dropdown-icon(href="" data-toggle="dropdown" aria-expanded="true")
               i.fa-2x.far.fa-envelope
             ul.wel-counter-dropdown-content.dropdown-menu
@@ -68,6 +68,48 @@ nav#wel-nav-bar.navbar.navbar-expand-lg.navbar-light
                 a(href="/messaging/conversations")
                   .pl-3.d-flex.d-flex-row.align-items-center.justify-content-center(href="") 
                     span View all conversations 
+                      span.ml-2.wel-counter-dropdown-content-angle-ico
+                        i.fa-2x.fas.fa-angle-right
+
+          li.nav-item.m-auto.pl-2.pr-2.pt-2.position-relative.notifications.wel-counter-dropdown
+            - let nbNewNotif = 0;
+            - locals.headerNotifications.forEach((notif) => notif.isNew ? nbNewNotif++ : null )
+            if nbNewNotif > 0
+              span.wel-counter-dropdown-counter.wel-counter-dropdown-counter-bell #{nbNewNotif}
+            a.wel-counter-dropdown-icon(href="" data-toggle="dropdown" aria-expanded="true")
+              i.fa-2x.far.fa-bell
+            ul.wel-counter-dropdown-content.dropdown-menu
+              li.p-3.wel-border-bottom-grey.text-center
+                i.mr-3.far.far.fa-bell
+                span.wel-counter-dropdown-content-title Notifications
+              li
+                ul.wel-counter-dropdown-content-menu.wel-counter-dropdown-content-item.p-0.m-0
+                  if locals.headerNotifications !== undefined && locals.headerNotifications != null && locals.headerNotifications.length > 0
+                    each notif in locals.headerNotifications
+                      - const desc = notif.description.length > 50 ? `${notif.description.substring(0,50)}...` : notif.description;
+                      li
+                        a.p-3.d-flex.d-flex-row.justify-content-center.align-items-start.flex-nowrap.wel-border-bottom-grey.wel-header-dropdown-item-peers(href=`/`) 
+                          .wel-counter-dropdown-content-item-peer.align-self-center.mr-3
+                            if notif.status === 'warning'
+                              i.fa-2x.fas.fa-exclamation-triangle.text-warning
+                            else if notif.status === 'ok'
+                              i.fa-2x.fas.fa-check.text-success
+                            else if notif.status === 'nok'
+                              i.fa-2x.fas.fa-times.text-danger
+                          .wel-counter-dropdown-content-item-peer.wel-counter-dropdown-content-item-peer-greed
+                            div
+                              .wel-counter-dropdown-content-item-peers.mb-1.justify-content-between.flex-nowrap.d-flex.d-flex-row
+                                .wel-counter-dropdown-content-item-peer.wel-color-grey-dark
+                                  p.fw-500.mb-0 #{notif.title} 
+                                .wel-counter-dropdown-content-item-peer.wel-color-grey-dark
+                                  small.relative-date.fsz-xs(data-date=notif.createdAt)
+                              .wel-color-grey.fsz-sm
+                                span #{desc}                 
+                                  
+              li.pr-4.pl-4.pb-3.pt-2.text-center.wel-border-top-grey
+                a(href="/messaging/conversations")
+                  .pl-3.d-flex.d-flex-row.align-items-center.justify-content-center(href="") 
+                    span View all notifications 
                       span.ml-2.wel-counter-dropdown-content-angle-ico
                         i.fa-2x.fas.fa-angle-right
 

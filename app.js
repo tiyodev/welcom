@@ -109,6 +109,43 @@ app.use((req, res, next) => {
     messagingController.getLastUpdateConversationsByUserIdAndNbLast(req.account._id, 3)
     .then((conversations) => {
       res.locals.headerConversations = conversations;
+
+      const dateNow = new Date(Date.now());
+
+      // Get last 5 notifications
+      const notifications = [{
+        reciver: res.locals.account,
+        type: 'Bec-Welc',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pellentesque porttitor finibus. Vestibulum commodo tempus erat placerat dapibus. Phasellus et mauris in justo molestie tristique sed at mi.',
+        linkRedirect: '/',
+        createdAt: dateNow,
+        isNew: true,
+        status: 'warning',
+        title: 'title warning notif'
+      },
+      {
+        reciver: res.locals.account,
+        type: 'Exp-Ok',
+        description: 'Nam turpis ipsum, tincidunt quis sagittis vel, viverra vel dui. Quisque in pulvinar sem, in suscipit ligula. Mauris eu ultrices magna. Aliquam erat volutpat. Duis sapien ante, placerat vitae hendrerit et, mattis sit amet turpis. Donec consequat efficitur quam et vehicula.',
+        linkRedirect: '/',
+        createdAt: dateNow,
+        isNew: true,
+        status: 'ok',
+        title: 'title ok notif'
+      },
+      {
+        reciver: res.locals.account,
+        type: 'Exp-Shit',
+        description: 'Maecenas eget ultrices tortor, nec ultrices ipsum. Nam condimentum porttitor tortor, vitae varius risus placerat vitae. Cras est lacus, bibendum vel congue nec, placerat ut lacus. Sed arcu felis, imperdiet sed lobortis vitae, tempor eget elit. Nulla ullamcorper sit amet ipsum quis molestie. Mauris nec odio turpis.',
+        linkRedirect: '/',
+        createdAt: dateNow,
+        isNew: false,
+        status: 'nok',
+        title: 'title nok notif'
+      }]
+
+      res.locals.headerNotifications = notifications;
+
       next();
     })
   } else{
