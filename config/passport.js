@@ -158,6 +158,7 @@ passport.use(new TwitterStrategy({
   consumerKey: process.env.TWITTER_KEY,
   consumerSecret: process.env.TWITTER_SECRET,
   callbackURL: '/auth/twitter/callback',
+  userProfileURL: 'https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true',
   passReqToCallback: true
 }, (req, accessToken, tokenSecret, profile, done) => {
   if (req.account) {
@@ -169,8 +170,11 @@ passport.use(new TwitterStrategy({
       } else {
         User.findById(req.account.id, (err, user) => {
           if (err) { return done(err); }
+
           user.twitter = profile.id;
           user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
+
+          user.email = profile._json.email;
 
           user.profile.nickName = profile._json.name;
           user.profile.city = profile._json.location;
@@ -203,11 +207,14 @@ passport.use(new TwitterStrategy({
         return done(null, existingUser);
       }
       const user = new User();
+
       // Twitter will not provide an email address.  Period.
       // But a person’s twitter username is guaranteed to be unique
       // so we can "fake" a twitter email address as follows:
       user.twitter = profile.id;
       user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
+
+      user.email = profile._json.email;
 
       user.profile.nickName = profile._json.name;
       user.profile.city = profile._json.location;
