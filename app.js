@@ -15,7 +15,9 @@ const passport = require('passport');
 const path = require('path');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
-const errorHandler = require('./config/error-handler');
+// const errorHandler = require('./config/error-handler');
+const errorHandler = require('errorhandler');
+const expressStatusMonitor = require('express-status-monitor');
 
 const messagingController = require('./controllers/messaging');
 
@@ -60,14 +62,12 @@ app.set('view engine', 'pug');
 /**
  * Express configuration.
  */
-app.use(favicon(path.join(__dirname, 'public', 'favicon', 'favicon.ico')));
+app.use(expressStatusMonitor());
+app.use(compression());
 app.use(logger('dev'));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'uploads')));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(compression());
 app.use(expressValidator());
 app.use(session({
   resave: true,
@@ -98,6 +98,7 @@ app.use((req, res, next) => {
 });
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
+app.disable('x-powered-by');
 app.use((req, res, next) => {
   res.locals.account = req.account;
   res.locals.recaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY;
@@ -163,6 +164,9 @@ app.use((req, res, next) => {
   }
   next();
 });
+app.use(express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon', 'favicon.ico')));
 
 app.use('/', index);
 app.use('/', footer);
@@ -183,8 +187,16 @@ app.use((req, res, next) => {
   next(err);
 });
 
-app.use(errorHandler.logErrors);
-app.use(errorHandler.clientErrorHandler);
-app.use(errorHandler.errorHandler);
+/**
+ * Error Handler.
+ */
+if (process.env.NODE_ENV === 'development') {
+  // only use in development
+  app.use(errorHandler());
+}
+
+// app.use(errorHandler.logErrors);
+// app.use(errorHandler.clientErrorHandler);
+// app.use(errorHandler.errorHandler);
 
 module.exports = app;

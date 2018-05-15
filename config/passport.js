@@ -103,8 +103,7 @@ passport.use(new FacebookStrategy({
     User.findOne({ facebook: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it.' });
-        done(err);
+        return done(null, existingUser);
       }  else{
         User.findOne({ email: profile._json.email }, (err, existingEmailUser) => {
           if (err) { return done(err); }
@@ -198,8 +197,7 @@ passport.use(new TwitterStrategy({
     User.findOne({ twitter: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Twitter account that belongs to you. Sign in with that account or delete it.' });
-        done(err);
+        return done(null, existingUser);
       } else {
         User.findOne({ email: profile._json.email }, (err, existingEmailUser) => {
           if (err) { return done(err); }
@@ -296,8 +294,7 @@ passport.use(new GoogleStrategy({
     User.findOne({ google: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it.' });
-        done(err);
+        return done(null, existingUser);
       } else {
         User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
           if (err) { return done(err); }
