@@ -52,7 +52,8 @@ block content
     nav.nav.nav-pills.nav-fill.nav-primary.font-weight-bold
       a.nav-item.nav-link(href=`/profile/${user._id}`) Profile
       a.nav-item.nav-link(href=`/profile/${user._id}/recommendation`) Recommendations
-      a.nav-item.nav-link.active(href=`/profile/${user._id}/experience`) Experiences
+      if locals.account.isWelcomer
+        a.nav-item.nav-link.active(href=`/profile/${user._id}/experience`) Experiences
       if locals.account._id.equals(user._id)
         a.nav-item.nav-link(href=`/profile/${user._id}/dashboard`) Dashboard
 

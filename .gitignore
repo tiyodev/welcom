@@ -35,6 +35,8 @@ uploads
 # API keys and secrets
 .env
 .env.example
+.env.dev
+.env.prod
 
 # Dependency directory
 node_modules
