@@ -11,10 +11,10 @@ block content
         each pic in user.profile.coverPic
           if i++ === 0
             .carousel-item.active
-              img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
+              img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label data-key-carousel=pic._id)
           else
             .carousel-item
-              img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label)
+              img.img-header-profile.d-block.w-100(src=pic.picture alt=pic.label data-key-carousel=pic._id)
     
     carousel-caption.d-none.d-md-block
       button.img-profile-cover-upload.btn.btn-wel-blue(type="button" data-toggle="modal" data-target="#uploadProfileCover")
@@ -167,7 +167,7 @@ block content
             span Please, tell us a little bit about you (30 signs min).
       .form-row
         .input-group.col-md-12.pb-4
-          label(for="inputHobbie") What are your hobbies, interests, passions ?
+          label(for="tags") What are your hobbies, interests, passions ?
           p (You don't have to list all of them, but shared interests are a good start point to create bonds.
             | Like foods, drinks, places, movies, unicorns, activities, etc. You can add 5 to 20.)
           input#tags.form-control(type="text" name="hobbies" placeholder="Hobbies" aria-label="Hobbies" aria-describedby="hobbies-btn")
@@ -272,9 +272,10 @@ block css
   link(rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
   link(rel='stylesheet' href='https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.css')
 block js
-  script(type="text/javascript" src=`https://maps.googleapis.com/maps/api/js?key=${locals.googleApi}&libraries=places&callback=initAutocompleteEditProfile` async defer)
   script(type="text/javascript" src="/js/autocomplete-city.js")
   script(type="text/javascript" src="/js/autocomplete-tag.js")
+  script(type="text/javascript" src="/js/experience-utils.js")
+  script(type="text/javascript" src=`https://maps.googleapis.com/maps/api/js?key=${locals.googleApi}&libraries=places&callback=initAutocompleteEditProfile` async defer)
   script(type="text/javascript" src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js")
   script(type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
   script.
@@ -285,7 +286,7 @@ block js
       form.onsubmit = function(event){
         createInvalideFeedback("inputDescribeAdj", "Please chose the adjective that best describes you.");
         createInvalideFeedback("inputLanguageSpoken", "Please tell us your spoken languages (at least one).");
-        createInvalideFeedback("inputHobbie", "Please chose at least one hobby.");
+        createInvalideFeedback("tags", "Please chose at least one hobby.");
         
         if (form.checkValidity() === false) {
           event.preventDefault();
@@ -409,7 +410,7 @@ block js
       document.getElementById("inputBirthDate").valueAsDate = new Date("#{user.profile.birthdate}");
 
       // Initialize tag autocomplete
-      autocomplete_tag('tags', {limit: 5, btnId: 'tags-btn'});
+      autocomplete_tag('tags', {limit: 20, btnId: 'tags-btn'});
 
       // Initialize Spoken Languages
       if(`#{user.profile.spokenLanguages}` !== "")

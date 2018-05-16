@@ -1,6 +1,6 @@
 function createInvalideFeedback(id, msg) {
   if (document.getElementById(id) === undefined || document.getElementById(id) === null) {
-    console.error('Id not found');
+    console.error(`Id not found : ${id}`);
     return;
   }
 
