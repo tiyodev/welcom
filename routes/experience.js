@@ -1,24 +1,21 @@
-const express = require('express');
-
-const router = express.Router();
 const passportConfig = require('./../config/passport');
 const uploadConfig = require('./../config/upload');
 const experienceController = require('./../controllers/experience');
 
-router.get('/create', passportConfig.isAuthenticated, experienceController.getCreateExperience);
-router.post('/create', passportConfig.isAuthenticated, experienceController.checkCreateExperienceData, experienceController.postCreateExperience);
+module.exports = function(app) {
+  app.get('/experience/create', passportConfig.isAuthenticated, experienceController.getCreateExperience);
+  app.post('/experience/create', passportConfig.isAuthenticated, experienceController.checkCreateExperienceData, experienceController.postCreateExperience);
 
-router.post('/create/cover-upload/add', passportConfig.isAuthenticated, uploadConfig.uploadExperience.array('input-cover[]', 5), experienceController.postAddExperienceCover);
-router.post('/create/cover-upload/delete', passportConfig.isAuthenticated, experienceController.postDeleteExperienceCover);
+  app.post('/experience/create/cover-upload/add', passportConfig.isAuthenticated, uploadConfig.uploadExperience.array('input-cover[]', 5), experienceController.postAddExperienceCover);
+  app.post('/experience/create/cover-upload/delete', passportConfig.isAuthenticated, experienceController.postDeleteExperienceCover);
 
-router.post('/edit/cover-upload/add', passportConfig.isAuthenticated, uploadConfig.uploadExperience.array('input-cover[]', 5), experienceController.postAddExperienceCover);
-router.post('/edit/cover-upload/delete', passportConfig.isAuthenticated, experienceController.postDeleteExperienceCover);
+  app.post('/experience/edit/cover-upload/add', passportConfig.isAuthenticated, uploadConfig.uploadExperience.array('input-cover[]', 5), experienceController.postAddExperienceCover);
+  app.post('/experience/edit/cover-upload/delete', passportConfig.isAuthenticated, experienceController.postDeleteExperienceCover);
 
-router.get('/list', experienceController.getExperienceList);
+  app.get('/experience/list', experienceController.getExperienceList);
 
-router.get('/:id', experienceController.getExperience);
-router.get('/:id/edit', passportConfig.isAuthenticated, experienceController.getEditExperience);
-router.post('/:id/edit', passportConfig.isAuthenticated, experienceController.checkCreateExperienceData, experienceController.postEditExperience);
-router.post('/:id/recommendation/add', passportConfig.isAuthenticated, experienceController.checkRecommendationData, experienceController.postRecommendation);
-
-module.exports = router;
+  app.get('/experience/:id', experienceController.getExperience);
+  app.get('/experience/:id/edit', passportConfig.isAuthenticated, experienceController.getEditExperience);
+  app.post('/experience/:id/edit', passportConfig.isAuthenticated, experienceController.checkCreateExperienceData, experienceController.postEditExperience);
+  app.post('/experience/:id/recommendation/add', passportConfig.isAuthenticated, experienceController.checkRecommendationData, experienceController.postRecommendation);
+}

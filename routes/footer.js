@@ -1,14 +1,10 @@
-const express = require('express');
-
-const router = express.Router();
 const footerController = require('./../controllers/footer');
 
-router.get('/termsofuse', footerController.getTermsOfUse);
-router.get('/meetteam', footerController.getWelcomTeam);
-router.get('/contactus', footerController.getContactUs);
-router.get('/needyou', footerController.getNeedYou);
-router.get('/readblog', footerController.getReadBlog);
-router.get('/learnmore', footerController.getLearnMore);
-
-
-module.exports = router;
+module.exports = function(app) {
+  app.get('/termsofuse', footerController.getTermsOfUse);
+  app.get('/meetteam', footerController.getWelcomTeam);
+  app.get('/contactus', footerController.getContactUs);
+  app.get('/needyou', footerController.getNeedYou);
+  app.get('/readblog', footerController.getReadBlog);
+  app.get('/learnmore', footerController.getLearnMore);
+}

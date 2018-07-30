@@ -1,8 +1,5 @@
-const express = require('express');
-
-const router = express.Router();
 const tagsController = require('./../controllers/tags');
 
-router.get('/autocomplete', tagsController.getTags);
-
-module.exports = router;
+module.exports = function(app) {
+  app.get('/tags/autocomplete', tagsController.getTags);
+}

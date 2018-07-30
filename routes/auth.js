@@ -1,25 +1,19 @@
 const express = require('express');
 const passport = require('passport');
 
-const router = express.Router();
+module.exports = function(app) {
+  app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
+  app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/', successRedirect: '/' }), (req, res) => {
+    res.redirect(req.session.returnTo || '/');
+  });
 
-/**
- * OAuth authentication routes. (Sign in)
- */
+  app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
+  app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/', successRedirect: '/'}), (req, res) => {
+    res.redirect(req.session.returnTo || '/');
+  });
 
-router.get('/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
-router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/', successRedirect: '/' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-
-router.get('/google', passport.authenticate('google', { scope: 'profile email' }));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/', successRedirect: '/'}), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-
-router.get('/twitter', passport.authenticate('twitter'));
-router.get('/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/', successRedirect: '/' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-
-module.exports = router;
+  app.get('/auth/twitter', passport.authenticate('twitter'));
+  app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/', successRedirect: '/' }), (req, res) => {
+    res.redirect(req.session.returnTo || '/');
+  });
+}

@@ -15,35 +15,19 @@ const passport = require('passport');
 const path = require('path');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
-// const errorHandler = require('./config/error-handler');
 const errorHandler = require('errorhandler');
 const expressStatusMonitor = require('express-status-monitor');
+const fs = require('fs');
 
+/**
+ * Load controller
+ */
 const messagingController = require('./controllers/messaging');
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
 dotenv.load({ path: '.env.dev' });
-
-/**
- * API keys and Passport configuration.
- */
-require('./config/passport');
-
-/**
- * Load routes files
- */
-const index = require('./routes/index');
-const users = require('./routes/users');
-const auth = require('./routes/auth');
-const footer = require('./routes/footer');
-const profile = require('./routes/profile');
-const tags = require('./routes/tags');
-const welcomer = require('./routes/welcomer');
-const experience = require('./routes/experience');
-const recommendation = require('./routes/recommendation');
-const messaging = require('./routes/messaging');
 
 /**
  * Create Express server.
@@ -55,7 +39,9 @@ const app = express();
  */
 bodyParser.json();
 
-// view engine setup
+/**
+ * View engine setup
+ */
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
@@ -84,18 +70,25 @@ app.use(passport.initialize({
 }));
 app.use(passport.session());
 app.use(flash());
+
+/**
+ * @const noCSRFURL
+ * @type {Set<String>}
+ * @desc Do not check the CSRF of these URL 
+ */
+const noCSRFURL = new Set([
+  '/profile/edit/cover-upload/add',
+  '/profile/edit/profile-pic-upload/add',
+  '/experience/create/cover-upload/add',
+  '/experience/edit/cover-upload/add'
+]);
 app.use((req, res, next) => {
-  // url with no csrf
-  if (req.path === '/profile/edit/cover-upload/add' ||
-      req.path === '/profile/edit/profile-pic-upload/add' ||
-      req.path === '/experience/create/cover-upload/add' ||
-      req.path === '/experience/edit/cover-upload/add'
-  ) {
-    next();
-  } else {
-    lusca.csrf()(req, res, next);
+  if(noCSRFURL.has(req.path)){
+    return next();
   }
+  lusca.csrf()(req, res, next);
 });
+
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 app.disable('x-powered-by');
@@ -105,9 +98,10 @@ app.use((req, res, next) => {
   res.locals.googleApi = process.env.GOOGLE_API;
   res.locals.googleApiGeocode = process.env.GOOGLE_API_GEOCODE;
 
-  if(req.account){
-    // Get last 3 messages
-    messagingController.getLastUpdateConversationsByUserIdAndNbLast(req.account._id, 3)
+  if(!req.account) return next();
+
+  // Get last 3 messages
+  messagingController.getLastUpdateConversationsByUserIdAndNbLast(req.account._id, 3)
     .then((conversations) => {
       res.locals.headerConversations = conversations;
 
@@ -149,17 +143,12 @@ app.use((req, res, next) => {
 
       next();
     })
-  } else{
-    next();
-  }
 });
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page
-  if (!req.account
-      && req.path !== '/login'
-      && req.path !== '/signup'
-      && !req.path.match(/^\/auth/)
-      && !req.path.match(/\./)) {
+  if (!req.account && req.path !== '/login' && req.path !== '/signup'
+      && !req.path.match(/^\/auth/) && !req.path.match(/\./)) 
+  {
     req.session.returnTo = req.path;
   }
   next();
@@ -168,22 +157,21 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon', 'favicon.ico')));
 
-app.use('/', index);
-app.use('/', footer);
-app.use('/auth', auth);
-app.use('/welcomer', welcomer);
-app.use('/profile', profile);
-app.use('/experience', experience);
-app.use('/tags', tags);
-app.use('/users', users);
-app.use('/recommendation', recommendation);
-app.use('/messaging', messaging);
 
-// catch 404 and forward to error handler
+/**
+ * Autoload routes
+ */
+const routeDir = path.join(__dirname, 'routes');
+fs.readdirSync(routeDir).forEach(function(file) {
+  require(path.join(routeDir, file))(app);
+});
+
+/**
+ * catch 404 and forward to error handler
+ */
 app.use((req, res, next) => {
   const err = new Error('Not Found');
   err.status = 404;
-  err.message = err.message;
   next(err);
 });
 
@@ -194,9 +182,5 @@ if (process.env.NODE_ENV === 'development') {
   // only use in development
   app.use(errorHandler());
 }
-
-// app.use(errorHandler.logErrors);
-// app.use(errorHandler.clientErrorHandler);
-// app.use(errorHandler.errorHandler);
 
 module.exports = app;

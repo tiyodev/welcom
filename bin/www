@@ -5,8 +5,6 @@
  */
 const chalk = require('chalk');
 const app = require('../app');
-const debug = require('debug')('welcom:server');
-const http = require('http');
 const mongoose = require('mongoose');
 
 /**
@@ -15,97 +13,67 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
 
+/**
+ * handle the mongoose connection event
+ */
 mongoose.connection.on('connected', () => {
-  console.info('%s MongoDB connection established!', chalk.green('✓'));
+  console.info(`${chalk.green('✓')} MongoDB connection established!`);
 });
 
-mongoose.connection.on('error', () => {
-  console.error('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+/**
+ * handle the mongoose connection error event
+ */
+mongoose.connection.on('error', (err) => {
+  if (process.env.NODE_ENV === 'development') {
+    console.error(`${chalk.red('✗')} MongoDB connection error: ${err}`);
+  } else{
+    console.error(`${chalk.red('✗')} MongoDB connection error. Please make sure MongoDB is running.`);
+  }
   process.exit();
 });
 
 /**
- * Normalize a port into a number, string, or false.
+ * handle the mongoose disconnect event
  */
-function normalizePort(val) {
-  const port = parseInt(val, 10);
+mongoose.connection.on('disconnected', () => {  
+  console.log('Mongoose default connection disconnected'); 
+});
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
+/**
+ * If the Node process ends, close the Mongoose connection  
+ */
+process.on('SIGINT', function() {  
+  mongoose.connection.close(() => { 
+    console.log('Mongoose default connection disconnected through app termination'); 
+    process.exit(0); 
+  }); 
+}); 
 
 /**
  * Get port from environment and store in Express.
  */
-const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+app.set('port', process.env.PORT || 3000);
 
 /**
- * Create HTTP server.
+ * Get uncaught exception
  */
-const server = http.createServer(app);
-
-/**
- * Event listener for HTTP server "error" event.
- */
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  const bind = typeof port === 'string'
-    ? `Pipe ${port}`
-    : `Port ${port}`;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(`${bind} requires elevated privileges`);
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(`${bind} is already in use`);
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-function onListening() {
-  const addr = server.address();
-  const bind = typeof addr === 'string'
-    ? `pipe ${addr}`
-    : `port ${addr.port}`;
-  console.info('%s Express server listening on %s in %s mode.', chalk.green('✓'), bind, app.get('env'));
-  debug(`Listening on ${bind}`);
-}
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
 process.on('uncaughtException', (err) => {
   console.error(' UNCAUGHT EXCEPTION ');
   console.error(`[Inside 'uncaughtException' event] ${err.stack}` || err.message);
 });
 
+/**
+ * Get unhandled rejection
+ */
 process.on('unhandledRejection', (err) => {
   console.error(' UNHANDLED REJECTION ');
   console.error(`[Inside 'unhandledRejection' event] ${err.stack}` || err.message);
 });
+
+/**
+ * Start server
+ */
+app.listen(app.get('port'), function () {
+  console.log(`${chalk.green('✓')} App is running at http://localhost:${app.get('port')} in ${app.get('env')} mode`);
+  console.log('  Press CTRL-C to stop\n');
+})

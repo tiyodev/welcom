@@ -1,20 +1,16 @@
-const express = require('express');
-
-const router = express.Router();
 const indexController = require('./../controllers/index');
 const userController = require('./../controllers/user');
 
-router.get('/', indexController.getIndex);
-
-router.get('/login', userController.getLogin);
-router.post('/login', userController.postLogin);
-router.get('/logout', userController.logout);
-router.get('/forgot', userController.getForgot);
-router.post('/forgot',  userController.checkEmailData, userController.postForgot);
-router.get('/reset/:token', userController.getReset);
-router.post('/reset/:token', userController.checkResetPwdData, userController.postReset);
-router.get('/verifyEmail/:validEmailToken', userController.getVerifyEmail);
-router.get('/signup', userController.getSignup);
-router.post('/signup', userController.checkSignupData, userController.postSignup);
-
-module.exports = router;
+module.exports = function(app) {
+  app.get('/', indexController.getIndex);
+  app.get('/login', userController.getLogin);
+  app.post('/login', userController.postLogin);
+  app.get('/logout', userController.logout);
+  app.get('/forgot', userController.getForgot);
+  app.post('/forgot',  userController.checkEmailData, userController.postForgot);
+  app.get('/reset/:token', userController.getReset);
+  app.post('/reset/:token', userController.checkResetPwdData, userController.postReset);
+  app.get('/verifyEmail/:validEmailToken', userController.getVerifyEmail);
+  app.get('/signup', userController.getSignup);
+  app.post('/signup', userController.checkSignupData, userController.postSignup);
+}
