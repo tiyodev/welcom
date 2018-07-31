@@ -65,9 +65,11 @@ block content
   #profile-edit-content.pt-6.m-auto
     .pt-4.pb-4.text-center
       p 
-        | Tip: We know it's a lot to fill, but the more your profile reflects you
-        | and the more it is compelte, the easier it is to create bonds with other members
-        | of the community!
+        b Tip: 
+        | We know it's a lot to fill, but the more your profile reflects you
+        | and the more it is complete, 
+        br
+        | the easier it is to create bonds with other members of the community!
 
     form#profile-form(action="/profile/edit" method="post" novalidate)
       input(type='hidden' name='_csrf' value=_csrf id="_csrf")
