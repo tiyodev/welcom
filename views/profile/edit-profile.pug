@@ -178,9 +178,9 @@ block content
           
         .input-group.col-md-12
           .profile-tags
-            #tags-container.mb-3.d-flex.justify-content-start.bd-highlight
+            #tags-container.mb-3.d-flex.flex-wrap.justify-content-start.bd-highlight
               each tag in user.profile.interests
-                .mr-2.tags-item.border.border-danger.rounded
+                .mb-2.mr-2.tags-item.border.border-danger.rounded
                   button.btn.btn-danger(type="button" onclick="deleteTag(this)")
                     span.fas.fa-trash-alt
                   span.tags-item-value.pl-3.pr-3 #{tag.name}
