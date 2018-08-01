@@ -164,7 +164,9 @@ block content
       .form-row
         .form-group.col-md-12
           label(for="inputIntro") Your intro (it's a short text that will appear on top of your profile like a status):
-          textarea#inputIntro.form-control(name="inputIntro" cols="30" rows="5" required) #{user.profile.intro}
+          textarea#inputIntro.form-control(name="inputIntro" cols="30" rows="5" onkeyup="counterChar(this.id, 'inputIntroStatusChar', 30, 200);" required) #{user.profile.intro}
+          .text-right
+            span#inputIntroStatusChar
           .invalid-feedback
             span Please, tell us a little bit about you (30 signs min).
       .form-row
@@ -189,7 +191,9 @@ block content
         .form-group.col-md-12
           label(for="inputBio") Your bio: a much bigger space where you can write what you want other members to know
             | about you. Let us know who you are!
-          textarea#inputBio.form-control(name="inputBio" cols="30" rows="10" required) #{user.profile.description}
+          textarea#inputBio.form-control(name="inputBio" cols="30" rows="10" onkeyup="counterChar(this.id, 'inputBioStatusChar', 100, 2000);" required) #{user.profile.description}
+          .text-right
+            span#inputBioStatusChar
           .invalid-feedback
             span Please, tell us a little bit about your life (100 signs min).
       hr.mt-6.form-separation
@@ -199,19 +203,25 @@ block content
       .form-row
         .form-group.col-md-12
           label(for="inputSharing") What would you like to share whith the community?
-          textarea#inputSharing.form-control(name="inputSharing" cols="30" rows="5" placeholder="Passion for languages, for history, for sport? Even just time, thoughts and smiles ais good!" required) #{user.profile.shareWithCommunity}
+          textarea#inputSharing.form-control(name="inputSharing" cols="30" rows="5" onkeyup="counterChar(this.id, 'inputSharingStatusChar', 30, 600);" placeholder="Passion for languages, for history, for sport? Even just time, thoughts and smiles ais good!" required) #{user.profile.shareWithCommunity}
+          .text-right
+            span#inputSharingStatusChar
           .invalid-feedback
             span Please, write something about what you would like to share (30 signs min).
       .form-row
         .form-group.col-md-12
           label(for="inputTripLived") What trips have you lived?
-          textarea#inputTripLived.form-control(name="inputTripLived" cols="30" rows="5" placeholder="Paris already? Amsterdam, Berlin, a small place in your country, or even... Kingslanding?") #{user.profile.tripLived}
+          textarea#inputTripLived.form-control(name="inputTripLived" cols="30" rows="5" onkeyup="counterChar(this.id, 'inputTripLivedStatusChar', 20, 300);" placeholder="Paris already? Amsterdam, Berlin, a small place in your country, or even... Kingslanding?") #{user.profile.tripLived}
+          .text-right
+            span#inputTripLivedStatusChar
           .invalid-feedback
             span Between 20 and 300 characters.
       .form-row
         .form-group.col-md-12
           label(for="inputFutureTravel") Do you have travel plans for the future?
-          textarea#inputFutureTravel.form-control(name="inputFutureTravel" cols="30" rows="5" placeholder="Whether big or small plans, very precise or just ideas.") #{user.profile.travelPlan}
+          textarea#inputFutureTravel.form-control(name="inputFutureTravel" cols="30" rows="5" onkeyup="counterChar(this.id, 'inputFutureTravelStatusChar', 20, 300);" placeholder="Whether big or small plans, very precise or just ideas.") #{user.profile.travelPlan}
+          .text-right
+            span#inputFutureTravelStatusChar
           .invalid-feedback
             span Between 20 and 300 characters.
               
@@ -421,7 +431,14 @@ block js
       // Initialize Learning Languages
       if(`#{user.profile.learningLanguages}` !== "")
         $('#inputLanguageLearning').selectpicker('val', Array.from(!{JSON.stringify(user.profile.learningLanguages)}, x => x.language));
-    
+
+      // Initialize counter char text
+      initCounterChar('inputIntro','inputIntroStatusChar', 30, 200);
+      initCounterChar('inputBio','inputBioStatusChar', 100, 2000);
+      initCounterChar('inputSharing','inputSharingStatusChar', 30, 600);
+      initCounterChar('inputTripLived','inputTripLivedStatusChar', 20, 300);
+      initCounterChar('inputFutureTravel','inputFutureTravelStatusChar', 20, 300);
+      
       // Set valid data
       setServerValidData(!{JSON.stringify(validData)});
 

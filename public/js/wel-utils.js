@@ -1,10 +1,10 @@
 const SECOND = 1000,
-      MINUTE = 60 * SECOND,
-      HOUR = 60 * MINUTE,
-      DAY = 24 * HOUR,
-      WEEK = 7 * DAY,
-      YEAR = DAY * 365,
-      MONTH = YEAR / 12;
+    MINUTE = 60 * SECOND,
+    HOUR = 60 * MINUTE,
+    DAY = 24 * HOUR,
+    WEEK = 7 * DAY,
+    YEAR = DAY * 365,
+    MONTH = YEAR / 12;
 
 const formats = [
   [ 0.7 * MINUTE, 'just now' ],
@@ -22,21 +22,28 @@ const formats = [
   [ Number.MAX_VALUE, 'years ago', YEAR ]
 ];
 
-function relativeDate(input, reference) {
-  if(reference === undefined || reference === null)
-    reference = new Date(Date.now());
+/*
+ * @function
+ * @name relativeDate
+ * @desc Define a relative date between a given date and a reference date.
+ * @param {Date} givenDate - Given date
+ * @param {Date} referenceDate - Reference date. If reference date is null, we will take the current date as a reference.
+ */
+function relativeDate(givenDate, referenceDate) {
+  if(referenceDate === undefined || referenceDate === null)
+    referenceDate = new Date(Date.now());
 
-  if(reference instanceof Date)
-    reference = reference.getTime();
+  if(referenceDate instanceof Date)
+    referenceDate = referenceDate.getTime();
   else
-    return 'Error in reference!';
+    return 'Error in reference date!';
 
-  if(input instanceof Date)
-    input = input.getTime();
+  if(givenDate instanceof Date)
+    givenDate = givenDate.getTime();
   else
-    return 'Error in input!';
+    return 'Error in the given date!';
 
-  const delta = reference - input;
+  const delta = referenceDate - givenDate;
   let format, i, len;
 
   for(i = -1, len=formats.length; ++i < len; ){
@@ -45,4 +52,50 @@ function relativeDate(input, reference) {
       return format[2] == undefined ? format[1] : Math.round(delta/format[2]) + ' ' + format[1];
     }
   };
+}
+
+/*
+ * @function
+ * @name counterChar
+ * @desc Character counter for text boxes.
+ * @param {string} textarea - Id of the text area
+ * @param {string} display - Id of the container of counter display text
+ * @param {int} min - Number min of character of the textarea
+ * @param {int} max - Number max of character of the textarea
+ */
+function counterChar(textarea, display, min, max) {
+  const textareaElem = document.getElementById(textarea);
+  const displayElem = document.getElementById(display);
+
+  if (textareaElem === undefined || displayElem === undefined) 
+    displayElem.innerText = 'Error';
+
+  if(textareaElem.value.length < min){
+    displayElem.innerText = `${textareaElem.value.length} (min signs: ${min})`;
+    displayElem.classList.remove('text-success');
+    displayElem.classList.add('text-danger');
+  }
+  else if(textareaElem.value.length > max){
+    displayElem.innerText = `${textareaElem.value.length} (max signs: ${max})`;
+    displayElem.classList.remove('text-success');
+    displayElem.classList.add('text-danger');
+  }
+  else{
+    displayElem.innerText = textareaElem.value.length;
+    displayElem.classList.remove('text-danger');
+    displayElem.classList.add('text-success');
+  }
+}
+
+/*
+ * @function
+ * @name initCounterChar
+ * @desc Init the character counter for text boxes.
+ * @param {string} textarea - Id of the text area
+ * @param {string} display - Id of the container of counter display text
+ * @param {int} min - Number min of character of the textarea
+ * @param {int} max - Number max of character of the textarea
+ */
+function initCounterChar(textarea, display, min, max) {
+  counterChar(textarea, display, min, max);
 }

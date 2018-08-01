@@ -143,6 +143,8 @@ block content
                     .form-row
                       .form-group.col-md-12
                         textarea#recommendation-desc.form-control(name="recommendationDesc" cols="30" rows="5" placeholder="Remember, stay positive please, the recommendations are public" required)
+                        .text-right
+                          span#recommendation-desc-status-char
                         .invalid-feedback
                           span Please, write a recommendations (30 to 300 signs).
 
@@ -214,7 +216,7 @@ block content
               .pt-4.text-center
                 button.pr-6.pl-6.btn.btn-wel-pink(data-target="#send-msg-modal" data-toggle="modal" type="button") Send a message
 
-            <!-- Write a recommendation -->
+            <!-- Send message -->
             #send-msg-modal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="sendMessage")
               .modal-dialog(role="document")
                 .modal-content
@@ -232,7 +234,9 @@ block content
                       .form-row
                         .form-group.col-md-12
                           label(for="messageInput") Please write here.
-                          textarea#send-msg-modal-input.form-control(name="messageInput" cols="30" rows="5" required)
+                          textarea#send-msg-modal-input.form-control(name="messageInput" cols="30" rows="5" onkeyup="counterChar(this.id, 'send-msg-modal-input-status-char', 2, 500);" required)
+                          .text-right
+                            span#send-msg-modal-input-status-char
                           small After sending, you can find this conversation in your messages.
                           .invalid-feedback
                             span Please, write a message (2 to 500 signs).
@@ -267,6 +271,8 @@ block js
       const recommendationDesc = document.getElementById('recommendation-desc');
 
         recommendationDesc.onkeyup = () => {
+          counterChar('recommendation-desc', 'recommendation-desc-status-char', 30, 300);
+
           const isValid = validateRecommendationDesc();
 
           if(isValid){
@@ -304,6 +310,10 @@ block js
         if(`#{isFromAddRecommendation}`){
           $('#write-recommendations-modal').modal('show');
         }
+
+        // Initialize counter char text
+        initCounterChar('recommendation-desc','recommendation-desc-status-char', 30, 300);
+        initCounterChar('send-msg-modal-input','send-msg-modal-input-status-char', 2, 500);
 
         // Set valid data
         setServerValidData(!{JSON.stringify(validData)});

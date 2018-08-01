@@ -20,6 +20,8 @@
       .form-row.align-items-center
         .col-10
           textarea#recommendation-response-desc.form-control(name="recommendationResponseDesc" cols="30" rows="3" placeholder="Write an answer" required)
+          .text-right
+            span#recommendation-response-desc-status-char
           .invalid-feedback
             span Please, write a answer (30 to 300 signs).
         .col-2
@@ -42,6 +44,8 @@ block js
 
       if (recommendationResponseDesc){
         recommendationResponseDesc.onkeyup = () => {
+          counterChar('recommendation-response-desc', 'recommendation-response-desc-status-char', 30, 300);
+
           const isValid = validateRecommendationResponseDesc();
 
           if(isValid){
@@ -76,6 +80,9 @@ block js
           form.classList.add('was-validated');      
         };
       }
+
+      // Initialize counter char text
+      initCounterChar('recommendation-response-desc','recommendation-response-desc-status-char', 300, 300);
 
       // Set valid data
       setServerValidData(!{JSON.stringify(validData)});

@@ -129,7 +129,9 @@ block content
           .form-row
             .form-group.col-md-12
               label(for="inputBecomeWelcomer") Why do you want to become a welcomer? Tell us everything :)
-              textarea#inputBecomeWelcomer.form-control(name="inputBecomeWelcomer" cols="30" rows="7" disabled=(user.isWelcomer || user === undefined || user.welcomerReason !== undefined) required) #{user !== undefined ? user.welcomerReason : ''}
+              textarea#inputBecomeWelcomer.form-control(name="inputBecomeWelcomer" cols="30" rows="7" onkeyup="counterChar(this.id, 'inputBecomeWelcomerStatusChar', 100, 2000);" disabled=(user.isWelcomer || user === undefined || user.welcomerReason !== undefined) required) #{user !== undefined ? user.welcomerReason : ''}
+              .text-right
+                span#inputBecomeWelcomerStatusChar
               .invalid-feedback
                 span Please, tell us why do you want to become a welcomer. (100 signs min)
 
@@ -184,6 +186,9 @@ block js
           form.classList.add('was-validated');      
         };
       }
+
+      // Initialize counter char text
+      initCounterChar('inputBecomeWelcomer','inputBecomeWelcomerStatusChar', 100, 2000);
 
       // Set valid data
       setServerValidData(!{JSON.stringify(validData)});

@@ -73,7 +73,9 @@ block content
       .form-row
         .form-group.col-md-12
           label(for="inputHook") The hook:
-          textarea#inputHook.form-control(type="text" name="inputHook" placeholder="Hook" cols="30" rows="5" required) #{exp.hook}
+          textarea#inputHook.form-control(type="text" name="inputHook" placeholder="Hook" cols="30" rows="5" onkeyup="counterChar(this.id, 'inputHookStatusChar', 2, 200);" required) #{exp.hook}
+          .text-right
+            span#inputHookStatusChar
           .invalid-feedback
             span Please chose a hook (2 to 200 signs).
           small (a short text to describe the experience, that will appear on top of the page)
@@ -140,7 +142,9 @@ block content
       .form-row
         .form-group.col-md-12
           label(for="inputChargeReason") What will you use the revenues for?
-          textarea#inputChargeReason.form-control(name="inputChargeReason" cols="30" rows="5" onchange="setInvalidInput(this)") #{exp.chargeReason}
+          textarea#inputChargeReason.form-control(name="inputChargeReason" cols="30" rows="5" onchange="setInvalidInput(this)" onkeyup="counterChar(this.id, 'inputChargeReasonStatusChar', 2, 300);") #{exp.chargeReason}
+          .text-right
+            span#inputChargeReasonStatusChar
           .invalid-feedback
             span Please specify what will you use the revenues? (2 to 300 signs)
           small 
@@ -200,14 +204,18 @@ block content
             | If you have a few availability in your tipycal week, you can also add your favorite to meet travellers,
             | like week-ends or evenings (to avoid booking requests you couldn't accept).
           
-          textarea#inputDescription.form-control(name="inputDescription" cols="30" rows="5" placeholder=`Let's go: you have a lot of space to tell the travellers everything they have to know about your experience before booking and living it.` required) #{exp.description}
+          textarea#inputDescription.form-control(name="inputDescription" cols="30" rows="5" onkeyup="counterChar(this.id, 'inputDescriptionStatusChar', 200, 2000);" placeholder=`Let's go: you have a lot of space to tell the travellers everything they have to know about your experience before booking and living it.` required) #{exp.description}
+          .text-right
+            span#inputDescriptionStatusChar
           .invalid-feedback
             span Please write a description, so the travellers can fully understand what your experience is about. (200 to 2000 signs)
 
       .form-row
         .form-group.col-md-12
           label(for="inputIncluded") What is included?
-          textarea#inputIncluded.form-control(name="inputIncluded" cols="30" rows="5" placeholder=`A beer on a terrace, a ticket to a museum, or just smiles and pictures.`) #{exp.included}
+          textarea#inputIncluded.form-control(name="inputIncluded" cols="30" rows="5" onkeyup="counterChar(this.id, 'inputIncludedStatusChar', 1, 1000);" placeholder=`A beer on a terrace, a ticket to a museum, or just smiles and pictures.`) #{exp.included}
+          .text-right
+            span#inputIncludedStatusChar
           .invalid-feedback
             span "What is included" must be between 1 and 1000 characters.
 
@@ -226,9 +234,11 @@ block content
       .form-row
         .form-group.col-md-12
           label(for="inputDontForget") Don't forget?
-          textarea#inputDontForget.form-control(name="inputDontForget" cols="30" rows="5" placeholder=`What do the travellers have to not forget ? Rain clothes, camera, curiosity, etc.`) #{exp.dontForget}
+          textarea#inputDontForget.form-control(name="inputDontForget" cols="30" rows="5" onkeyup="counterChar(this.id, 'inputDontForgetStatusChar', 1, 1000);" placeholder=`What do the travellers have to not forget ? Rain clothes, camera, curiosity, etc.`) #{exp.dontForget}
+          .text-right
+            span#inputDontForgetStatusChar
           .invalid-feedback
-            span "Don't forget" must be between 1 and 200 characters.
+            span "Don't forget" must be between 1 and 1000 characters.
 
       hr.mt-6.form-separation
 
@@ -337,6 +347,13 @@ block js
 
       // Initialize tag autocomplete
       autocomplete_tag('tags', {limit: 20, btnId: 'tags-btn'});
+
+      // Initialize counter char text
+      initCounterChar('inputHook','inputHookStatusChar', 2, 200);
+      initCounterChar('inputChargeReason','inputChargeReasonStatusChar', 2, 300);
+      initCounterChar('inputDescription','inputDescriptionStatusChar', 200, 2000);
+      initCounterChar('inputIncluded','inputIncludedStatusChar', 1, 1000);
+      initCounterChar('inputDontForget','inputDontForgetStatusChar', 1, 1000);
     
       // Set valid data
       setServerValidData(!{JSON.stringify(validData)});

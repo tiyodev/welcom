@@ -42,9 +42,11 @@ block content
     .container.wel-bg-white.p-6.mt-6
       form.form-horizontal(name="sendMessage" action=`/messaging/${displayParticipant._id}/message/send` method='POST' novalidate)
         input(type='hidden', name='_csrf', value=_csrf)
-        .row.align-items-center.justify-content-center
+        .row.align-items-start.justify-content-center
           .form-group.col-10.pr-0
-            textarea.messaging-send-input.form-control(name="messageInput" cols="30" rows="4" placeholder="Write a message" required)
+            textarea#message-input.messaging-send-input.form-control(name="messageInput" cols="30" rows="4" placeholder="Write a message" onkeyup="counterChar(this.id, 'message-input-status-char', 2, 500);" required)
+            .text-right
+              span#message-input-status-char
             .invalid-feedback
               span Please, write a message (2 to 500 signs).
           .form-group.col-1.pl-0
@@ -53,3 +55,10 @@ block content
         .col.pt-2.pb-2.pl-0.pr-0
           each msg in conversation.messages.sort( (a,b) => b.date - a.date)
             include ../components/messages-item
+
+block js
+  script.
+    (function() {
+      // Initialize counter char text on text area field
+      initCounterChar('message-input','message-input-status-char', 2, 500);
+    })();

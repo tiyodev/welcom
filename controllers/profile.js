@@ -77,7 +77,7 @@ exports.checkProfileData = [
 ];
 
 exports.checkRecommendationData = [
-  check('recommendationDesc', 'Please, write a recommendations (30 to 200 signs).').trim().isLength({ min: 30, max: 300 })
+  check('recommendationDesc', 'Please, write a recommendations (30 to 300 signs).').trim().isLength({ min: 30, max: 300 })
 ];
 
 /**
