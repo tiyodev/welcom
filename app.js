@@ -23,6 +23,8 @@ const fs = require('fs');
  * Load controller
  */
 const messagingController = require('./controllers/messaging');
+const notificationController = require('./controllers/notification');
+const notificationModel = require('./models/notifications');
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -92,57 +94,44 @@ app.use((req, res, next) => {
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 app.disable('x-powered-by');
-app.use((req, res, next) => {
+
+/**
+ * @const noCheckPartUrl
+ * @type {Array<String>}
+ * @desc Do not retrieve conversations and notifications if the url contains one of these string
+ */
+const noCheckPartUrl = [
+  '/images/',
+  '/js/',
+  '/css/',
+  '/font/',
+  '.jpg'
+];
+
+app.use(async (req, res, next) => {
   res.locals.account = req.account;
   res.locals.recaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY;
   res.locals.googleApi = process.env.GOOGLE_API;
   res.locals.googleApiGeocode = process.env.GOOGLE_API_GEOCODE;
 
-  if(!req.account) return next();
+  if(!req.account || noCheckPartUrl.some(str => req.path.includes(str))) 
+    return next();
 
-  // Get last 3 messages
-  messagingController.getLastUpdateConversationsByUserIdAndNbLast(req.account._id, 3)
-    .then((conversations) => {
-      res.locals.headerConversations = conversations;
+  try{
+    // Get last 3 messages
+    res.locals.headerConversations = await messagingController.getLastUpdateConversationsByUserIdAndNbLast(req.account._id, 3);
+    // Get last 3 notifications
+    res.locals.headerNotifications = await notificationController.getNbLastNotificationsByUserId(req.account._id, 3);
+    
+    // // Test create Notifs
+    // await notificationController.createNotification(notificationModel.NotificationTypes.Welcoming , req.account._id);
+    // await notificationController.createNotification(notificationModel.NotificationTypes.NewWelcomer , req.account._id);
 
-      const dateNow = new Date(Date.now());
-
-      // Get last 5 notifications
-      const notifications = [{
-        reciver: res.locals.account,
-        type: 'Bec-Welc',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pellentesque porttitor finibus. Vestibulum commodo tempus erat placerat dapibus. Phasellus et mauris in justo molestie tristique sed at mi.',
-        linkRedirect: '/',
-        createdAt: dateNow,
-        isNew: true,
-        status: 'warning',
-        title: 'title warning notif'
-      },
-      {
-        reciver: res.locals.account,
-        type: 'Exp-Ok',
-        description: 'Nam turpis ipsum, tincidunt quis sagittis vel, viverra vel dui. Quisque in pulvinar sem, in suscipit ligula. Mauris eu ultrices magna. Aliquam erat volutpat. Duis sapien ante, placerat vitae hendrerit et, mattis sit amet turpis. Donec consequat efficitur quam et vehicula.',
-        linkRedirect: '/',
-        createdAt: dateNow,
-        isNew: true,
-        status: 'ok',
-        title: 'title ok notif'
-      },
-      {
-        reciver: res.locals.account,
-        type: 'Exp-Shit',
-        description: 'Maecenas eget ultrices tortor, nec ultrices ipsum. Nam condimentum porttitor tortor, vitae varius risus placerat vitae. Cras est lacus, bibendum vel congue nec, placerat ut lacus. Sed arcu felis, imperdiet sed lobortis vitae, tempor eget elit. Nulla ullamcorper sit amet ipsum quis molestie. Mauris nec odio turpis.',
-        linkRedirect: '/',
-        createdAt: dateNow,
-        isNew: false,
-        status: 'nok',
-        title: 'title nok notif'
-      }]
-
-      res.locals.headerNotifications = notifications;
-
-      next();
-    })
+    next();
+  }
+  catch(err){
+    next(err)
+  }
 });
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page

@@ -1,33 +1,34 @@
-- const displayParticipant = conv.firstParticipant._id.equals(locals.account._id) ? conv.secondParticipant : conv.firstParticipant;
-- const msgSort = conv.messages.sort( (a,b) => b.date - a.date);
-- const lastMsg = msgSort[0];
-- const lastMsgText = lastMsg.text.length > 150 ? `${lastMsg.text.substring(0,150)}...` : lastMsg.text;
+if conv.firstParticipant !== undefined && conv.firstParticipant !== null && conv.secondParticipant !== undefined && conv.secondParticipant !== null
+  - const displayParticipant = conv.firstParticipant._id.equals(locals.account._id) ? conv.secondParticipant : conv.firstParticipant;
+  - const msgSort = conv.messages.sort( (a,b) => b.date - a.date);
+  - const lastMsg = msgSort[0];
+  - const lastMsgText = lastMsg.text.length > 150 ? `${lastMsg.text.substring(0,150)}...` : lastMsg.text;
 
-.container.messaging-card-container
-  a(href=`/messaging/conversations/${conv._id}`)
-    .row.align-items-center.p-2.justify-content-around
-      .col-2
-        img.messaging-card-img.rounded-circle(src=(displayParticipant.profile.profilePic.picture !== undefined ? displayParticipant.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
-      .col-3
-        .row.align-items-center
-          .col-12
-            h4 #{displayParticipant.profile.nickName} 
-        .row.align-items-center
-          .col-12
-            p From #{displayParticipant.profile.city}
+  .container.messaging-card-container
+    a(href=`/messaging/conversations/${conv._id}`)
+      .row.align-items-center.p-2.justify-content-around
+        .col-2
+          img.messaging-card-img.rounded-circle(src=(displayParticipant.profile.profilePic.picture !== undefined ? displayParticipant.profile.profilePic.picture : '/images/default-profile-pic.jpg') alt="Profile picture")
+        .col-3
+          .row.align-items-center
+            .col-12
+              h4 #{displayParticipant.profile.nickName} 
+          .row.align-items-center
+            .col-12
+              p From #{displayParticipant.profile.city}
 
-      if lastMsg.sender.equals(locals.account._id)
-        .col-5.messaging-card-text
-          p.pt-3 #{lastMsgText}
-      else
-        if lastMsg.isRead
-          .col-5.wel-bg-grey-middle-light.messaging-card-text
+        if lastMsg.sender.equals(locals.account._id)
+          .col-5.messaging-card-text
             p.pt-3 #{lastMsgText}
         else
-          .col-5.wel-bg-grey-middle-light.messaging-card-text-new
-            p.pt-3 #{lastMsgText}
-      .col-2.text-center
-        p.relative-date(data-date=lastMsg.date)
+          if lastMsg.isRead
+            .col-5.wel-bg-grey-middle-light.messaging-card-text
+              p.pt-3 #{lastMsgText}
+          else
+            .col-5.wel-bg-grey-middle-light.messaging-card-text-new
+              p.pt-3 #{lastMsgText}
+        .col-2.text-center
+          p.relative-date(data-date=lastMsg.date)
 
 script.
   (function() {

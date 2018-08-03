@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  .wel-bg-blue.wel-color-white.p-6
+    h1.text-center Notifications
+  
+  .pb-6.pt-6.wel-bg-grey-light
+    .container.wel-bg-white.p-6
+      .row.pb-4.justify-content-center
+        h3.text-center Notifications
+      .row
+        .col-6.messaging-border-right
+          p
+            | Notifications are made for you to not miss important things happening on the plateform.
+            | Like your profile being created, becoming a welcomer, receiving a booking request or 
+            | an answer to a booking request you send, receiving a review.
+        .col-6
+          p
+            | Future notifications will maybe include new story on the blog, 
+            | new feature on the platform, new like on your experience ... 
+            | If want more different notifications in future versions, just tell us!
+    .container.wel-bg-white.p-6.mt-6
+      .row.pb-4.justify-content-center
+        h3.text-center Your notifications
+      .row
+        .col-12
+          each notif in notifications
+            include ../components/notification-card

@@ -1,0 +1,26 @@
+.container.messaging-card-container
+  a(href=`${notif.linkRedirect}`)
+    .row.align-items-center.p-2.justify-content-around
+      .col-1
+        i.fa-3x.fas(class=`${notif.icon} ${notif.iconColor}`)
+      .col-3.pl-4
+        .row.align-items-center
+          .col-12
+            h4 #{notif.title} 
+
+      if notif.isRead
+        .col-6.wel-bg-grey-middle-light.messaging-card-text
+          p.pt-3 #{notif.description}
+      else
+        .col-6.wel-bg-grey-middle-light.messaging-card-text-new
+          p.pt-3 #{notif.description}
+      .col-2.text-center
+        p.relative-date(data-date=notif.createdAt)
+
+script.
+  (function() {
+    let relativeDateArray = document.getElementsByClassName('relative-date');
+    for(item of relativeDateArray){
+      item.innerText = relativeDate(new Date(item.attributes["data-date"].value));
+    }
+  })();

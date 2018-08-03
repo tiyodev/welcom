@@ -9,6 +9,9 @@ const User = require('./../models/users');
 const Interest = require('../models/interests');
 const Experience = require('./../models/experiences');
 
+const notificationController = require('./notification');
+const notificationModel = require('./../models/notifications');
+
 exports.checkEmailData = [
   check('inputEmail')
   .isLength({ min: 1 }).withMessage('Email is required.')
@@ -430,7 +433,7 @@ exports.getSignup = (req, res) => {
  * POST /signup
  * Create a new local account.
  */
-exports.postSignup = (req, res) => {
+exports.postSignup = async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -455,44 +458,32 @@ exports.postSignup = (req, res) => {
     });
   }
 
-  createRandomToken()
-  .then((newToken) => {
+  try{
+    const newToken = await createRandomToken();
+
     const user = new User({
       email: req.body.email,
       password: req.body.password,
-      validEmailTokenExpires: Date.now() + 3600000
+      validEmailTokenExpires: Date.now() + 3600000,
+      validEmailToken: newToken
     });
 
-    user.validEmailToken = newToken;
+    const existingUser = await User.findOne({ email: req.body.email });
 
-    User.findOne({ email: req.body.email }, (err, existingUser) => {
-      if (existingUser) {
-        req.flash('errors', { msg: 'Account with that email address already exists.' });
-        res.redirect('/');
-      } else {
-        user.save()
-          .then(() => {
-            Emails.sendMail(user.email, 'Confirm your email address', { templateName: 'validEmail', host: req.headers.host, token: user.validEmailToken })
-              .then(() => {
-                req.flash('info', { msg: `You will receive an Email at ${user.email} with instructions within the next 5 minutes (usually instant).` });
-                res.redirect('/');
-              }).catch((err) => {
-                req.flash('errors', { msg: err });
-                console.error(err);
-                res.redirect('/');
-              });
-          })
-          .catch((err) => {
-            req.flash('errors', { msg: err });
-            console.error(err);
-            res.redirect('/');
-          });
-      }
-    });
-  })
-  .catch((err) => {
+    if (existingUser) {
+      req.flash('errors', { msg: 'Account with that email address already exists.' });
+      res.redirect('/');
+    } else {
+      await user.save();
+      await notificationController.createNotification(notificationModel.NotificationTypes.Welcoming , user._id);
+      await Emails.sendMail(user.email, 'Confirm your email address', { templateName: 'validEmail', host: req.headers.host, token: user.validEmailToken });
+    
+      req.flash('info', { msg: `You will receive an Email at ${user.email} with instructions within the next 5 minutes (usually instant).` });
+      res.redirect('/');
+    }
+  } catch(err){
     req.flash('errors', { msg: err });
     console.error(err);
     res.redirect('/');
-  });
+  }
 };

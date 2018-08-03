@@ -22,7 +22,7 @@ const formats = [
   [ Number.MAX_VALUE, 'years ago', YEAR ]
 ];
 
-/*
+/**
  * @function
  * @name relativeDate
  * @desc Define a relative date between a given date and a reference date.
@@ -54,10 +54,10 @@ function relativeDate(givenDate, referenceDate) {
   };
 }
 
-/*
+/**
  * @function
- * @name counterChar
- * @desc Character counter for text boxes.
+ * @name relativeDate
+ * @desc Define a relative date between a given date and a reference date.
  * @param {string} textarea - Id of the text area
  * @param {string} display - Id of the container of counter display text
  * @param {int} min - Number min of character of the textarea
@@ -87,7 +87,7 @@ function counterChar(textarea, display, min, max) {
   }
 }
 
-/*
+/**
  * @function
  * @name initCounterChar
  * @desc Init the character counter for text boxes.
