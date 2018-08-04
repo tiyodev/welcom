@@ -16,7 +16,6 @@ const path = require('path');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const errorHandler = require('errorhandler');
-const expressStatusMonitor = require('express-status-monitor');
 const fs = require('fs');
 
 /**
@@ -24,7 +23,6 @@ const fs = require('fs');
  */
 const messagingController = require('./controllers/messaging');
 const notificationController = require('./controllers/notification');
-const notificationModel = require('./models/notifications');
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -50,7 +48,6 @@ app.set('view engine', 'pug');
 /**
  * Express configuration.
  */
-app.use(expressStatusMonitor());
 app.use(compression());
 app.use(logger('dev'));
 app.use(cookieParser());
@@ -123,10 +120,6 @@ app.use(async (req, res, next) => {
     // Get last 3 notifications
     res.locals.headerNotifications = await notificationController.getNbLastNotificationsByUserId(req.account._id, 3);
     
-    // // Test create Notifs
-    // await notificationController.createNotification(notificationModel.NotificationTypes.Welcoming , req.account._id);
-    // await notificationController.createNotification(notificationModel.NotificationTypes.NewWelcomer , req.account._id);
-
     next();
   }
   catch(err){

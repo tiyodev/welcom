@@ -1,7 +1,6 @@
 const pug = require('pug');
 const request = require('request');
 
-// const nodemailer = require('nodemailer');
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 
 const _emailPath = './config/emails/templates/';
