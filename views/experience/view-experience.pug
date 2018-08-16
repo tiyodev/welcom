@@ -159,49 +159,99 @@ block content
           else
             p.mt-4.m-0.p-4.exp-view-border-container.text-center This experience is new
         #exp-view-content-booking-free-component
-          form#exp-view-content-booking-free-component-form(action=`/experience/${exp._id}/booking` method="post" novalidate)
-            .mt-4.p-4.exp-view-border-container.text-center
-              h3.pb-4 
-                | Live this experience with 
-                br
-                | #{exp.creator.profile.firstName}
-              p.pb-4
-                i.mr-2.fas.fa-euro-sign
-                if exp.amountCharge !== undefined && exp.amountCharge !== null && exp.amountCharge > 0
-                  | <b>#{exp.amountCharge}</b> #{exp.isChargeGroup ? 'for the groupe' : ''} #{exp.isChargeTraveller ? 'per traveller' : ''}
-                else
-                  | Free
-                br
-                i.mr-2.fas.fa-users
-                | Between <b>#{exp.travellerNbMin}</b> and <b>#{exp.travellerNbMax}</b> people
-                br
-                i.mr-2.fas.fa-hourglass-half
-                | For <b>#{exp.durationMin}</b> to <b>#{exp.durationMax}</b> hours
-              if locals.account
-                .container.mx-auto
-                  .row
-                    .col-6
-                      label.exp-view-border-container-label(for="booking-date") Date
-                    .col-6
-                      label.exp-view-border-container-label(for="booking-nb-travellers") Travellers
-                    
-                    .col-6
-                      input#booking-date.exp-view-border-container-input(type="Date")
-                    .col-6
-                      input#booking-nb-travellers.exp-view-border-container-input(name="bookingNbTravellers" type="number" min=exp.travellerNbMin max=exp.travellerNbMax step="1" value=exp.travellerNbMin)
+          .mt-4.p-4.exp-view-border-container.text-center
+            h3.pb-4 
+              | Live this experience with 
+              br
+              | #{exp.creator.profile.firstName}
+            p
+              i.mr-2.fas.fa-euro-sign
+              if exp.amountCharge !== undefined && exp.amountCharge !== null && exp.amountCharge > 0
+                | <b>#{exp.amountCharge}</b> #{exp.isChargeGroup ? 'for the groupe' : ''} #{exp.isChargeTraveller ? 'per traveller' : ''}
               else
-                h3.text-center Please join or log in
-                p To book an experience, you have to be connected.
-                .container.mx-auto
-                  .row
-                    .col-6
-                      button.gradient-rounded-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(data-target="#joinus" data-toggle="modal" type="button") Join us
-                    .col-6
-                      a.underline-yellow.text-uppercase.nav-link.text-gradient(data-target="#sign-in-modal" data-toggle="modal" href="#") Sign in
+                | Free
+              br
+              i.mr-2.fas.fa-users
+              | Between <b>#{exp.travellerNbMin}</b> and <b>#{exp.travellerNbMax}</b> people
+              br
+              i.mr-2.fas.fa-hourglass-half
+              | For <b>#{exp.durationMin}</b> to <b>#{exp.durationMax}</b> hours
 
-              if locals.account
-                .pt-4.text-center
-                  button.pr-6.pl-6.btn.btn-wel-pink.font-weight-bold(type="submit") Request booking
+            if locals.account
+              .pt-2.text-center
+                button.pr-6.pl-6.btn.btn-wel-pink.font-weight-bold(data-target="#book-exp-modal" data-toggle="modal" type="button") Request booking
+            else
+              h3.text-center Please join or log in
+              p To book an experience, you have to be connected.
+              .container.mx-auto
+                .row
+                  .col-6
+                    button.gradient-rounded-btn.text-uppercase.nav-link.btn.wel-bg-blue.wel-color-white(data-target="#joinus" data-toggle="modal" type="button") Join us
+                  .col-6
+                    a.underline-yellow.text-uppercase.nav-link.text-gradient(data-target="#sign-in-modal" data-toggle="modal" href="#") Sign in
+        
+        <!-- Book an experience -->
+          #book-exp-modal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="bookExperience")
+            .modal-dialog(role="document")
+              .modal-content
+                form#book-exp-modal-form(name="bookExperience" action=`/experience/${exp._id}/booking` method='POST' novalidate)
+                  input(type='hidden', name='_csrf', value=_csrf)
+                  .wel-bg-blue.wel-color-white
+                    .row.modal-header.border-0
+                      .col-1
+                      .col-10.text-center 
+                        h3.modal-title.m-auto Your booking request
+                      .col-1
+                        button.close(type="button" data-dismiss="modal" aria-label="Close")
+                          span.wel-color-yellow(aria-hidden="true") X
+                  .modal-body
+                    .text-center
+                      i.mr-2.fas.fa-euro-sign
+                      if exp.amountCharge !== undefined && exp.amountCharge !== null && exp.amountCharge > 0
+                        | <b>#{exp.amountCharge}</b> #{exp.isChargeGroup ? 'for the groupe' : ''} #{exp.isChargeTraveller ? 'per traveller' : ''}
+                      else
+                        | Free
+                      br
+                      i.mr-2.fas.fa-users
+                      | Between <b>#{exp.travellerNbMin}</b> and <b>#{exp.travellerNbMax}</b> people
+                      br
+                      i.mr-2.fas.fa-hourglass-half
+                      | For <b>#{exp.durationMin}</b> to <b>#{exp.durationMax}</b> hours
+
+                    .text-left.pt-4
+                      p To: #{exp.creator.profile.firstName}
+                      p For: #{exp.title}
+                    
+                    .form-group.row
+                      .col-md-5
+                        label(for="booking-date") Date:
+                      .col-md-7
+                        input#booking-date.form-control(name="inputBookingDate" type="Date" required)
+                        .invalid-feedback
+                          span Please, select a correct date.
+
+                    .form-group.row
+                      .col-md-5
+                        label(for="booking-nb-travellers") Number of travellers: 
+                      .col-md-7
+                        input#booking-nb-travellers.form-control(name="inputBookingNbTravellers" type="number" min=exp.travellerNbMin max=exp.travellerNbMax step="1" value=exp.travellerNbMin style="width: 120px;")
+                        .invalid-feedback
+                          span Number of travellers must be between #{exp.travellerNbMin} and #{exp.travellerNbMax}!
+
+                    .form-group.row
+                      .col-md-12
+                        label.text-center(for="bookingMessageInput")
+                          | You can write a message to your welcomer, to introduce yourself and start the conversation.
+                          | Remember that welcomers are not professionals, but travellers ready to help other travellers like you :)
+                        textarea#book-exp-msg-modal-input.form-control(name="inputBookingMessage" cols="30" rows="5" onkeyup="counterChar(this.id, 'book-exp-msg-modal-input-status-char', 2, 500);" required)
+                        .text-right
+                          span#book-exp-msg-modal-input-status-char
+                        .invalid-feedback
+                          span Please, write a message (2 to 500 signs).
+                  .modal-footer
+                    button.btn.btn-wel-pink(type="submit") Send
+                    button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+        
         #exp-view-content-why-part-community-component
           .mt-4.p-4.exp-view-border-container.text-center
             h4 Why be a part of Welcom' community?
@@ -270,54 +320,78 @@ block js
     (function() {
       const recommendationDesc = document.getElementById('recommendation-desc');
 
-        recommendationDesc.onkeyup = () => {
-          counterChar('recommendation-desc', 'recommendation-desc-status-char', 30, 300);
+      recommendationDesc.onkeyup = () => {
+        counterChar('recommendation-desc', 'recommendation-desc-status-char', 30, 300);
 
-          const isValid = validateRecommendationDesc();
+        const isValid = validateRecommendationDesc();
 
-          if(isValid){
-            recommendationDesc.setCustomValidity('');
-          } else{
-            recommendationDesc.setCustomValidity("Please, write a recommendations (30 to 200 signs).");
-          }
+        if(isValid){
+          recommendationDesc.setCustomValidity('');
+        } else{
+          recommendationDesc.setCustomValidity("Please, write a recommendations (30 to 200 signs).");
         }
+      }
 
-        function validateRecommendationDesc(){
-          if(recommendationDesc.value === undefined 
-          || recommendationDesc.value === null
-          || recommendationDesc.value === ''
-          || recommendationDesc.value.length < 30 
-          || recommendationDesc.value.length > 300){
-            return false;
-          }
-          return true;
+      function validateRecommendationDesc(){
+        if(recommendationDesc.value === undefined 
+        || recommendationDesc.value === null
+        || recommendationDesc.value === ''
+        || recommendationDesc.value.length < 30 
+        || recommendationDesc.value.length > 300){
+          return false;
+        }
+        return true;
+      };
+
+      // Add manual validation
+      let form = $("#write-recommendations-modal-form")[0];
+      if(form !== undefined || form !== null){
+        form.onsubmit = function(event){    
+
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          } 
+
+          form.classList.add('was-validated');      
         };
+      }
 
-        // Add manual validation
-        let form = $("#write-recommendations-modal-form")[0];
-        if(form !== undefined || form !== null){
-          form.onsubmit = function(event){    
+      if(`#{isFromAddRecommendation}`){
+        $('#write-recommendations-modal').modal('show');
+      }
 
-            if (form.checkValidity() === false) {
-              event.preventDefault();
-              event.stopPropagation();
-            } 
+      // Add manual validation for booking modal
+      let bookingForm = document.getElementById('book-exp-modal-form');
+      if(bookingForm !== undefined || bookingForm !== null){
+        bookingForm.onsubmit = function(event){
 
-            form.classList.add('was-validated');      
-          };
-        }
+          if (bookingForm.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          } 
 
-        if(`#{isFromAddRecommendation}`){
-          $('#write-recommendations-modal').modal('show');
-        }
+          bookingForm.classList.add('was-validated');      
+        };
+      }
 
-        // Initialize counter char text
-        initCounterChar('recommendation-desc','recommendation-desc-status-char', 30, 300);
-        initCounterChar('send-msg-modal-input','send-msg-modal-input-status-char', 2, 500);
+      if(`#{isFromBookingRequest}`){
+        $('#book-exp-modal').modal('show');
+      }
 
-        // Set valid data
-        setServerValidData(!{JSON.stringify(validData)});
-        // Set Error data
-        checkServerValidity(!{JSON.stringify(errors)}); 
-      })();
+      // Initialize counter char text
+      initCounterChar('recommendation-desc','recommendation-desc-status-char', 30, 300);
+      initCounterChar('send-msg-modal-input','send-msg-modal-input-status-char', 2, 500);
+      initCounterChar('book-exp-msg-modal-input','book-exp-msg-modal-input-status-char', 2, 500);
+
+      // Initialize min date to tomorrow
+      let tomorrowDate = new Date(Date.now());
+      tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+      document.getElementById('booking-date').min = tomorrowDate.toISOString().split('T')[0];
+
+      // Set valid data
+      setServerValidData(!{JSON.stringify(validData)});
+      // Set Error data
+      checkServerValidity(!{JSON.stringify(errors)}); 
+    })();
   script(type="text/javascript" src=`https://maps.googleapis.com/maps/api/js?key=${locals.googleApi}&callback=initMap` async defer)

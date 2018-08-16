@@ -3,7 +3,7 @@
 const languages = require('../data/language');
 const adjectives = require('../data/adjective');
 const mongoose = require('mongoose');
-const myFs = require('../config/myFs');
+const myFs = require('../utils/myFs');
 
 const User = require('./../models/users');
 const Interest = require('../models/interests');

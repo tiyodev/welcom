@@ -11,10 +11,10 @@ block content
         each pic in exp.coverPic
           if i++ === 0
             .carousel-item.active
-              img.d-block.w-100.exp-carousel-img-header(src=pic.picture alt=pic.label)
+              img.d-block.w-100.exp-carousel-img-header(src=pic.picture alt=pic.label data-key-carousel=pic._id)
           else
             .carousel-item
-              img.d-block.w-100.exp-carousel-img-header(src=pic.picture alt=pic.label)
+              img.d-block.w-100.exp-carousel-img-header(src=pic.picture alt=pic.label data-key-carousel=pic._id)
     
     carousel-caption.d-none.d-md-block
       button.btn.btn-wel-blue.exp-carousel-cover-upload(type="button" data-toggle="modal" data-target="#uploadExpCover")
@@ -340,7 +340,8 @@ block js
           })
         });
       }).on('filedeleted', function(event, key, jqXHR, data) {
-        let carouselItemToRemove = $(`[data-key-carousel='${key}']`)[0].parentNode;
+        const elem = document.querySelector(`[data-key-carousel='${key}']`);
+        const carouselItemToRemove = elem.parentNode;
 
         // Delete item
         carouselItemToRemove.parentNode.removeChild(carouselItemToRemove);

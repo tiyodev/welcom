@@ -4,7 +4,7 @@ const experienceController = require('./../controllers/experience');
 
 module.exports = function(app) {
   app.get('/experience/create', passportConfig.isAuthenticated, experienceController.getCreateExperience);
-  app.post('/experience/create', passportConfig.isAuthenticated, experienceController.checkCreateExperienceData, experienceController.postCreateExperience);
+  app.post('/experience/create', passportConfig.isAuthenticated, experienceController.checkExperienceData, experienceController.postCreateExperience);
 
   app.post('/experience/create/cover-upload/add', passportConfig.isAuthenticated, uploadConfig.uploadExperience.array('input-cover[]', 5), experienceController.postAddExperienceCover);
   app.post('/experience/create/cover-upload/delete', passportConfig.isAuthenticated, experienceController.postDeleteExperienceCover);
@@ -16,6 +16,8 @@ module.exports = function(app) {
 
   app.get('/experience/:id', experienceController.getExperience);
   app.get('/experience/:id/edit', passportConfig.isAuthenticated, experienceController.getEditExperience);
-  app.post('/experience/:id/edit', passportConfig.isAuthenticated, experienceController.checkCreateExperienceData, experienceController.postEditExperience);
+  app.post('/experience/:id/edit', passportConfig.isAuthenticated, experienceController.checkExperienceData, experienceController.postEditExperience);
   app.post('/experience/:id/recommendation/add', passportConfig.isAuthenticated, experienceController.checkRecommendationData, experienceController.postRecommendation);
+
+  app.post('/experience/:id/booking', passportConfig.isAuthenticated, experienceController.checkBookAnExpData, experienceController.postBookAnExp);
 }

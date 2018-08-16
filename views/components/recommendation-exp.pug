@@ -82,7 +82,8 @@ block js
       }
 
       // Initialize counter char text
-      initCounterChar('recommendation-response-desc','recommendation-response-desc-status-char', 30, 300);
+      if(document.getElementById('recommendation-response-desc'))
+        initCounterChar('recommendation-response-desc','recommendation-response-desc-status-char', 30, 300);
 
       // Set valid data
       setServerValidData(!{JSON.stringify(validData)});

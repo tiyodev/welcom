@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
  * @name NotificationTypes
  * @desc Defines all possible types of notification
  * @readonly
- * @enum {string}
+ * @enum {String}
  */
 const NotificationTypes = Object.freeze({
   Welcoming: 'welcoming',
@@ -31,7 +31,7 @@ const NotificationTypes = Object.freeze({
  * @name NotificationIcons
  * @desc Defines all icons available for notifications
  * @readonly
- * @enum {string}
+ * @enum {String}
  */
 const NotificationIcons = Object.freeze({
   ArrowCircleRight: 'fa-arrow-alt-circle-right',
@@ -45,7 +45,7 @@ const NotificationIcons = Object.freeze({
  * @name NotificationIcons
  * @desc Defines all available colors for icons
  * @readonly
- * @enum {string}
+ * @enum {String}
  */
 const NotificationIconsColor = Object.freeze({
   Yellow: 'text-warning',
@@ -70,11 +70,11 @@ const notificationSchema = new Schema({
 }, { timestamps: true });
 
 /**
+ * @function
  * @name notificationFactory
  * @desc Factory => Create a notification instance based on the notification type
- * @function
- * @param {Enum<string>} notificationType - Notification type
- * @param {ObjectId} receiverId - Receiver id
+ * @param {Object<String>} notificationType - Notification type
+ * @param {Object} receiverId - Receiver id
  * @param {Object} traveller - Traveller object
  * @param {Object} welcomer - Welcomer object
  * @param {Object} experience - Experience object
@@ -255,11 +255,11 @@ notificationSchema.static('notificationFactory', function(notificationType, rece
 });
 
 /**
+ * @function
  * @name getAllNotificationsByUserId
  * @desc Get all notifications by user id
- * @function
- * @param {ObjectId} userId - User id
- * @returns {Object[]} Notification array
+ * @param {Object} userId - User id
+ * @returns {Array<Object>} Notification array
  */
 notificationSchema.static('getAllNotificationsByUserId', function(userId){
   return new Promise((resolve, reject) => {
@@ -274,11 +274,11 @@ notificationSchema.static('getAllNotificationsByUserId', function(userId){
 });
 
 /**
+ * @function
  * @name getAllUnreadNotificationsByUserId
  * @desc Get all unread notifications by user id
- * @function
- * @param {ObjectId} userId - User id
- * @returns {Object[]} Notification array
+ * @param {Object} userId - User id
+ * @returns {Array<Object>} Notification array
  */
 notificationSchema.static('getAllUnreadNotificationsByUserId', function(userId){
   return new Promise((resolve, reject) => {
@@ -293,12 +293,12 @@ notificationSchema.static('getAllUnreadNotificationsByUserId', function(userId){
 });
 
 /**
+ * @function
  * @name getNbLastNotificationsByUserId
  * @desc Get the last nbLast notifications of a user
- * @function
- * @param {ObjectId} userId - User id
- * @param {ObjectId} nbLast - Number of notification
- * @returns {Object[]} Notification array
+ * @param {Object} userId - User id
+ * @param {Object} nbLast - Number of notification
+ * @returns {Array<Object>} Notification array
  */
 notificationSchema.static('getNbLastNotificationsByUserId', function(userId, nbLast){
   return new Promise((resolve, reject) => {
@@ -314,10 +314,10 @@ notificationSchema.static('getNbLastNotificationsByUserId', function(userId, nbL
 });
 
 /**
+ * @function
  * @name setNotificationAsReadByNotificationId
  * @desc Mark as read a notification
- * @function
- * @param {ObjectId} notifId - Notification id
+ * @param {Array<Object>} notifId - Notification id
  * @returns {Object} Modified notification
  */
 notificationSchema.static('setNotificationAsReadByNotificationId', function(notifId){
@@ -339,9 +339,9 @@ notificationSchema.static('setNotificationAsReadByNotificationId', function(noti
 });
 
 /**
+ * @function
  * @name createNotification
  * @desc Create a notification in the database
- * @function
  * @param {Object} notif - Notification to create
  * @returns {Object} Created notification
  */

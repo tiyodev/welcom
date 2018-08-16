@@ -7,8 +7,8 @@ const Notification = require('./../models/notifications');
  * @name createNotification
  * @desc Create a new notification
  * @param {Notification.NotificationTypes} notificationType - Type of notification
- * @param {ObjectId} receiverId - User object id
- * @returns {object} Created notification
+ * @param {Object} receiverId - User object id
+ * @returns {Object} Created notification
  */
 exports.createNotification = async (notificationType, receiverId) => {
   try{
@@ -23,19 +23,17 @@ exports.createNotification = async (notificationType, receiverId) => {
  * @function
  * @name getNotificationById
  * @desc Get a notification by id
- * @param {object} req - HTTP request argument to the middleware function, conventionally called "req".
- * @param {object} res - HTTP response argument to the middleware function, conventionally called "res".
- * @param {function} next - Reminder argument to the middleware function, called "next" by convention.
- * @returns {json} Notification
+ * @param {Object} req - HTTP request argument to the middleware function, conventionally called "req".
+ * @param {Object} res - HTTP response argument to the middleware function, conventionally called "res".
+ * @param {Function} next - Reminder argument to the middleware function, called "next" by convention.
+ * @returns {Json} Notification
  */
 exports.getNotificationById = async (req, res, next) => {
-  if(!req.params.id) {
+  if(!req.params.id)
     next(new Error('Notification id not found'));
-  }
   
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id))
     next(new Error('Wrong notification ID!'));
-  }
 
   try{
     const notif = await Notification.findById(notificationId);
@@ -50,10 +48,10 @@ exports.getNotificationById = async (req, res, next) => {
  * @function
  * @name getUserNotifications
  * @desc Get all user notifications, and mark all unread notifications as read
- * @param {object} req - HTTP request argument to the middleware function, conventionally called "req".
- * @param {object} res - HTTP response argument to the middleware function, conventionally called "res".
- * @param {function} next - Reminder argument to the middleware function, called "next" by convention.
- * @returns {view} Notifications page
+ * @param {Object} req - HTTP request argument to the middleware function, conventionally called "req".
+ * @param {Object} res - HTTP response argument to the middleware function, conventionally called "res".
+ * @param {Function} next - Reminder argument to the middleware function, called "next" by convention.
+ * @returns {View} Notifications page
  */
 exports.getUserNotifications = async (req, res, next) => {
   if(!req.account._id) {
@@ -84,10 +82,10 @@ exports.getUserNotifications = async (req, res, next) => {
  * @function
  * @name setNotificationAsReadByNotificationIdAndRedirect
  * @desc Define the notification as read by the notification identifier and then redirect to the correct link.
- * @param {object} req - HTTP request argument to the middleware function, conventionally called "req".
- * @param {object} res - HTTP response argument to the middleware function, conventionally called "res".
- * @param {function} next - Reminder argument to the middleware function, called "next" by convention.
- * @returns {view} Notification redirect view
+ * @param {Object} req - HTTP request argument to the middleware function, conventionally called "req".
+ * @param {Object} res - HTTP response argument to the middleware function, conventionally called "res".
+ * @param {Function} next - Reminder argument to the middleware function, called "next" by convention.
+ * @returns {View} Notification redirect view
  */
 exports.setNotificationAsReadByNotificationIdAndRedirect = async (req, res, next) => {
   if(!req.params.id) {
@@ -110,9 +108,9 @@ exports.setNotificationAsReadByNotificationIdAndRedirect = async (req, res, next
  * @function
  * @name getNbLastNotificationsByUserId
  * @desc Get the last nbLast notifications of a user
- * @param {ObjectId} userId - User id
- * @param {int} nbLast - Number of notifications to be returned
- * @returns {object} nbLast notifications
+ * @param {Object} userId - User id
+ * @param {Number} nbLast - Number of notifications to be returned
+ * @returns {Object} nbLast notifications
  */
 exports.getNbLastNotificationsByUserId = async (userId, nbLast) => {
   if(!userId) {
